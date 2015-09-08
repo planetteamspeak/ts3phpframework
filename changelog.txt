@@ -1,0 +1,572 @@
+===============================================================================
+                        TS 3 PHP Framework - Changelog
+                          Copyright Planet TeamSpeak
+                        http://www.planetteamspeak.com
+===============================================================================
+   + Added feature or noticable improvement
+   - Bug fix or something removed
+   * Changed or Information
+   ! Important - Take note!
+===============================================================================
+
+=== Release 1.1.23 - 11 Oct 2013 ===
+ - TeamSpeak3_Node_Server::channelSpacerCreate() now accepts an additional
+   parameter to specifiy the channel_maxclients for the spacer (defaults to 0)
+ - fixed a stupid typo in TeamSpeak3_Node_Server::channelSpacerCreate() that 
+   was reported by barricas
+ - fixed "Serialization of 'Closure' is not allowed" errors
+ * public legacy release
+
+=== Release 1.1.22 - 15 Aug 2013 ===
+ ! upgrading your servers to 3.0.9 (build >= 1378383061) is recommended
+ + added TeamSpeak3_Helper_Convert::versionShort()
+ + added icons for server and client applications
+ * unified UTF-8 encoding in several methods
+ * TeamSpeak3_Node_Server::clientList() now includes client badges
+ * public legacy release
+
+=== Release 1.1.21 - 26 Jul 2013 ===
+ ! updated online and offline docs to Doxygen 1.8.4
+ - fixed an issue where TeamSpeak3_Adapter_ServerQuery_Reply::toArray() could
+   generate elements with an invalid key
+ + added TeamSpeak3_Node_Server::clientGetByDbid()
+ + added TeamSpeak3_Node_Server::sendPluginCmd()
+ + added TeamSpeak3_Node_Channel::sendPluginCmd()
+ + added TeamSpeak3_Node_Client::sendPluginCmd()
+ * updated default codec for channel spacers to Opus Voice
+ * updated country flag images
+ * public legacy release
+
+=== Release 1.1.20 - 04 Mar 2013 ===
+ ! updated online and offline docs to Doxygen 1.8.3.1
+ - removed outdated example scripts; check documentation instead
+ * TeamSpeak3_Node_Server::sortFileList() now sorts existing folders first in 
+   alphabetical order
+ * public legacy release
+
+=== Release 1.1.19 - 03 Jan 2013 ===
+ + added support for the Opus audio codec
+ * adjusted output of TeamSpeak3_Helper_Convert::codec()
+ * TeamSpeak3_Viewer_Html interface now displays music codec status for both
+   CELT Mono and Opus Music codecs
+ * internal legacy release
+
+=== Release 1.1.18 - 13 Nov 2012 ===
+ ! upgrading your servers to 3.0.7 (build >= 1352818893) is recommended
+ ! TeamSpeak3_Node_Host::permissionList() now respects -new option and converts
+   the new output containing group_id_end to the old format
+ + added TeamSpeak3_Node_Host::permissionCats()
+ + added TeamSpeak3_Node_Host::permissionEnds()
+ ! TeamSpeak3_Node_Host::permissionGetCategoryById() now determines the servers
+   permission version and returns the permission category based based on the 
+   group_id_end or the first byte of the specified permission ID
+ ! TeamSpeak3_Node_Host::permissionGetGrantById() now determines the servers
+   permission version and returns the ID of the associated needed permission 
+   modify power based on their default mask 0xFF00 or the new 0x8000
+ * TeamSpeak3_Node_Host::permissionTree() performance tweaks
+ * public legacy release
+
+=== Release 1.1.17 - 05 Oct 2012 ===
+ * TeamSpeak3_Adapter_ServerQuery::request() now allows disabling of exceptions
+ ! fixed a deadlock in TeamSpeak3_Adapter_ServerQuery_Reply::fetchError()
+   that was reported by neXXus4tw
+ * public legacy release
+
+=== Release 1.1.16 - 13 Sep 2012 ===
+ - fixed a problem in TeamSpeak3_Adapter_ServerQuery_Reply::fetchError() that 
+   could cause an infinite loop when using the permissionlist command
+ + added TeamSpeak3_Helper_String::transliterate()
+ + added TeamSpeak3_Helper_String::uriSafe()
+ + added TeamSpeak3_Viewer_Html::getContainerSummary()
+ * TeamSpeak3_Viewer_Html interface now indicates insufficient talk power on
+   clients in moderated channels
+ * public legacy release
+
+=== Release 1.1.15 - 23 Aug 2012 ===
+ ! codebase converted to Zend Studio 9.0.3 project
+ + added TeamSpeak3_Node_Host::serverGroupPermAutoAssign()
+ + added TeamSpeak3_Node_Host::serverGroupPermAutoRemove()
+ - fixed a bug where TeamSpeak3_Node_Server::channelGroupListReset() was not 
+   called in several channel group related methods
+ * public legacy release
+
+=== Release 1.1.14 - 11 Aug 2012 ===
+ ! updated online and offline docs to Doxygen 1.8.2
+ * updated country flag images using files from client 3.0.9
+ * public legacy release
+
+=== Release 1.1.13 - 18 Jun 2012 ===
+ ! upgrading your servers to 3.0.6 (build >= 1339404919) is mandatory
+ + TeamSpeak3_Node_Server::transferInitUpload() now respects server-side IP
+   bindings for file transfer interface
+ + TeamSpeak3_Node_Server::transferInitDownload() now respects server-side IP
+   bindings for file transfer interface
+ - fixed missing return value for TeamSpeak3_Node_Server::messageList()
+ * TeamSpeak3_Node_Server::clientList() now includes client IP addresses
+ + added TeamSpeak3_Node_Server::tempPasswordList()
+ + added TeamSpeak3_Node_Server::tempPasswordCreate()
+ + added TeamSpeak3_Node_Server::tempPasswordDelete()
+ * internal legacy release
+
+=== Release 1.1.12 - 18 Feb 2012 ===
+ - TeamSpeak3_Viewer_Html::getCorpusName() no longer truncates name of channel
+   spacers
+ - fixed broken TeamSpeak3_Node_Server::snapshotDeploy() method
+
+=== Release 1.1.11 - 05 Feb 2012 ===
+ ! TeamSpeak3_Node_Server::logView() has been updated and all parameters were
+   changed to respect the new server-side implementation
+ - fixed invalid usage of "permsid" instead of "permid" when an array of IDs
+   was passed to permission related methods
+ - fixed invalid detection of some channel spacers
+ - fixed issues when using some UTF-8 encoded strings as command parameters
+ * TeamSpeak3_Helper_String::isUtf8() now scans the entire string and checks
+   that it conforms to UTF-8 by searching for non-ascii multibyte sequences
+   in UTF-8 range
+ + added TeamSpeak3_Node_Host::permissionGetGrantById()
+ + added TeamSpeak3_Node_Host::permissionTree()
+
+=== Release 1.1.10 - 27 Dec 2011 ===
+ ! updated online and offline docs to Doxygen 1.7.6.1
+ - fixed object conversion issues in TeamSpeak3_Node_Server::clientMove()
+ - fixed invalid handling of sortid in TeamSpeak3_Node_Server::sortGroupList()
+ + added TeamSpeak3_Node_Server::clientCountDb()
+ * lists generated by TeamSpeak3_Node_Server::channelFileList() now contain
+   the ID of the selected virtual server
+ * TeamSpeak3_Node_Server::snapshotDeploy() now returns a new ID and port if
+   the deploy created a virtual server from scratch
+ * public stable release
+
+=== Release 1.1.9-beta - 27 Oct 2011 ===
+ + added TeamSpeak3_Adapter_Update::getClientRev()
+ + added TeamSpeak3_Adapter_Update::getVersion()
+ + added TeamSpeak3_Adapter_Update::getClientVersion()
+ + added TeamSpeak3_Adapter_Update::getServerVersion()
+ + added TeamSpeak3_Node_Server::clientGetIdsByUid()
+ * TeamSpeak3_Adapter_Update now supports new update protocol which allows
+   querying the latest client and server build numbers (UNIX timestamps) and
+   version strings
+ * internal release only
+
+=== Release 1.1.8-beta - 26 Sep 2011 ===
+ + added TeamSpeak3_Helper_Convert::version()
+ * TeamSpeak3_Viewer_Html interface now respects UNIX timestamps in server
+   and client version numbers
+
+=== Release 1.1.7-beta - 25 Sep 2011 ===
+ ! upgrading your servers to 3.0.1 (build >= 1316930695) is mandatory
+ ! TeamSpeak3_Node_Host::logView() has been updated and all parameters were
+   changed to respect the new server-side implementation
+ + added TeamSpeak3_Helper_Convert::logEntry()
+ * TeamSpeak3_Helper_Convert::logLevel() now supports conversion from string
+   to level and vice versa
+ * managing virtual server template settings is now possible by spawning a
+   TeamSpeak3_Node_Server object using TeamSpeak3_Node_Host::serverGetById(0)
+ * parameter for TeamSpeak3_Node_Host::serverCreate() is now optional
+ - minor fixes in online and offline docs
+ * internal release only
+
+=== Release 1.1.6-beta - 21 May 2011 ===
+ ! updated online and offline docs to Doxygen 1.7.4
+ ! upgrading your servers to 3.0.0-rc1 (build >= 14467) is mandatory
+ + added TeamSpeak3_Helper_Convert::imageMimeType()
+ + added constants for different banner display modes
+ * TeamSpeak3_Viewer_Html interface now supports alternative ftclient option
+   data:image which allows embedding images directly into HTML output
+ * internal release only
+
+=== Release 1.1.5-beta - 19 Mar 2011 ===
+ ! updated online and offline docs to Doxygen 1.7.3
+ * TeamSpeak3_Viewer_Html interface is now backwards compatible to servers
+   running version 3.0.0-beta29
+ * TeamSpeak3_Adapter_ServerQuery is now theoretically compatible to the
+   ClientQuery plugin interface when using available commands
+ * adjusted exception types in all adapter methods
+ + added TeamSpeak3_Adapter_Blacklist_Exception
+ + added TeamSpeak3_Adapter_Update_Exception
+ + added TeamSpeak3_Adapter_FileTransfer_Exception
+ + added TeamSpeak3_Adapter_TSDNS_Exception
+ + added TeamSpeak3_Adapter_TSDNS
+ + added TeamSpeak3_Helper_String::prepend()
+ + added TeamSpeak3_Helper_Uri::getFQDNParts()
+ + added TeamSpeak3_Node_Host::serverGetByTSDNS()
+ * TeamSpeak3::factory() URIs now supports optional server_tsdns parameter to
+   identify a virtual server without specifying an ID or port number
+
+=== Release 1.1.4-beta - 05 Feb 2011 ===
+ ! codebase converted to Zend Studio 8.0.0 project
+ ! upgrading your servers to 3.0.0-beta31 (build >= 13537) is recommended
+ + added TeamSpeak3_Node_Server::clientGetNameByUid()
+ + added TeamSpeak3_Node_Server::clientGetNameByDbid()
+ + added TeamSpeak3_Node_Server::clientGetServerGroupsByDbid()
+ + added TeamSpeak3_Node_Server::permRemoveAny()
+ - fixed internal convert error exception caused internally when using integer
+   values with more than 16 bits for clientftfid parameters
+ * several iconDownload() and iconUpload() methods now use random clientftfid
+   parameter values instead of node IDs
+ - fixed bug where using exceptions inside uasort() callbacks caused warnings
+ * TeamSpeak3_Adapter_ServerQuery_Reply::fetchError() now tries to resolve
+   the permission name for failed_permid values to generate comprehensible
+   error messages
+
+=== Release 1.1.3-beta - 15 Jan 2011 ===
+ ! updated online and offline docs to Doxygen 1.7.2
+ + added TeamSpeak3_Helper_Signal_Interface which subscribes the layout for
+   all TeamSpeak3_Helper_Signal callbacks available
+ + added TeamSpeak3_Node_Host::permissionGetCategoryById()
+ + added TeamSpeak3_Node_Servergroup::message()
+ + added TeamSpeak3_Node_Channelgroup::message()
+ + added TeamSpeak3_Helper_Convert::permissionCategory()
+ + added new notifyError signal to TeamSpeak3_Adapter_ServerQuery_Reply class
+   to provide powerful code profiling capabilities
+ + added additional debugging signals to both TeamSpeak3_Transport_TCP and
+   TeamSpeak3_Transport_UDP to indicate whenever data has been sent/received
+ * TeamSpeak3_Adapter_Update::getRev() now supports an additional channel to
+   query the latest server revision number from the master server
+ * TeamSpeak3_Node_Host::version() now supports optional parameter to provide
+   direct access to specific version information such as platform and build
+ - fixed an issue where flood ban messages sent by 3.0.0-beta30 servers could
+   could cause timeout exceptions
+
+=== Release 1.1.2-beta - 03 Dec 2010 ===
+ + added TeamSpeak3_Node_Servergroup::copy()
+ + added TeamSpeak3_Node_Channelgroup::copy()
+ - fixed invalid method call in TeamSpeak3_Node_Servergroup::rename()
+ - fixed invalid method call in TeamSpeak3_Node_Servergroup::delete()
+ - fixed invalid method call in TeamSpeak3_Node_Channelgroup::rename()
+ - fixed invalid method call in TeamSpeak3_Node_Channelgroup::delete()
+ - fixed unnecessary error exception when checking a group with no permissions
+   assigned in TeamSpeak3_Node_Server::serverGroupGetProfiles()
+ - fixed invalid $_GET parameter name on clientinfo example page
+ * hotfix release
+
+=== Release 1.1.1-beta - 28 Nov 2010 ===
+ ! upgrading your servers to 3.0.0-beta30 (build >= 12910) is recommended
+ ! example pages have been extended with useful example applications
+ ! implemented __sleep() and __wakeup() methods for TeamSpeak3_Node_Abstract
+   objects which makes it possible to serialize and store them into persistent
+   session values
+ ! TeamSpeak3_Viewer_Html interface now returns HTML tables instead of div
+   elements so please make sure that your existing CSS files get updated too
+ * updated TeamSpeak3_Viewer_Text and TeamSpeak3_Viewer_Html classes with new
+   customizable output patterns to provide greater flexibility
+ * changed visibility of all private class methods and properties to protected
+   to allow modifications through inherited classes
+ + added constants for different group name display modes
+ + added TeamSpeak3_Helper_Crypt
+ + added TeamSpeak3_Exception::prepareCustomMessage()
+ * custom messages set with TeamSpeak3_Exception::registerCustomMessage() can
+   now be customized with pre-defined signs %code, %mesg, $file and %line to
+   provide greater flexibility
+ * class properties returned by TeamSpeak3_Node_Abstract::getClass() now
+   respect channel spacers and ServerQuery clients
+ + added TeamSpeak3_Helper_Uri::getUserParam()
+ + added TeamSpeak3_Helper_Uri::getHostParam()
+ + added TeamSpeak3_Helper_Uri::getSessParam()
+ + added TeamSpeak3_Helper_Uri::getHostUri()
+ + added TeamSpeak3_Helper_Uri::getBaseUri()
+ + added TeamSpeak3_Helper_Uri::stripslashesRecursive()
+ + added TeamSpeak3_Adapter_Abstract::syn()
+ + added TeamSpeak3_Helper_String::spaceToPercent()
+ + added TeamSpeak3_Node_Servergroup::privilegeKeyCreate()
+ + added TeamSpeak3_Node_Servergroup::tokenCreate()
+ + added TeamSpeak3_Node_Channelgroup::privilegeKeyCreate()
+ + added TeamSpeak3_Node_Channelgroup::tokenCreate()
+ + added TeamSpeak3_Node_Server::sortGroupList()
+ + added TeamSpeak3_Node_Server::isOnline()
+ + added TeamSpeak3_Node_Host::selfPermCheck()
+ * TeamSpeak3_Node_Server::serverGroupList() now respects i_group_sort_id
+ * TeamSpeak3_Node_Server::channelGroupList() now respects i_group_sort_id
+ * TeamSpeak3_Node_Server::privilegeKeyList() now supports optional resolve
+   parameter to translate token_id1 and token_id2 into the appropriate group
+   and/or channel names
+ - fixed issue in TeamSpeak3_Helper_String::toInt() where integer overflow
+   did not cast as float
+
+=== Release 1.0.38-beta - 13 Oct 2010 ===
+ - reverted TeamSpeak3_Node_Host::serverGetByPort() method to 1.0.35-beta
+ * hotfix release
+
+=== Release 1.0.37-beta - 12 Oct 2010 ===
+ - fixed broken TeamSpeak3_Node_Host::serverGetByPort() method
+ * hotfix release
+
+=== Release 1.0.36-beta - 11 Oct 2010 ===
+ ! upgrading your servers to 3.0.0-beta30 (build >= 12559) is recommended
+ ! converted online and offline docs to Doxygen 1.7.1
+ - fixed a possible timeout issue with 3.0.0-beta30-pre servers
+ - added missing comments for some undocumented class members
+ + added TeamSpeak3_Node_Host::serverSelectedPort()
+ * TeamSpeak3_Node_Host::serverSelectByPort() will not select a virtual server
+   that is already selected
+
+=== Release 1.0.35-beta - 05 Oct 2010 ===
+ - fixed invalid method name in TeamSpeak3_Node_Server::privilegeKeyCreate()
+ - fixed invalid method name in TeamSpeak3_Node_Server::customSearch()
+ - fixed invalid method name in TeamSpeak3_Node_Server::customInfo()
+ - fixed several small issues
+
+=== Release 1.0.34-beta - 29 Sep 2010 ===
+ ! upgrading your servers to 3.0.0-beta29 (build >= 12463) is recommended
+ + added constants for different codec encryption modes
+ + added TeamSpeak3_Helper_Signal
+ + added TeamSpeak3_Helper_Signal_Handler
+ + added TeamSpeak3_Adapter_ServerQuery_Event
+ + added TeamSpeak3_Adapter_ServerQuery_Reply::getCommandString()
+ + added TeamSpeak3_Adapter_ServerQuery_Reply::getNotifyEvents()
+ + added TeamSpeak3_Adapter_ServerQuery::wait()
+ + added TeamSpeak3_Adapter_ServerQuery::getQueryLastTimestamp()
+ + added TeamSpeak3_Node_Server::privilegeKeyList()
+ + added TeamSpeak3_Node_Server::privilegeKeyCreate()
+ + added TeamSpeak3_Node_Server::privilegeKeyDelete()
+ + added TeamSpeak3_Node_Server::privilegeKeyUse()
+ + added simple console client script to example pages
+ ! all libraries will now emit signals that you can subscribe to which allows
+   you to extend the core functionality of the framework with your own code
+ - fixed regular expressions in TeamSpeak3_Helper_String filter methods
+ * TeamSpeak3_Node_Host::serverSelect() will not select a virtual server that
+   is already selected
+ * new ServerQuery greeting message will now be filtered out of all replies
+   sent by the server
+ * TeamSpeak3_Transport_Abstract::getConfig() now accepts a parameter to get
+   the value of a specified config setting directly
+
+=== Release 1.0.33-beta - 19 Sep 2010 ===
+ ! upgrading your servers to 3.0.0-beta29 (build >= 12327) is recommended
+ ! example pages will no longer support outdated Internet Explorer versions
+   so please be sure to use a modern browser
+ + added TeamSpeak3_Node_Server::permReset()
+ - fixed "convert error" issues when using a TeamSpeak3_Node_Abstract object
+   as command parameter
+ * TeamSpeak3_Node_Client::getIcon() now respects client_flag_talking again
+ * TeamSpeak3_Viewer_Html interface now supports client country flags
+
+=== Release 1.0.32-beta - 25 Aug 2010 ===
+ + added TeamSpeak3_Helper_String::isInt()
+ + added TeamSpeak3_Node_Host::setLoadClientlistFirst()
+ * TCP/UDP streams will by default be opened in blocking mode
+ * factory URI now accepts all flags as options thus supporting multiple flags
+   at once including both TeamSpeak 3 Client display modes for viewer scripts
+ - fixed invalid usage of parameter for blocking/non-blocking mode on a stream
+ - fixed invalid conversion of float values while parsing ServerQuery replies
+ * internal release only
+
+=== Release 1.0.31-beta - 12 Aug 2010 ===
+ ! upgrading your servers to 3.0.0-beta26 (build >= 11927) is recommended
+ ! removed "16x16_" prefix from viewer images and updated several icons
+ + added some new demo scripts to the example pages
+ + added TeamSpeak3_Node_Server::serverGroupGetProfiles()
+ + added TeamSpeak3_Node_Server::connectionInfo()
+ + added TeamSpeak3_Helper_Convert::logLevel()
+ * TeamSpeak3_Node_Client::getIcon() now respects channel commander flag
+ * several node list methods now support additional regexp filter parameters
+ * exceptions thrown in TeamSpeak3_Adapter_ServerQuery::request() no longer
+   contain full query command string
+ * TeamSpeak3::factory() uri now features an optional parameter to enable the
+   blocking/non-blocking mode on a stream
+ * TeamSpeak3_Viewer_Html interface now supports all special channel spacers
+   by using background images
+ * TeamSpeak3_Viewer_Html interface now returns empty <div> with invidual CSS
+   classes for each spacer type instead of <hr> tags
+ * TeamSpeak3_Helper_Convert::seconds() no longer converts to milliseconds by
+   default
+ * TeamSpeak3_Node_Abstract::getInfo() now supports optional auto-conversion
+   of some properties to human-readable values
+ * TeamSpeak3_Node_Server::serverGroupList() now returns an empty array when
+   called on a default group
+ * TeamSpeak3_Node_Server::channelGroupList() now returns an empty array when
+   called on a default group
+ - fixed invalid TeamSpeak3_Adapter_Blacklist::isBlacklisted() return values
+   when master server is not responding
+ - fixed a stristr() warning in TeamSpeak3_Helper_String::contains() when
+   providing an empty search pattern
+
+=== Release 1.0.30-beta - 10 Jul 2010 ===
+ + added TeamSpeak3_Node_Client::getRev()
+ * TeamSpeak3_Helper_String::toInt() now handles -1 values properly
+ - fixed order of grouped or nested parameters in ServerQuery commands
+ - fixed issues in TeamSpeak3_Helper_Profiler when working with sessions
+ - fixed download issue in the included file browser example
+
+=== Release 1.0.29-beta - 03 Jul 2010 ===
+ ! upgrading your servers to 3.0.0-beta26 (build >= 11624) is mandatory
+ + added TeamSpeak3_Node_Server::serverGroupCopy()
+ + added TeamSpeak3_Node_Server::channelGroupCopy()
+ + added TeamSpeak3_Node_Server::clientInfoDb()
+ + added TeamSpeak3_Node_Host::setUseOfflineAsVirtual()
+ * TeamSpeak3_Node_Server use methods now respect -virtual option
+ ! offline virtual servers will no longer be started in virtual mode by
+   default while several new methods allow changing this behavior
+
+=== Release 1.0.28-beta - 28 Jun 2010 ===
+ ! upgrading your servers to 3.0.0-beta25 (build >= 11255) is mandatory
+ + added TeamSpeak3_Node_Server::isOffline()
+ + added TeamSpeak3_Node_Server::channelSpacerGetAlign()
+ * TeamSpeak3_Node_Server::serverGroupCreate() now supports type parameter
+ * TeamSpeak3_Node_Server::channelGroupCreate() now supports type parameter
+ * TeamSpeak3_Node_Server permlist methods now respect -permsid option
+ * TeamSpeak3_Viewer_Html interface now supports downloading of remote icons
+ ! please keep in mind that the TeamSpeak3_Viewer_Html interface is intended
+   as a proof of concept application and should be modified to cache remote
+   icons before beeing used in a production environment
+ - fixed invalid command name in TeamSpeak3_Node_Server::clientDeleteDb()
+ - removed check for client_flag_talking in TeamSpeak3_Node_Client::getIcon()
+ * internal release only
+
+=== Release 1.0.27-beta - 24 May 2010 ===
+ ! upgrading your servers to 3.0.0-beta23 (build >= 11062) is mandatory
+ ! TeamSpeak3_Adapter_Abstract::__construct() now expects an array of options
+   instead of a TeamSpeak3_Transport_Abstract object
+ + added TeamSpeak3_Adapter_Update
+ + added TeamSpeak3_Adapter_Blacklist
+ + added TeamSpeak3_Adapter_Abstract::initTransport()
+ + added TeamSpeak3_Transport_UDP
+ + added TeamSpeak3_Node_Abstract::getClass()
+ + added TeamSpeak3_Node_Abstract::serverGroupIdentify()
+ - fixed invalid return value in TeamSpeak3_Helper_String::resize()
+ * TeamSpeak3::autoload() no longer loads libraries without the TeamSpeak3
+   classname prefix to resolve issues with spl_autoload() implementations from
+   other frameworks
+ * TeamSpeak3_Viewer_Html interface now adds custom HTML class properties to
+   nodes to improve CSS customization options
+ * TeamSpeak3_Viewer_Html interface now recognizes channel spacers (WIP)
+ * internal release only
+
+=== Release 1.0.26-beta - 14 Apr 2010 ===
+ ! codebase converted to Zend Studio 7.1.2 project
+ + added TeamSpeak3_Node_Server::channelIsSpacer()
+ + added TeamSpeak3_Node_Server::channelSpacerCreate()
+ + added TeamSpeak3_Node_Server::channelSpacerGetType()
+ + added constants for different channel spacer types
+ - fixed unused parameters in TeamSpeak3_Node_Channel::permRemove()
+ - fixed unused parameters in TeamSpeak3_Node_Server::channelFileRename()
+ * TeamSpeak3_Helper_String::contains() now supports RegExp patterns and is
+   case-insensitive
+ * lists generated by TeamSpeak3_Node_Server::channelFileList() are now sorted
+   by filename
+ * TeamSpeak3_Viewer_Html interface now calculates server uptime correctly
+ * changed examples to include new features
+ * internal release only
+
+=== Release 1.0.25-beta - 1 Apr 2010 ===
+ ! upgrading your servers to 3.0.0-beta21 (build >= 10608) is mandatory
+ + added TeamSpeak3_Exception::registerCustomMessage()
+ + added TeamSpeak3_Exception::unregisterCustomMessage()
+ + added TeamSpeak3_Helper_Convert::groupType()
+ + added TeamSpeak3_Helper_Convert::permissionType()
+ + added TeamSpeak3_Helper_Convert::password()
+ + added TeamSpeak3_Helper_String::filterAlnum()
+ + added TeamSpeak3_Helper_String::filterAlpha()
+ + added TeamSpeak3_Helper_String::filterDigits()
+ + added constants for different group auto-update types
+ - changed invalid variable name in TeamSpeak3_Adapter_ServerQuery::request()
+ * TeamSpeak3_Adapter_FileTransfer::download() now supports fpassthru() to
+   write the results to the PHP output buffer which can be very useful when
+   transferring large files
+ * TeamSpeak3_Helper_Convert::seconds() now supports custom output format
+ * internal release only
+
+=== Release 1.0.24-beta - 24 Feb 2010 ===
+ ! upgrading your servers to 3.0.0-beta19 (build >= 10368) is mandatory
+ + added TeamSpeak3_Node_Abstract::iconIsLocal()
+ + added TeamSpeak3_Node_Abstract::iconGetName()
+ + added TeamSpeak3_Node_Server::iconDownload()
+ + added TeamSpeak3_Node_Server::iconUpload()
+ + added TeamSpeak3_Node_Channel::iconDownload()
+ + added TeamSpeak3_Node_Client::iconDownload()
+ + added TeamSpeak3_Node_Servergroup::iconDownload()
+ + added TeamSpeak3_Node_Channelgroup::iconDownload()
+ * TeamSpeak3_Transport_TCP methods will now read and write in small packets
+   of 4096 bytes
+ * TeamSpeak3_Node_Server snapshot methods now support three different export
+   formats (SNAPSHOT_STRING, SNAPSHOT_BASE64, SNAPSHOT_HEXDEC)
+ * internal release only
+
+=== Release 1.0.23-beta - 28 Jan 2010 ===
+ ! upgrading your servers to 3.0.0-beta17 (build >= 10036) is mandatory
+ + added TeamSpeak3_Node_Server::customInfo()
+ + added TeamSpeak3_Node_Client::customInfo()
+ + added priority speaker information to TeamSpeak3_Viewer_Html interface
+ * changed fetch mode from toAssocArray() to toArray() in several methods
+ * spl_autoload_register() is only called once even if TeamSpeak3::init() is
+   called multiple times
+ - changed invalid variable name in TeamSpeak3_Node_Server::clientGetByUid()
+ - changed invalid description for TeamSpeak3_Node_Client::remServerGroup()
+
+=== Release 1.0.22-beta - 18 Jan 2010 ===
+ ! library now requires PHP version 5.2.1 or newer
+ ! upgrading your servers to 3.0.0-beta13 (build >= 9802) is mandatory
+ + added TeamSpeak3_Adapter_Abstract::getProfiler()
+ + added TeamSpeak3_Adapter_ServerQuery::getQueryCount()
+ + added TeamSpeak3_Adapter_ServerQuery::getQueryRuntime()
+ + added TeamSpeak3_Node_Server::customSearch()
+ * adapter classes will now start their own timer for profiling
+ * added "-times" to default clientList() parameters
+ * added optional command parameters "tokendescription" and "tokencustomset"
+   to TeamSpeak3_Node_Server::tokenCreate()
+ - fixed error exception in TeamSpeak3_Adapter_ServerQuery destructor
+ - removed undefined variable in TeamSpeak3_Node_Server::channelFileRename()
+
+=== Release 1.0.21-beta - 10 Jan 2010 ===
+ ! all thrown TeamSpeak 3 Server error exceptions are now of objects of type
+   TeamSpeak3_Adapter_ServerQuery_Exception
+ ! TeamSpeak3_Node_Abstract::offsetSet() is now a wrapper for the modify()
+   method to allow direct modifications of node properties
+ + added TeamSpeak3_Helper_Convert::codec()
+ + added TeamSpeak3_Node_Abstract::toArray()
+ + added TeamSpeak3_Node_Abstract::toString()
+ + added TeamSpeak3_Node_Server::clientCount()
+ + added TeamSpeak3_Node_Server::clientListDb()
+ + added TeamSpeak3_Node_Server::clientFind()
+ + added TeamSpeak3_Node_Server::clientFindDb()
+ + added TeamSpeak3_Node_Host::setPredefinedQueryName()
+ + added TeamSpeak3_Node_Host::setExcludeQueryClients()
+ + added optional "timeout" parameter to TeamSpeak3::factory()
+ + added optional "nickname" parameter to TeamSpeak3::factory()
+ * error exception messages thrown by TeamSpeak3_Transport_TCP::connect()
+   will be UTF-8 encoded
+ * set some fancy titles in TeamSpeak3_Viewer_Html interface
+ * tweaked some of the implemented RecursiveIterator methods
+ * using strtr() instead of str_replace() in TeamSpeak3_Helper_String::arg()
+ * isset($node) no longer queries node information automatically
+ - fixed error exception when trying to start profiler timer twice
+ - fixed invalid node list format after reset
+
+=== Release 1.0.20-beta - 08 Jan 2010 ===
+ ! factory URI now supports #no_query_clients fragment to remove ServerQuery
+   clients from client lists and viewers
+ + added TeamSpeak3_Helper_Profiler
+ + added TeamSpeak3_Helper_Convert
+ - fixed unnessesary command requests on empty list caches
+ - fixed recursion bug on empty virtual servers
+
+=== Release 1.0.19-beta - 07 Jan 2010 ===
+ + added TeamSpeak3_Adapter_Abstract::getTransportHost()
+ + added TeamSpeak3_Adapter_Abstract::getTransportPort()
+ + added TeamSpeak3_Node_Host::getAdapterHost()
+ + added TeamSpeak3_Node_Host::getAdapterPort()
+ + added TeamSpeak3_Node_Server::snapshotCreate()
+ + added TeamSpeak3_Node_Server::snapshotDeploy()
+ + added TeamSpeak3_Node_Server::selfPermOverview()
+ * given parameter strings will be UTF-8 encoded while commands are prepared
+ * TeamSpeak3_Node_Host::__toString() now returns hostname or IPv4 address
+   instead of "TeamSpeak 3 Host"
+ * public beta release
+
+=== Release 1.0.18-beta - 06 Jan 2010 ===
+ ! added code examples
+ ! added online docs (http://docs.planetteamspeak.com/ts3/php/framework/)
+ + added TeamSpeak3_Node_Client::avatarGetName()
+ + added TeamSpeak3_Node_Client::avatarDownload()
+ + added TeamSpeak3_Node_Client::permOverview()
+ * TeamSpeak3_Viewer_Html constructor now supports custom image paths
+ * whoami cache will be updated when creating temporary channels
+ * whoami cache will be updated when moving own client
+ - fixed "already member of channel" issue when sending two text messages to
+   the same channel
+ - ServerQuery adapter no longer tries to quit in desctructor when transport
+   is not connected
+ - replaced invalid data types in method descriptions
+
+=== Release 1.0.17-beta - 05 Jan 2010 ===
+ * internal beta release
