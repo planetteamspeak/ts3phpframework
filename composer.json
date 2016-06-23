@@ -1,0 +1,26 @@
+{
+  "name": "planetteamspeak/ts3phpframework",
+  "type": "library",
+  "version": "1.1.24",
+  "description": "Powerful, object-oriented framework to manage a TeamSpeak 3 Server",
+  "keywords": ["teamspeak","server","query","management"],
+  "homepage": "https://www.planetteamspeak.com",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Sven 'ScP' Paulsen",
+      "email": "scp@planetteamspeak.com"
+    }
+  ],
+  "support": {
+    "email": "info@planetteamspeak.com",
+    "issues": "https://github.com/planetteamspeak/ts3phpframework/issues",
+    "docs": "https://docs.planetteamspeak.com/ts3/php/framework"
+  },
+  "require": {
+    "php": ">=5.2.1"
+  },
+  "autoload": {
+    "files": ["libraries/TeamSpeak3/TeamSpeak3.php"]
+  }
+}
