@@ -2,8 +2,8 @@
   "name": "planetteamspeak/ts3phpframework",
   "type": "library",
   "version": "1.1.24",
-  "description": "Powerful, object-oriented framework to manage a TeamSpeak 3 Server",
-  "keywords": ["teamspeak","server","query","management"],
+  "description": "Modern use-at-will framework that provides individual components to manage TeamSpeak 3 Server instances",
+  "keywords": ["ts3", "teamspeak","server","query","filetransfer","management","interface","api"],
   "homepage": "https://www.planetteamspeak.com",
   "license": "GPL-3.0",
   "authors": [
