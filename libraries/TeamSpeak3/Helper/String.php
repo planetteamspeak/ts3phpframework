@@ -491,7 +491,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
   /**
    * Decodes the string with MIME base64 and returns the result as an TeamSpeak3_Helper_String
    *
-   * @param  string
+   * @param  string $base64
    * @return TeamSpeak3_Helper_String
    */
   public static function fromBase64($base64)
@@ -519,7 +519,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
   /**
    * Returns the TeamSpeak3_Helper_String based on a given hex value.
    *
-   * @param  string
+   * @param  string $hex
    * @throws TeamSpeak3_Helper_Exception
    * @return TeamSpeak3_Helper_String
    */
