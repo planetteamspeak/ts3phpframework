@@ -2268,8 +2268,6 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
   public function delete()
   {
     $this->getParent()->serverDelete($this->getId());
-
-    unset($this);
   }
 
   /**
