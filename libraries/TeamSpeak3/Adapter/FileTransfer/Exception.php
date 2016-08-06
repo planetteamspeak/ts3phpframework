@@ -29,4 +29,6 @@
  * @class TeamSpeak3_Adapter_FileTransfer_Exception
  * @brief Enhanced exception class for TeamSpeak3_Adapter_FileTransfer objects.
  */
-class TeamSpeak3_Adapter_FileTransfer_Exception extends TeamSpeak3_Adapter_Exception {}
+class TeamSpeak3_Adapter_FileTransfer_Exception extends TeamSpeak3_Adapter_Exception
+{
+}

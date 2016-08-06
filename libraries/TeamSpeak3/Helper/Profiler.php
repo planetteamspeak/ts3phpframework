@@ -31,71 +31,66 @@
  */
 class TeamSpeak3_Helper_Profiler
 {
-  /**
-   * Stores various timers for code profiling.
-   *
-   * @var array
-   */
-  protected static $timers = array();
+    /**
+     * Stores various timers for code profiling.
+     *
+     * @var array
+     */
+    protected static $timers = array();
 
-  /**
-   * Inits a timer.
-   *
-   * @param  string $name
-   * @return void
-   */
-  public static function init($name = "default")
-  {
-    self::$timers[$name] = new TeamSpeak3_Helper_Profiler_Timer($name);
-  }
-
-  /**
-   * Starts a timer.
-   *
-   * @param  string $name
-   * @return void
-   */
-  public static function start($name = "default")
-  {
-    if(array_key_exists($name, self::$timers))
+    /**
+     * Inits a timer.
+     *
+     * @param  string $name
+     * @return void
+     */
+    public static function init($name = "default")
     {
-      self::$timers[$name]->start();
-    }
-    else
-    {
-      self::$timers[$name] = new TeamSpeak3_Helper_Profiler_Timer($name);
-    }
-  }
-
-  /**
-   * Stops a timer.
-   *
-   * @param  string $name
-   * @return void
-   */
-  public static function stop($name = "default")
-  {
-    if(!array_key_exists($name, self::$timers))
-    {
-      self::init($name);
+        self::$timers[$name] = new TeamSpeak3_Helper_Profiler_Timer($name);
     }
 
-    self::$timers[$name]->stop();
-  }
-
-  /**
-   * Returns a timer.
-   *
-   * @param  string $name
-   * @return TeamSpeak3_Helper_Profiler_Timer
-   */
-  public static function get($name = "default")
-  {
-    if(!array_key_exists($name, self::$timers))
+    /**
+     * Starts a timer.
+     *
+     * @param  string $name
+     * @return void
+     */
+    public static function start($name = "default")
     {
-      self::init($name);
+        if (array_key_exists($name, self::$timers)) {
+            self::$timers[$name]->start();
+        } else {
+            self::$timers[$name] = new TeamSpeak3_Helper_Profiler_Timer($name);
+        }
     }
 
-    return self::$timers[$name];
-  }
+    /**
+     * Stops a timer.
+     *
+     * @param  string $name
+     * @return void
+     */
+    public static function stop($name = "default")
+    {
+        if (!array_key_exists($name, self::$timers)) {
+            self::init($name);
+        }
+
+        self::$timers[$name]->stop();
+    }
+
+    /**
+     * Returns a timer.
+     *
+     * @param  string $name
+     * @return TeamSpeak3_Helper_Profiler_Timer
+     */
+    public static function get($name = "default")
+    {
+        if (!array_key_exists($name, self::$timers)) {
+            self::init($name);
+        }
+
+        return self::$timers[$name];
+    }
 }

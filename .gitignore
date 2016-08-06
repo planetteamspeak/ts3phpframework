@@ -1,3 +1,6 @@
 .DS_Store
 documentation
 Doxyfile
+/nbproject/
+/.idea/
+*.php~

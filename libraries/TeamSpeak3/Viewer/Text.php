@@ -31,77 +31,75 @@
  */
 class TeamSpeak3_Viewer_Text implements TeamSpeak3_Viewer_Interface
 {
-  /**
-   * A pre-defined pattern used to display a node in a TeamSpeak 3 viewer.
-   *
-   * @var string
-   */
-  protected $pattern = "%0%1 %2\n";
+    /**
+     * A pre-defined pattern used to display a node in a TeamSpeak 3 viewer.
+     *
+     * @var string
+     */
+    protected $pattern = "%0%1 %2\n";
 
-  /**
-   * Returns the code needed to display a node in a TeamSpeak 3 viewer.
-   *
-   * @param  TeamSpeak3_Node_Abstract $node
-   * @param  array $siblings
-   * @return string
-   */
-  public function fetchObject(TeamSpeak3_Node_Abstract $node, array $siblings = array())
-  {
-    $this->currObj = $node;
-    $this->currSib = $siblings;
-
-    $args = array(
-      $this->getPrefix(),
-      $this->getCorpusIcon(),
-      $this->getCorpusName(),
-    );
-
-    return TeamSpeak3_Helper_String::factory($this->pattern)->arg($args);
-  }
-
-  /**
-   * Returns the ASCII string to display the prefix of the current node.
-   *
-   * @return string
-   */
-  protected function getPrefix()
-  {
-    $prefix = "";
-
-    if(count($this->currSib))
+    /**
+     * Returns the code needed to display a node in a TeamSpeak 3 viewer.
+     *
+     * @param  TeamSpeak3_Node_Abstract $node
+     * @param  array $siblings
+     * @return string
+     */
+    public function fetchObject(TeamSpeak3_Node_Abstract $node, array $siblings = array())
     {
-      $last = array_pop($this->currSib);
+        $this->currObj = $node;
+        $this->currSib = $siblings;
 
-      foreach($this->currSib as $sibling)
-      {
-        $prefix .=  ($sibling) ? "| " : "  ";
-      }
+        $args = array(
+            $this->getPrefix(),
+            $this->getCorpusIcon(),
+            $this->getCorpusName(),
+        );
 
-      $prefix .= ($last) ? "\\-" : "|-";
+        return TeamSpeak3_Helper_String::factory($this->pattern)->arg($args);
     }
 
-    return $prefix;
-  }
+    /**
+     * Returns the ASCII string to display the prefix of the current node.
+     *
+     * @return string
+     */
+    protected function getPrefix()
+    {
+        $prefix = "";
 
-  /**
-   * Returns an ASCII string which can be used to display the status icon for a
-   * TeamSpeak_Node_Abstract object.
-   *
-   * @return string
-   */
-  protected function getCorpusIcon()
-  {
-    return $this->currObj->getSymbol();
-  }
+        if (count($this->currSib)) {
+            $last = array_pop($this->currSib);
 
-  /**
-   * Returns a string for the current corpus element which contains the display name
-   * for the current TeamSpeak_Node_Abstract object.
-   *
-   * @return string
-   */
-  protected function getCorpusName()
-  {
-    return $this->currObj;
-  }
+            foreach ($this->currSib as $sibling) {
+                $prefix .= ($sibling) ? "| " : "  ";
+            }
+
+            $prefix .= ($last) ? "\\-" : "|-";
+        }
+
+        return $prefix;
+    }
+
+    /**
+     * Returns an ASCII string which can be used to display the status icon for a
+     * TeamSpeak_Node_Abstract object.
+     *
+     * @return string
+     */
+    protected function getCorpusIcon()
+    {
+        return $this->currObj->getSymbol();
+    }
+
+    /**
+     * Returns a string for the current corpus element which contains the display name
+     * for the current TeamSpeak_Node_Abstract object.
+     *
+     * @return string
+     */
+    protected function getCorpusName()
+    {
+        return $this->currObj;
+    }
 }

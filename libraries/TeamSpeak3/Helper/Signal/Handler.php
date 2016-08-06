@@ -31,48 +31,47 @@
  */
 class TeamSpeak3_Helper_Signal_Handler
 {
-  /**
-   * Stores the name of the subscribed signal.
-   *
-   * @var string
-   */
-  protected $signal = null;
+    /**
+     * Stores the name of the subscribed signal.
+     *
+     * @var string
+     */
+    protected $signal = null;
 
-  /**
-   * Stores the callback function for the subscribed signal.
-   *
-   * @var mixed
-   */
-  protected $callback = null;
+    /**
+     * Stores the callback function for the subscribed signal.
+     *
+     * @var mixed
+     */
+    protected $callback = null;
 
-  /**
-   * The TeamSpeak3_Helper_Signal_Handler constructor.
-   *
-   * @param  string $signal
-   * @param  mixed  $callback
-   * @throws TeamSpeak3_Helper_Signal_Exception
-   * @return TeamSpeak3_Helper_Signal_Handler
-   */
-  public function __construct($signal, $callback)
-  {
-    $this->signal = (string) $signal;
-
-    if(!is_callable($callback))
+    /**
+     * The TeamSpeak3_Helper_Signal_Handler constructor.
+     *
+     * @param  string $signal
+     * @param  mixed $callback
+     * @throws TeamSpeak3_Helper_Signal_Exception
+     * @return TeamSpeak3_Helper_Signal_Handler
+     */
+    public function __construct($signal, $callback)
     {
-      throw new TeamSpeak3_Helper_Signal_Exception("invalid callback specified for signal '" . $signal . "'");
+        $this->signal = (string)$signal;
+
+        if (!is_callable($callback)) {
+            throw new TeamSpeak3_Helper_Signal_Exception("invalid callback specified for signal '" . $signal . "'");
+        }
+
+        $this->callback = $callback;
     }
 
-    $this->callback = $callback;
-  }
-
-  /**
-   * Invoke the signal handler.
-   *
-   * @param  array $args
-   * @return mixed
-   */
-  public function call(array $args = array())
-  {
-    return call_user_func_array($this->callback, $args);
-  }
+    /**
+     * Invoke the signal handler.
+     *
+     * @param  array $args
+     * @return mixed
+     */
+    public function call(array $args = array())
+    {
+        return call_user_func_array($this->callback, $args);
+    }
 }

@@ -31,89 +31,85 @@
  */
 class TeamSpeak3_Adapter_Blacklist extends TeamSpeak3_Adapter_Abstract
 {
-  /**
-   * The IPv4 address or FQDN of the TeamSpeak Systems update server.
-   *
-   * @var string
-   */
-  protected $default_host = "blacklist.teamspeak.com";
+    /**
+     * The IPv4 address or FQDN of the TeamSpeak Systems update server.
+     *
+     * @var string
+     */
+    protected $default_host = "blacklist.teamspeak.com";
 
-  /**
-   * The UDP port number of the TeamSpeak Systems update server.
-   *
-   * @var integer
-   */
-  protected $default_port = 17385;
+    /**
+     * The UDP port number of the TeamSpeak Systems update server.
+     *
+     * @var integer
+     */
+    protected $default_port = 17385;
 
-  /**
-   * Stores an array containing the latest build numbers.
-   *
-   * @var array
-   */
-  protected $build_numbers = null;
+    /**
+     * Stores an array containing the latest build numbers.
+     *
+     * @var array
+     */
+    protected $build_numbers = null;
 
-  /**
-   * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
-   * server.
-   *
-   * @return void
-   */
-  public function syn()
-  {
-    if(!isset($this->options["host"]) || empty($this->options["host"])) $this->options["host"] = $this->default_host;
-    if(!isset($this->options["port"]) || empty($this->options["port"])) $this->options["port"] = $this->default_port;
-
-    $this->initTransport($this->options, "TeamSpeak3_Transport_UDP");
-    $this->transport->setAdapter($this);
-
-    TeamSpeak3_Helper_Profiler::init(spl_object_hash($this));
-
-    TeamSpeak3_Helper_Signal::getInstance()->emit("blacklistConnected", $this);
-  }
-
-  /**
-   * The TeamSpeak3_Adapter_Blacklist destructor.
-   *
-   * @return void
-   */
-  public function __destruct()
-  {
-    if($this->getTransport() instanceof TeamSpeak3_Transport_Abstract && $this->getTransport()->isConnected())
+    /**
+     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
+     * server.
+     *
+     * @return void
+     */
+    public function syn()
     {
-      $this->getTransport()->disconnect();
-    }
-  }
+        if (!isset($this->options["host"]) || empty($this->options["host"])) $this->options["host"] = $this->default_host;
+        if (!isset($this->options["port"]) || empty($this->options["port"])) $this->options["port"] = $this->default_port;
 
-  /**
-   * Returns TRUE if a specified $host IP address is currently blacklisted.
-   *
-   * @param  string $host
-   * @throws TeamSpeak3_Adapter_Blacklist_Exception
-   * @return boolean
-   */
-  public function isBlacklisted($host)
-  {
-    if(ip2long($host) === FALSE)
-    {
-      $addr = gethostbyname($host);
+        $this->initTransport($this->options, "TeamSpeak3_Transport_UDP");
+        $this->transport->setAdapter($this);
 
-      if($addr == $host)
-      {
-        throw new TeamSpeak3_Adapter_Blacklist_Exception("unable to resolve IPv4 address (" . $host . ")");
-      }
+        TeamSpeak3_Helper_Profiler::init(spl_object_hash($this));
 
-      $host = $addr;
+        TeamSpeak3_Helper_Signal::getInstance()->emit("blacklistConnected", $this);
     }
 
-    $this->getTransport()->send("ip4:" . $host);
-    $repl = $this->getTransport()->read(1);
-    $this->getTransport()->disconnect();
-
-    if(!count($repl))
+    /**
+     * The TeamSpeak3_Adapter_Blacklist destructor.
+     *
+     * @return void
+     */
+    public function __destruct()
     {
-      return FALSE;
+        if ($this->getTransport() instanceof TeamSpeak3_Transport_Abstract && $this->getTransport()->isConnected()) {
+            $this->getTransport()->disconnect();
+        }
     }
 
-    return ($repl->toInt()) ? FALSE : TRUE;
-  }
+    /**
+     * Returns TRUE if a specified $host IP address is currently blacklisted.
+     *
+     * @param  string $host
+     * @throws TeamSpeak3_Adapter_Blacklist_Exception
+     * @return boolean
+     */
+    public function isBlacklisted($host)
+    {
+        if (ip2long($host) === FALSE) {
+            $addr = gethostbyname($host);
+
+            if ($addr == $host) {
+                throw new TeamSpeak3_Adapter_Blacklist_Exception("unable to resolve IPv4 address (" . $host . ")");
+            }
+
+            $host = $addr;
+        }
+
+        $this->getTransport()->send("ip4:" . $host);
+        $repl = $this->getTransport()->read(1);
+        $this->getTransport()->disconnect();
+
+        if (!count($repl)) {
+            return FALSE;
+        }
+
+        return ($repl->toInt()) ? FALSE : TRUE;
+    }
 }

@@ -31,268 +31,261 @@
  */
 class TeamSpeak3_Node_Servergroup extends TeamSpeak3_Node_Abstract
 {
-  /**
-   * The TeamSpeak3_Node_Servergroup constructor.
-   *
-   * @param  TeamSpeak3_Node_Server $server
-   * @param  array  $info
-   * @param  string $index
-   * @throws TeamSpeak3_Node_Exception
-   * @return TeamSpeak3_Node_Servergroup
-   */
-  public function __construct(TeamSpeak3_Node_Server $server, array $info, $index = "sgid")
-  {
-    $this->parent = $server;
-    $this->nodeInfo = $info;
-
-    if(!array_key_exists($index, $this->nodeInfo))
+    /**
+     * The TeamSpeak3_Node_Servergroup constructor.
+     *
+     * @param  TeamSpeak3_Node_Server $server
+     * @param  array $info
+     * @param  string $index
+     * @throws TeamSpeak3_Node_Exception
+     * @return TeamSpeak3_Node_Servergroup
+     */
+    public function __construct(TeamSpeak3_Node_Server $server, array $info, $index = "sgid")
     {
-      throw new TeamSpeak3_Node_Exception("invalid groupID", 0xA00);
+        $this->parent = $server;
+        $this->nodeInfo = $info;
+
+        if (!array_key_exists($index, $this->nodeInfo)) {
+            throw new TeamSpeak3_Node_Exception("invalid groupID", 0xA00);
+        }
+
+        $this->nodeId = $this->nodeInfo[$index];
     }
 
-    $this->nodeId = $this->nodeInfo[$index];
-  }
-
-  /**
-   * Renames the server group specified.
-   *
-   * @param  string  $name
-   * @return void
-   */
-  public function rename($name)
-  {
-    $this->getParent()->serverGroupRename($this->getId(), $name);
-  }
-
-  /**
-   * Deletes the server group. If $force is set to 1, the server group will be
-   * deleted even if there are clients within.
-   *
-   * @param  boolean $force
-   * @return void
-   */
-  public function delete($force = FALSE)
-  {
-    $this->getParent()->serverGroupDelete($this->getId(), $force);
-  }
-
-  /**
-   * Creates a copy of the server group and returns the new groups ID.
-   *
-   * @param  string  $name
-   * @param  integer $tsgid
-   * @param  integer $type
-   * @return integer
-   */
-  public function copy($name = null, $tsgid = 0, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
-  {
-    return $this->getParent()->serverGroupCopy($this->getId(), $name, $tsgid, $type);
-  }
-
-  /**
-   * Returns a list of permissions assigned to the server group.
-   *
-   * @param  boolean $permsid
-   * @return array
-   */
-  public function permList($permsid = FALSE)
-  {
-    return $this->getParent()->serverGroupPermList($this->getId(), $permsid);
-  }
-
-  /**
-   * Adds a set of specified permissions to the server group. Multiple permissions
-   * can be added by providing the four parameters of each permission in separate arrays.
-   *
-   * @param  integer $permid
-   * @param  integer $permvalue
-   * @param  integer $permnegated
-   * @param  integer $permskip
-   * @return void
-   */
-  public function permAssign($permid, $permvalue, $permnegated = FALSE, $permskip = FALSE)
-  {
-    $this->getParent()->serverGroupPermAssign($this->getId(), $permid, $permvalue, $permnegated, $permskip);
-  }
-
-  /**
-   * Alias for permAssign().
-   *
-   * @deprecated
-   */
-  public function permAssignByName($permname, $permvalue, $permnegated = FALSE, $permskip = FALSE)
-  {
-    $this->permAssign($permname, $permvalue, $permnegated, $permskip);
-  }
-
-  /**
-   * Removes a set of specified permissions from the server group. Multiple
-   * permissions can be removed at once.
-   *
-   * @param  integer $permid
-   * @return void
-   */
-  public function permRemove($permid)
-  {
-    $this->getParent()->serverGroupPermRemove($this->getId(), $permid);
-  }
-
-  /**
-   * Alias for permRemove().
-   *
-   * @deprecated
-   */
-  public function permRemoveByName($permname)
-  {
-    $this->permRemove($permname);
-  }
-
-  /**
-   * Returns a list of clients assigned to the server group specified.
-   *
-   * @return array
-   */
-  public function clientList()
-  {
-    return $this->getParent()->serverGroupClientList($this->getId());
-  }
-
-  /**
-   * Adds a client to the server group specified. Please note that a client cannot be
-   * added to default groups or template groups.
-   *
-   * @param  integer $cldbid
-   * @return void
-   */
-  public function clientAdd($cldbid)
-  {
-    $this->getParent()->serverGroupClientAdd($this->getId(), $cldbid);
-  }
-
-  /**
-   * Removes a client from the server group.
-   *
-   * @param  integer $cldbid
-   * @return void
-   */
-  public function clientDel($cldbid)
-  {
-    $this->getParent()->serverGroupClientDel($this->getId(), $cldbid);
-  }
-
-  /**
-   * Alias for privilegeKeyCreate().
-   *
-   * @deprecated
-   */
-  public function tokenCreate($description = null, $customset = null)
-  {
-    return $this->privilegeKeyCreate($description, $customset);
-  }
-
-  /**
-   * Creates a new privilege key (token) for the server group and returns the key.
-   *
-   * @param  string  $description
-   * @param  string  $customset
-   * @return TeamSpeak3_Helper_String
-   */
-  public function privilegeKeyCreate($description = null, $customset = null)
-  {
-    return $this->getParent()->privilegeKeyCreate(TeamSpeak3::TOKEN_SERVERGROUP, $this->getId(), 0, $description, $customset);
-  }
-
-  /**
-   * Sends a text message to all clients residing in the server group on the virtual server.
-   *
-   * @param  string $msg
-   * @return void
-   */
-  public function message($msg)
-  {
-    foreach($this as $client)
+    /**
+     * Renames the server group specified.
+     *
+     * @param  string $name
+     * @return void
+     */
+    public function rename($name)
     {
-      try
-      {
-        $this->execute("sendtextmessage", array("msg" => $msg, "target" => $client, "targetmode" => TeamSpeak3::TEXTMSG_CLIENT));
-      }
-      catch(TeamSpeak3_Adapter_ServerQuery_Exception $e)
-      {
-        /* ERROR_client_invalid_id */
-        if($e->getCode() != 0x0200) throw $e;
-      }
+        $this->getParent()->serverGroupRename($this->getId(), $name);
     }
-  }
 
-  /**
-   * Downloads and returns the server groups icon file content.
-   *
-   * @return TeamSpeak3_Helper_String
-   */
-  public function iconDownload()
-  {
-    if($this->iconIsLocal("iconid") || $this["iconid"] == 0) return;
-
-    $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("iconid"));
-    $transfer = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== FALSE ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
-
-    return $transfer->download($download["ftkey"], $download["size"]);
-  }
-
-  /**
-   * @ignore
-   */
-  protected function fetchNodeList()
-  {
-    $this->nodeList = array();
-
-    foreach($this->getParent()->clientList() as $client)
+    /**
+     * Deletes the server group. If $force is set to 1, the server group will be
+     * deleted even if there are clients within.
+     *
+     * @param  boolean $force
+     * @return void
+     */
+    public function delete($force = FALSE)
     {
-      if(in_array($this->getId(), explode(",", $client["client_servergroups"])))
-      {
-        $this->nodeList[] = $client;
-      }
+        $this->getParent()->serverGroupDelete($this->getId(), $force);
     }
-  }
 
-  /**
-   * Returns a unique identifier for the node which can be used as a HTML property.
-   *
-   * @return string
-   */
-  public function getUniqueId()
-  {
-    return $this->getParent()->getUniqueId() . "_sg" . $this->getId();
-  }
+    /**
+     * Creates a copy of the server group and returns the new groups ID.
+     *
+     * @param  string $name
+     * @param  integer $tsgid
+     * @param  integer $type
+     * @return integer
+     */
+    public function copy($name = null, $tsgid = 0, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
+    {
+        return $this->getParent()->serverGroupCopy($this->getId(), $name, $tsgid, $type);
+    }
 
-  /**
-   * Returns the name of a possible icon to display the node object.
-   *
-   * @return string
-   */
-  public function getIcon()
-  {
-    return "group_server";
-  }
+    /**
+     * Returns a list of permissions assigned to the server group.
+     *
+     * @param  boolean $permsid
+     * @return array
+     */
+    public function permList($permsid = FALSE)
+    {
+        return $this->getParent()->serverGroupPermList($this->getId(), $permsid);
+    }
 
-  /**
-   * Returns a symbol representing the node.
-   *
-   * @return string
-   */
-  public function getSymbol()
-  {
-    return "%";
-  }
+    /**
+     * Adds a set of specified permissions to the server group. Multiple permissions
+     * can be added by providing the four parameters of each permission in separate arrays.
+     *
+     * @param  integer $permid
+     * @param  integer $permvalue
+     * @param  integer $permnegated
+     * @param  integer $permskip
+     * @return void
+     */
+    public function permAssign($permid, $permvalue, $permnegated = FALSE, $permskip = FALSE)
+    {
+        $this->getParent()->serverGroupPermAssign($this->getId(), $permid, $permvalue, $permnegated, $permskip);
+    }
 
-  /**
-   * Returns a string representation of this node.
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return (string) $this["name"];
-  }
+    /**
+     * Alias for permAssign().
+     *
+     * @deprecated
+     */
+    public function permAssignByName($permname, $permvalue, $permnegated = FALSE, $permskip = FALSE)
+    {
+        $this->permAssign($permname, $permvalue, $permnegated, $permskip);
+    }
+
+    /**
+     * Removes a set of specified permissions from the server group. Multiple
+     * permissions can be removed at once.
+     *
+     * @param  integer $permid
+     * @return void
+     */
+    public function permRemove($permid)
+    {
+        $this->getParent()->serverGroupPermRemove($this->getId(), $permid);
+    }
+
+    /**
+     * Alias for permRemove().
+     *
+     * @deprecated
+     */
+    public function permRemoveByName($permname)
+    {
+        $this->permRemove($permname);
+    }
+
+    /**
+     * Returns a list of clients assigned to the server group specified.
+     *
+     * @return array
+     */
+    public function clientList()
+    {
+        return $this->getParent()->serverGroupClientList($this->getId());
+    }
+
+    /**
+     * Adds a client to the server group specified. Please note that a client cannot be
+     * added to default groups or template groups.
+     *
+     * @param  integer $cldbid
+     * @return void
+     */
+    public function clientAdd($cldbid)
+    {
+        $this->getParent()->serverGroupClientAdd($this->getId(), $cldbid);
+    }
+
+    /**
+     * Removes a client from the server group.
+     *
+     * @param  integer $cldbid
+     * @return void
+     */
+    public function clientDel($cldbid)
+    {
+        $this->getParent()->serverGroupClientDel($this->getId(), $cldbid);
+    }
+
+    /**
+     * Alias for privilegeKeyCreate().
+     *
+     * @deprecated
+     */
+    public function tokenCreate($description = null, $customset = null)
+    {
+        return $this->privilegeKeyCreate($description, $customset);
+    }
+
+    /**
+     * Creates a new privilege key (token) for the server group and returns the key.
+     *
+     * @param  string $description
+     * @param  string $customset
+     * @return TeamSpeak3_Helper_String
+     */
+    public function privilegeKeyCreate($description = null, $customset = null)
+    {
+        return $this->getParent()->privilegeKeyCreate(TeamSpeak3::TOKEN_SERVERGROUP, $this->getId(), 0, $description, $customset);
+    }
+
+    /**
+     * Sends a text message to all clients residing in the server group on the virtual server.
+     *
+     * @param  string $msg
+     * @return void
+     */
+    public function message($msg)
+    {
+        foreach ($this as $client) {
+            try {
+                $this->execute("sendtextmessage", array("msg" => $msg, "target" => $client, "targetmode" => TeamSpeak3::TEXTMSG_CLIENT));
+            } catch (TeamSpeak3_Adapter_ServerQuery_Exception $e) {
+                /* ERROR_client_invalid_id */
+                if ($e->getCode() != 0x0200) throw $e;
+            }
+        }
+    }
+
+    /**
+     * Downloads and returns the server groups icon file content.
+     *
+     * @return TeamSpeak3_Helper_String
+     */
+    public function iconDownload()
+    {
+        if ($this->iconIsLocal("iconid") || $this["iconid"] == 0) return;
+
+        $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("iconid"));
+        $transfer = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== FALSE ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
+
+        return $transfer->download($download["ftkey"], $download["size"]);
+    }
+
+    /**
+     * @ignore
+     */
+    protected function fetchNodeList()
+    {
+        $this->nodeList = array();
+
+        foreach ($this->getParent()->clientList() as $client) {
+            if (in_array($this->getId(), explode(",", $client["client_servergroups"]))) {
+                $this->nodeList[] = $client;
+            }
+        }
+    }
+
+    /**
+     * Returns a unique identifier for the node which can be used as a HTML property.
+     *
+     * @return string
+     */
+    public function getUniqueId()
+    {
+        return $this->getParent()->getUniqueId() . "_sg" . $this->getId();
+    }
+
+    /**
+     * Returns the name of a possible icon to display the node object.
+     *
+     * @return string
+     */
+    public function getIcon()
+    {
+        return "group_server";
+    }
+
+    /**
+     * Returns a symbol representing the node.
+     *
+     * @return string
+     */
+    public function getSymbol()
+    {
+        return "%";
+    }
+
+    /**
+     * Returns a string representation of this node.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this["name"];
+    }
 }
 

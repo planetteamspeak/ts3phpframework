@@ -29,4 +29,6 @@
  * @class TeamSpeak3_Transport_Exception
  * @brief Enhanced exception class for TeamSpeak3_Transport_Abstract objects.
  */
-class TeamSpeak3_Transport_Exception extends TeamSpeak3_Exception {}
+class TeamSpeak3_Transport_Exception extends TeamSpeak3_Exception
+{
+}
