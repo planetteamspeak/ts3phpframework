@@ -181,6 +181,27 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
     abstract public function getSymbol();
 
     /**
+     * @return array
+     */
+    public function getArray()
+    {
+        $viewer = new \TeamSpeak3_Viewer_Array('images/viewericons/', 'images/countryflags/', 'data:image');
+
+        $data = $viewer->fetchObject($this);
+
+        foreach (new \IteratorIterator($this) as $node) {
+            $channel = $viewer->fetchObject($node);
+            foreach (new \IteratorIterator($node) as $client) {
+                $channel['clients'][] = $viewer->fetchObject($client);
+            }
+
+            $data['channels'][] = $channel;
+        }
+
+        return $data;
+    }
+
+    /**
      * Returns the HTML code to display a TeamSpeak 3 viewer.
      *
      * @param  TeamSpeak3_Viewer_Interface $viewer
