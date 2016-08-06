@@ -29,4 +29,6 @@
  * @class TeamSpeak3_Helper_Profiler_Exception
  * @brief Enhanced exception class for TeamSpeak3_Helper_Profiler objects.
  */
-class TeamSpeak3_Helper_Profiler_Exception extends TeamSpeak3_Helper_Exception {}
+class TeamSpeak3_Helper_Profiler_Exception extends TeamSpeak3_Helper_Exception
+{
+}

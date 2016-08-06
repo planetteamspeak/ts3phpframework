@@ -31,183 +31,169 @@
  */
 class TeamSpeak3_Helper_Signal
 {
-  /**
-   * Stores the TeamSpeak3_Helper_Signal object.
-   *
-   * @var TeamSpeak3_Helper_Signal
-   */
-  protected static $instance = null;
+    /**
+     * Stores the TeamSpeak3_Helper_Signal object.
+     *
+     * @var TeamSpeak3_Helper_Signal
+     */
+    protected static $instance = null;
 
-  /**
-   * Stores subscribed signals and their slots.
-   *
-   * @var array
-   */
-  protected $sigslots = array();
+    /**
+     * Stores subscribed signals and their slots.
+     *
+     * @var array
+     */
+    protected $sigslots = array();
 
-  /**
-   * Emits a signal with a given set of parameters.
-   *
-   * @param  string $signal
-   * @param  mixed  $params
-   * @return mixed
-   */
-  public function emit($signal, $params = null)
-  {
-    if(!$this->hasHandlers($signal))
+    /**
+     * Emits a signal with a given set of parameters.
+     *
+     * @param  string $signal
+     * @param  mixed $params
+     * @return mixed
+     */
+    public function emit($signal, $params = null)
     {
-      return;
+        if (!$this->hasHandlers($signal)) {
+            return;
+        }
+
+        if (!is_array($params)) {
+            $params = func_get_args();
+            $params = array_slice($params, 1);
+        }
+
+        foreach ($this->sigslots[$signal] as $slot) {
+            $return = $slot->call($params);
+        }
+
+        return $return;
     }
 
-    if(!is_array($params))
+    /**
+     * Generates a MD5 hash based on a given callback.
+     *
+     * @param  mixed $callback
+     * @param  string
+     * @return void
+     */
+    public function getCallbackHash($callback)
     {
-      $params = func_get_args();
-      $params = array_slice($params, 1);
+        if (!is_callable($callback, TRUE, $callable_name)) {
+            throw new TeamSpeak3_Helper_Signal_Exception("invalid callback specified");
+        }
+
+        return md5($callable_name);
     }
 
-    foreach($this->sigslots[$signal] as $slot)
+    /**
+     * Subscribes to a signal and returns the signal handler.
+     *
+     * @param  string $signal
+     * @param  mixed $callback
+     * @return TeamSpeak3_Helper_Signal_Handler
+     */
+    public function subscribe($signal, $callback)
     {
-      $return = $slot->call($params);
+        if (empty($this->sigslots[$signal])) {
+            $this->sigslots[$signal] = array();
+        }
+
+        $index = $this->getCallbackHash($callback);
+
+        if (!array_key_exists($index, $this->sigslots[$signal])) {
+            $this->sigslots[$signal][$index] = new TeamSpeak3_Helper_Signal_Handler($signal, $callback);
+        }
+
+        return $this->sigslots[$signal][$index];
     }
 
-    return $return;
-  }
-  
-  /**
-   * Generates a MD5 hash based on a given callback.
-   *
-   * @param  mixed  $callback
-   * @param  string
-   * @return void
-   */
-  public function getCallbackHash($callback)
-  {
-    if(!is_callable($callback, TRUE, $callable_name))
+    /**
+     * Unsubscribes from a signal.
+     *
+     * @param  string $signal
+     * @param  mixed $callback
+     * @return void
+     */
+    public function unsubscribe($signal, $callback = null)
     {
-      throw new TeamSpeak3_Helper_Signal_Exception("invalid callback specified");
-    }
-    
-    return md5($callable_name);
-  }
+        if (!$this->hasHandlers($signal)) {
+            return;
+        }
 
-  /**
-   * Subscribes to a signal and returns the signal handler.
-   *
-   * @param  string $signal
-   * @param  mixed  $callback
-   * @return TeamSpeak3_Helper_Signal_Handler
-   */
-  public function subscribe($signal, $callback)
-  {
-    if(empty($this->sigslots[$signal]))
-    {
-      $this->sigslots[$signal] = array();
+        if ($callback !== null) {
+            $index = $this->getCallbackHash($callback);
+
+            if (!array_key_exists($index, $this->sigslots[$signal])) {
+                return;
+            }
+
+            unset($this->sigslots[$signal][$index]);
+        } else {
+            unset($this->sigslots[$signal]);
+        }
     }
 
-    $index = $this->getCallbackHash($callback);
-
-    if(!array_key_exists($index, $this->sigslots[$signal]))
+    /**
+     * Returns all registered signals.
+     *
+     * @return array
+     */
+    public function getSignals()
     {
-      $this->sigslots[$signal][$index] = new TeamSpeak3_Helper_Signal_Handler($signal, $callback);
+        return array_keys($this->sigslots);
     }
 
-    return $this->sigslots[$signal][$index];
-  }
-
-  /**
-   * Unsubscribes from a signal.
-   *
-   * @param  string $signal
-   * @param  mixed  $callback
-   * @return void
-   */
-  public function unsubscribe($signal, $callback = null)
-  {
-    if(!$this->hasHandlers($signal))
+    /**
+     * Returns TRUE there are slots subscribed for a specified signal.
+     *
+     * @param  string $signal
+     * @return boolean
+     */
+    public function hasHandlers($signal)
     {
-      return;
+        return empty($this->sigslots[$signal]) ? FALSE : TRUE;
     }
 
-    if($callback !== null)
+    /**
+     * Returns all slots for a specified signal.
+     *
+     * @param  string $signal
+     * @return array
+     */
+    public function getHandlers($signal)
     {
-      $index = $this->getCallbackHash($callback);
+        if (!$this->hasHandlers($signal)) {
+            return $this->sigslots[$signal];
+        }
 
-      if(!array_key_exists($index, $this->sigslots[$signal]))
-      {
-        return;
-      }
-
-      unset($this->sigslots[$signal][$index]);
-    }
-    else
-    {
-      unset($this->sigslots[$signal]);
-    }
-  }
-
-  /**
-   * Returns all registered signals.
-   *
-   * @return array
-   */
-  public function getSignals()
-  {
-    return array_keys($this->sigslots);
-  }
-
-  /**
-   * Returns TRUE there are slots subscribed for a specified signal.
-   *
-   * @param  string $signal
-   * @return boolean
-   */
-  public function hasHandlers($signal)
-  {
-    return empty($this->sigslots[$signal]) ? FALSE : TRUE;
-  }
-
-  /**
-   * Returns all slots for a specified signal.
-   *
-   * @param  string $signal
-   * @return array
-   */
-  public function getHandlers($signal)
-  {
-    if(!$this->hasHandlers($signal))
-    {
-      return $this->sigslots[$signal];
+        return array();
     }
 
-    return array();
-  }
-
-  /**
-   * Clears all slots for a specified signal.
-   *
-   * @param  string $signal
-   * @return void
-   */
-  public function clearHandlers($signal)
-  {
-    if(!$this->hasHandlers($signal))
+    /**
+     * Clears all slots for a specified signal.
+     *
+     * @param  string $signal
+     * @return void
+     */
+    public function clearHandlers($signal)
     {
-      unset($this->sigslots[$signal]);
-    }
-  }
-
-  /**
-   * Returns a singleton instance of TeamSpeak3_Helper_Signal.
-   *
-   * @return TeamSpeak3_Helper_Signal
-   */
-  public static function getInstance()
-  {
-    if(self::$instance === null)
-    {
-      self::$instance = new self();
+        if (!$this->hasHandlers($signal)) {
+            unset($this->sigslots[$signal]);
+        }
     }
 
-    return self::$instance;
-  }
+    /**
+     * Returns a singleton instance of TeamSpeak3_Helper_Signal.
+     *
+     * @return TeamSpeak3_Helper_Signal
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
 }

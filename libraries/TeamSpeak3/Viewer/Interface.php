@@ -31,12 +31,12 @@
  */
 interface TeamSpeak3_Viewer_Interface
 {
-  /**
-   * Returns the code needed to display a node in a TeamSpeak 3 viewer.
-   *
-   * @param  TeamSpeak3_Node_Abstract $node
-   * @param  array $siblings
-   * @return string
-   */
-  public function fetchObject(TeamSpeak3_Node_Abstract $node, array $siblings = array());
+    /**
+     * Returns the code needed to display a node in a TeamSpeak 3 viewer.
+     *
+     * @param  TeamSpeak3_Node_Abstract $node
+     * @param  array $siblings
+     * @return string
+     */
+    public function fetchObject(TeamSpeak3_Node_Abstract $node, array $siblings = array());
 }

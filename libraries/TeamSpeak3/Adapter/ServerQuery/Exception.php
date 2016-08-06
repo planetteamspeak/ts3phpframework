@@ -29,4 +29,6 @@
  * @class TeamSpeak3_Adapter_ServerQuery_Exception
  * @brief Enhanced exception class for TeamSpeak3_Adapter_ServerQuery objects.
  */
-class TeamSpeak3_Adapter_ServerQuery_Exception extends TeamSpeak3_Adapter_Exception {}
+class TeamSpeak3_Adapter_ServerQuery_Exception extends TeamSpeak3_Adapter_Exception
+{
+}

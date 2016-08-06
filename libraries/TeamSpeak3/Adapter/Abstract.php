@@ -31,130 +31,128 @@
  */
 abstract class TeamSpeak3_Adapter_Abstract
 {
-  /**
-   * Stores user-provided options.
-   *
-   * @var array
-   */
-  protected $options = null;
+    /**
+     * Stores user-provided options.
+     *
+     * @var array
+     */
+    protected $options = null;
 
-  /**
-   * Stores an TeamSpeak3_Transport_Abstract object.
-   *
-   * @var TeamSpeak3_Transport_Abstract
-   */
-  protected $transport = null;
+    /**
+     * Stores an TeamSpeak3_Transport_Abstract object.
+     *
+     * @var TeamSpeak3_Transport_Abstract
+     */
+    protected $transport = null;
 
-  /**
-   * The TeamSpeak3_Adapter_Abstract constructor.
-   *
-   * @param  array $options
-   * @return TeamSpeak3_Adapter_Abstract
-   */
-  public function __construct(array $options)
-  {
-    $this->options = $options;
-
-    if($this->transport === null)
+    /**
+     * The TeamSpeak3_Adapter_Abstract constructor.
+     *
+     * @param  array $options
+     * @return TeamSpeak3_Adapter_Abstract
+     */
+    public function __construct(array $options)
     {
-      $this->syn();
-    }
-  }
+        $this->options = $options;
 
-  /**
-   * The TeamSpeak3_Adapter_Abstract destructor.
-   *
-   * @return void
-   */
-  abstract public function __destruct();
-
-  /**
-   * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
-   * server.
-   *
-   * @throws TeamSpeak3_Adapter_Exception
-   * @return void
-   */
-  abstract protected function syn();
-
-  /**
-   * Commit pending data.
-   *
-   * @return array
-   */
-  public function __sleep()
-  {
-    return array("options");
-  }
-
-  /**
-   * Reconnects to the remote server.
-   *
-   * @return void
-   */
-  public function __wakeup()
-  {
-    $this->syn();
-  }
-
-  /**
-   * Returns the profiler timer used for this connection adapter.
-   *
-   * @return TeamSpeak3_Helper_Profiler_Timer
-   */
-  public function getProfiler()
-  {
-    return TeamSpeak3_Helper_Profiler::get(spl_object_hash($this));
-  }
-
-  /**
-   * Returns the transport object used for this connection adapter.
-   *
-   * @return TeamSpeak3_Transport_Abstract
-   */
-  public function getTransport()
-  {
-    return $this->transport;
-  }
-
-  /**
-   * Loads the transport object object used for the connection adapter and passes a given set
-   * of options.
-   *
-   * @param  array  $options
-   * @param  string $transport
-   * @throws TeamSpeak3_Adapter_Exception
-   * @return void
-   */
-  protected function initTransport($options, $transport = "TeamSpeak3_Transport_TCP")
-  {
-    if(!is_array($options))
-    {
-      throw new TeamSpeak3_Adapter_Exception("transport parameters must provided in an array");
+        if ($this->transport === null) {
+            $this->syn();
+        }
     }
 
-    $this->transport = new $transport($options);
-  }
+    /**
+     * The TeamSpeak3_Adapter_Abstract destructor.
+     *
+     * @return void
+     */
+    abstract public function __destruct();
 
-  /**
-   * Returns the hostname or IPv4 address the underlying TeamSpeak3_Transport_Abstract object
-   * is connected to.
-   *
-   * @return string
-   */
-  public function getTransportHost()
-  {
-    return $this->getTransport()->getConfig("host", "0.0.0.0");
-  }
+    /**
+     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
+     * server.
+     *
+     * @throws TeamSpeak3_Adapter_Exception
+     * @return void
+     */
+    abstract protected function syn();
 
-  /**
-   * Returns the port number of the server the underlying TeamSpeak3_Transport_Abstract object
-   * is connected to.
-   *
-   * @return string
-   */
-  public function getTransportPort()
-  {
-    return $this->getTransport()->getConfig("port", "0");
-  }
+    /**
+     * Commit pending data.
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        return array("options");
+    }
+
+    /**
+     * Reconnects to the remote server.
+     *
+     * @return void
+     */
+    public function __wakeup()
+    {
+        $this->syn();
+    }
+
+    /**
+     * Returns the profiler timer used for this connection adapter.
+     *
+     * @return TeamSpeak3_Helper_Profiler_Timer
+     */
+    public function getProfiler()
+    {
+        return TeamSpeak3_Helper_Profiler::get(spl_object_hash($this));
+    }
+
+    /**
+     * Returns the transport object used for this connection adapter.
+     *
+     * @return TeamSpeak3_Transport_Abstract
+     */
+    public function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * Loads the transport object object used for the connection adapter and passes a given set
+     * of options.
+     *
+     * @param  array $options
+     * @param  string $transport
+     * @throws TeamSpeak3_Adapter_Exception
+     * @return void
+     */
+    protected function initTransport($options, $transport = "TeamSpeak3_Transport_TCP")
+    {
+        if (!is_array($options)) {
+            throw new TeamSpeak3_Adapter_Exception("transport parameters must provided in an array");
+        }
+
+        $this->transport = new $transport($options);
+    }
+
+    /**
+     * Returns the hostname or IPv4 address the underlying TeamSpeak3_Transport_Abstract object
+     * is connected to.
+     *
+     * @return string
+     */
+    public function getTransportHost()
+    {
+        return $this->getTransport()->getConfig("host", "0.0.0.0");
+    }
+
+    /**
+     * Returns the port number of the server the underlying TeamSpeak3_Transport_Abstract object
+     * is connected to.
+     *
+     * @return string
+     */
+    public function getTransportPort()
+    {
+        return $this->getTransport()->getConfig("port", "0");
+    }
 }

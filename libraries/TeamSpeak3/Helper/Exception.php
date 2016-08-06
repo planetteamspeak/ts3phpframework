@@ -29,4 +29,6 @@
  * @class TeamSpeak3_Helper_Exception
  * @brief Enhanced exception class for TeamSpeak3_Helper_* objects.
  */
-class TeamSpeak3_Helper_Exception extends TeamSpeak3_Exception {}
+class TeamSpeak3_Helper_Exception extends TeamSpeak3_Exception
+{
+}

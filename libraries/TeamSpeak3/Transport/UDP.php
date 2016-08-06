@@ -31,83 +31,81 @@
  */
 class TeamSpeak3_Transport_UDP extends TeamSpeak3_Transport_Abstract
 {
-  /**
-   * Connects to a remote server.
-   *
-   * @throws TeamSpeak3_Transport_Exception
-   * @return void
-   */
-  public function connect()
-  {
-    if($this->stream !== null) return;
-
-    $host = strval($this->config["host"]);
-    $port = strval($this->config["port"]);
-
-    $address = "udp://" . (strstr($host, ":") !== FALSE ? "[" . $host . "]" : $host) . ":" . $port;
-    $timeout = (int) $this->config["timeout"];
-
-    $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout);
-
-    if($this->stream === FALSE)
+    /**
+     * Connects to a remote server.
+     *
+     * @throws TeamSpeak3_Transport_Exception
+     * @return void
+     */
+    public function connect()
     {
-      throw new TeamSpeak3_Transport_Exception(TeamSpeak3_Helper_String::factory($errstr)->toUtf8()->toString(), $errno);
+        if ($this->stream !== null) return;
+
+        $host = strval($this->config["host"]);
+        $port = strval($this->config["port"]);
+
+        $address = "udp://" . (strstr($host, ":") !== FALSE ? "[" . $host . "]" : $host) . ":" . $port;
+        $timeout = (int)$this->config["timeout"];
+
+        $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout);
+
+        if ($this->stream === FALSE) {
+            throw new TeamSpeak3_Transport_Exception(TeamSpeak3_Helper_String::factory($errstr)->toUtf8()->toString(), $errno);
+        }
+
+        @stream_set_timeout($this->stream, $timeout);
+        @stream_set_blocking($this->stream, $this->config["blocking"] ? 1 : 0);
     }
 
-    @stream_set_timeout($this->stream, $timeout);
-    @stream_set_blocking($this->stream, $this->config["blocking"] ? 1 : 0);
-  }
-
-  /**
-   * Disconnects from a remote server.
-   *
-   * @return void
-   */
-  public function disconnect()
-  {
-    if($this->stream === null) return;
-
-    $this->stream = null;
-
-    TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");
-  }
-
-  /**
-   * Reads data from the stream.
-   *
-   * @param  integer $length
-   * @throws TeamSpeak3_Transport_Exception
-   * @return TeamSpeak3_Helper_String
-   */
-  public function read($length = 4096)
-  {
-    $this->connect();
-    $this->waitForReadyRead();
-
-    $data = @fread($this->stream, $length);
-
-    TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
-
-    if($data === FALSE)
+    /**
+     * Disconnects from a remote server.
+     *
+     * @return void
+     */
+    public function disconnect()
     {
-      throw new TeamSpeak3_Transport_Exception("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
+        if ($this->stream === null) return;
+
+        $this->stream = null;
+
+        TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");
     }
 
-    return new TeamSpeak3_Helper_String($data);
-  }
+    /**
+     * Reads data from the stream.
+     *
+     * @param  integer $length
+     * @throws TeamSpeak3_Transport_Exception
+     * @return TeamSpeak3_Helper_String
+     */
+    public function read($length = 4096)
+    {
+        $this->connect();
+        $this->waitForReadyRead();
 
-  /**
-   * Writes data to the stream.
-   *
-   * @param  string $data
-   * @return void
-   */
-  public function send($data)
-  {
-    $this->connect();
+        $data = @fread($this->stream, $length);
 
-    @stream_socket_sendto($this->stream, $data);
+        TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
-    TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
-  }
+        if ($data === FALSE) {
+            throw new TeamSpeak3_Transport_Exception("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
+        }
+
+        return new TeamSpeak3_Helper_String($data);
+    }
+
+    /**
+     * Writes data to the stream.
+     *
+     * @param  string $data
+     * @return void
+     */
+    public function send($data)
+    {
+        $this->connect();
+
+        @stream_socket_sendto($this->stream, $data);
+
+        TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
+    }
 }

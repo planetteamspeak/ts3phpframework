@@ -29,4 +29,6 @@
  * @class TeamSpeak3_Adapter_TSDNS_Exception
  * @brief Enhanced exception class for TeamSpeak3_Adapter_TSDNS objects.
  */
-class TeamSpeak3_Adapter_TSDNS_Exception extends TeamSpeak3_Adapter_Exception {}
+class TeamSpeak3_Adapter_TSDNS_Exception extends TeamSpeak3_Adapter_Exception
+{
+}

@@ -29,4 +29,6 @@
  * @class TeamSpeak3_Helper_Signal_Exception
  * @brief Enhanced exception class for TeamSpeak3_Helper_Signal objects.
  */
-class TeamSpeak3_Helper_Signal_Exception extends TeamSpeak3_Helper_Exception {}
+class TeamSpeak3_Helper_Signal_Exception extends TeamSpeak3_Helper_Exception
+{
+}
