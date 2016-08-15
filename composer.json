@@ -1,5 +1,5 @@
 {
-  "name": "planetteamspeak/ts3phpframework",
+  "name": "planetteamspeak/ts3-php-framework",
   "type": "library",
   "description": "Modern use-at-will framework that provides individual components to manage TeamSpeak 3 Server instances",
   "keywords": ["ts3", "teamspeak","server","query","filetransfer","management","interface","api"],
