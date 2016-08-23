@@ -89,6 +89,28 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
 
     return $this->getParent()->request($cmd, $throw);
   }
+  
+  /**
+   * Returns an array filled with TeamSpeak3_Node_Server objects.
+   *
+   * @param  array $filter
+   * @return array
+   */
+  public function serverInfo()
+  {
+	return $this->request("serverinfo")->toList();
+  }
+  
+  /**
+   * Resets the server info.
+   *
+   * @return void
+   */
+  public function serverInfoReset()
+  {
+    $this->resetNodeList();
+    $this->serverInfo = null;
+  }
 
   /**
    * Returns an array filled with TeamSpeak3_Node_Channel objects.
