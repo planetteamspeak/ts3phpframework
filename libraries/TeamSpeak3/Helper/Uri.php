@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Uri.php 10/11/2013 11:35:21 scp@orilla $
+ * $Id: Uri.php 06/06/2016 22:27:13 scp@Svens-iMac $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.23
+ * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
@@ -155,7 +155,7 @@ class TeamSpeak3_Helper_Uri
     $this->query = (isset($matches[6])) ? $matches[6] : '';
     $this->fragment = (isset($matches[8])) ? $matches[8] : '';
 
-    $status = @preg_match("~^(([^:@]*)(:([^@]*))?@)?([^:]+)(:(.*))?$~", (isset($matches[3])) ? $matches[3] : "", $matches);
+    $status = @preg_match("~^(([^:@]*)(:([^@]*))?@)?((?(?=[[])[[][^]]+[]]|[^:]+))(:(.*))?$~", (isset($matches[3])) ? $matches[3] : "", $matches);
 
     if($status === FALSE)
     {
@@ -166,7 +166,7 @@ class TeamSpeak3_Helper_Uri
 
     $this->user = isset($matches[2]) ? $matches[2] : "";
     $this->pass = isset($matches[4]) ? $matches[4] : "";
-    $this->host = isset($matches[5]) ? $matches[5] : "";
+    $this->host = isset($matches[5]) === TRUE ? preg_replace('~^\[([^]]+)\]$~', '\1', $matches[5]) : "";
     $this->port = isset($matches[7]) ? $matches[7] : "";
   }
 

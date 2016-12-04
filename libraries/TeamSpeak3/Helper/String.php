@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: String.php 10/11/2013 11:35:21 scp@orilla $
+ * $Id: String.php 06/06/2016 22:27:13 scp@Svens-iMac $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.23
+ * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
@@ -51,7 +51,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
    */
   public function __construct($string)
   {
-    $this->string = strval($string);
+    $this->string = (string) $string;
   }
 
   /**
@@ -177,7 +177,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
    * Returns true if the string contains $pattern.
    *
    * @param  string  $pattern
-   * @param  booean  $regexp
+   * @param  boolean $regexp
    * @return boolean
    */
   public function contains($pattern, $regexp = FALSE)
@@ -270,7 +270,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
 
     $total = count($sections);
     $first = intval($first);
-    $last = intval($last);
+    $last  = intval($last);
 
     if($first > $total) return null;
     if($first > $last) $last = $first;
@@ -393,7 +393,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
    */
   public function isInt()
   {
-    return (is_numeric($this->string) && !$this->contains(".")) ? TRUE : FALSE;
+    return (is_numeric($this->string) && !$this->contains(".") && !$this->contains("x")) ? TRUE : FALSE;
   }
 
   /**
@@ -491,7 +491,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
   /**
    * Decodes the string with MIME base64 and returns the result as an TeamSpeak3_Helper_String
    *
-   * @param  string
+   * @param  string $base64
    * @return TeamSpeak3_Helper_String
    */
   public static function fromBase64($base64)
@@ -519,7 +519,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
   /**
    * Returns the TeamSpeak3_Helper_String based on a given hex value.
    *
-   * @param  string
+   * @param  string $hex
    * @throws TeamSpeak3_Helper_Exception
    * @return TeamSpeak3_Helper_String
    */
@@ -550,7 +550,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
     $utf8_accents = array(
       "à" => "a",
       "ô" => "o",
-      "�?" => "d",
+      "ď" => "d",
       "ḟ" => "f",
       "ë" => "e",
       "š" => "s",
@@ -560,9 +560,9 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "ř" => "r",
       "ț" => "t",
       "ň" => "n",
-      "�?" => "a",
+      "ā" => "a",
       "ķ" => "k",
-      "�?" => "s",
+      "ŝ" => "s",
       "ỳ" => "y",
       "ņ" => "n",
       "ĺ" => "l",
@@ -573,7 +573,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "ě" => "e",
       "é" => "e",
       "ç" => "c",
-      "�?" => "w",
+      "ẁ" => "w",
       "ċ" => "c",
       "õ" => "o",
       "ṡ" => "s",
@@ -591,7 +591,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "ŵ" => "w",
       "ṫ" => "t",
       "ū" => "u",
-      "�?" => "c",
+      "č" => "c",
       "ö" => "oe",
       "è" => "e",
       "ŷ" => "y",
@@ -622,7 +622,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "ñ" => "n",
       "ń" => "n",
       "ĥ" => "h",
-      "�?" => "g",
+      "ĝ" => "g",
       "đ" => "d",
       "ĵ" => "j",
       "ÿ" => "y",
@@ -639,8 +639,8 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "ī" => "i",
       "ã" => "a",
       "ġ" => "g",
-      "�?" => "m",
-      "�?" => "o",
+      "ṁ" => "m",
+      "ō" => "o",
       "ĩ" => "i",
       "ù" => "u",
       "į" => "i",
@@ -700,7 +700,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "È" => "E",
       "Ŷ" => "Y",
       "Ą" => "A",
-      "�?" => "L",
+      "Ł" => "L",
       "Ų" => "U",
       "Ů" => "U",
       "Ş" => "S",
@@ -712,12 +712,12 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "Ḃ" => "B",
       "Å" => "A",
       "Ì" => "I",
-      "�?" => "I",
+      "Ï" => "I",
       "Ḋ" => "D",
       "Ť" => "T",
       "Ŗ" => "R",
       "Ä" => "Ae",
-      "�?" => "I",
+      "Í" => "I",
       "Ŕ" => "R",
       "Ê" => "E",
       "Ü" => "Ue",
@@ -727,15 +727,15 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "Ń" => "N",
       "Ĥ" => "H",
       "Ĝ" => "G",
-      "�?" => "D",
+      "Đ" => "D",
       "Ĵ" => "J",
       "Ÿ" => "Y",
       "Ũ" => "U",
       "Ŭ" => "U",
       "Ư" => "U",
       "Ţ" => "T",
-      "�?" => "Y",
-      "�?" => "O",
+      "Ý" => "Y",
+      "Ő" => "O",
       "Â" => "A",
       "Ľ" => "L",
       "Ẅ" => "W",
@@ -749,10 +749,10 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
       "Ù" => "U",
       "Į" => "I",
       "Ź" => "Z",
-      "�?" => "A",
+      "Á" => "A",
       "Û" => "U",
       "Þ" => "Th",
-      "�?" => "Dh",
+      "Ð" => "Dh",
       "Æ" => "Ae",
       "Ĕ" => "E",
       "Œ" => "Oe",

@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: UDP.php 10/11/2013 11:35:22 scp@orilla $
+ * $Id: UDP.php 06/06/2016 22:27:13 scp@Svens-iMac $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.23
+ * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
@@ -44,8 +44,8 @@ class TeamSpeak3_Transport_UDP extends TeamSpeak3_Transport_Abstract
     $host = strval($this->config["host"]);
     $port = strval($this->config["port"]);
 
-    $address = "udp://" . $host . ":" . $port;
-    $timeout = intval($this->config["timeout"]);
+    $address = "udp://" . (strstr($host, ":") !== FALSE ? "[" . $host . "]" : $host) . ":" . $port;
+    $timeout = (int) $this->config["timeout"];
 
     $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout);
 

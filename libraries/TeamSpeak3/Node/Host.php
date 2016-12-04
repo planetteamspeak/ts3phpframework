@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Host.php 10/11/2013 11:35:21 scp@orilla $
+ * $Id: Host.php 06/06/2016 22:27:13 scp@Svens-iMac $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.23
+ * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
@@ -125,7 +125,7 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
       $this->version = $this->request("version")->toList();
     }
 
-    return ($ident && array_key_exists($ident, $this->version)) ? $this->version[$ident] : $this->version;
+    return ($ident && isset($this->version[$ident])) ? $this->version[$ident] : $this->version;
   }
 
   /**
@@ -467,9 +467,9 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
    *
    * @return array
    */
-  public function bindingList()
+  public function bindingList($subsystem = "voice")
   {
-    return $this->request("bindinglist")->toArray();
+    return $this->execute("bindinglist", array("subsystem" => $subsystem))->toArray();
   }
 
   /**
@@ -906,7 +906,7 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
   {
     $this->whoami();
 
-    $this->whoami[$ident] = (is_numeric($value)) ? intval($value) : TeamSpeak3_Helper_String::factory($value);
+    $this->whoami[$ident] = (is_numeric($value)) ? (int) $value : TeamSpeak3_Helper_String::factory($value);
   }
 
   /**
@@ -1175,8 +1175,17 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     {
       $func = array_shift($server);
       $args = array_shift($server);
-
-      call_user_func_array(array($this, $func), $args);
+      
+      try
+      {
+        call_user_func_array(array($this, $func), $args);
+      }
+      catch(Exception $e)
+      {
+        $class = get_class($e);
+        
+        throw new $class($e->getMessage(), $e->getCode());
+      }
     }
   }
 

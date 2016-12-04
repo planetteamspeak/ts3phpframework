@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Channel.php 10/11/2013 11:35:21 scp@orilla $
+ * $Id: Channel.php 06/06/2016 22:27:13 scp@Svens-iMac $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.23
+ * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
@@ -168,7 +168,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    *
    * @param  integer $cldbid
    * @param  boolean $permsid
-   * @return void
+   * @return array
    */
   public function clientPermList($cldbid, $permsid = FALSE)
   {
@@ -186,7 +186,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function clientPermAssign($cldbid, $permid, $permvalue)
   {
-    return $this->getParent()->channelClientPermAssign($this->getId(), $cldbid, $permid, $permvalue);
+    $this->getParent()->channelClientPermAssign($this->getId(), $cldbid, $permid, $permvalue);
   }
 
   /**
@@ -196,7 +196,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function clientPermAssignByName($cldbid, $permname, $permvalue)
   {
-    return $this->clientPermAssign($cldbid, $permname, $permvalue);
+    $this->clientPermAssign($cldbid, $permname, $permvalue);
   }
 
   /**
@@ -208,7 +208,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function clientPermRemove($cldbid, $permid)
   {
-    return $this->getParent()->channelClientPermRemove($this->getId(), $cldbid, $permid);
+    $this->getParent()->channelClientPermRemove($this->getId(), $cldbid, $permid);
   }
 
   /**
@@ -218,7 +218,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function clientPermRemoveByName($cldbid, $permname)
   {
-    return $this->clientPermRemove($cldbid, $permname);
+    $this->clientPermRemove($cldbid, $permname);
   }
 
   /**
@@ -242,7 +242,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function permAssign($permid, $permvalue)
   {
-    return $this->getParent()->channelPermAssign($this->getId(), $permid, $permvalue);
+    $this->getParent()->channelPermAssign($this->getId(), $permid, $permvalue);
   }
 
   /**
@@ -252,7 +252,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function permAssignByName($permname, $permvalue)
   {
-    return $this->permAssign($permname, $permvalue);
+    $this->permAssign($permname, $permvalue);
   }
 
   /**
@@ -263,7 +263,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function permRemove($permid)
   {
-    return $this->getParent()->channelPermRemove($this->getId(), $permid);
+    $this->getParent()->channelPermRemove($this->getId(), $permid);
   }
 
   /**
@@ -273,7 +273,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function permRemoveByName($permname)
   {
-    return $this->permRemove($permname);
+    $this->permRemove($permname);
   }
 
   /**
@@ -282,7 +282,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    * @param  string  $cpw
    * @param  string  $path
    * @param  boolean $recursive
-   * @return void
+   * @return array
    */
   public function fileList($cpw = "", $path = "/", $recursive = FALSE)
   {
@@ -314,7 +314,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function fileRename($cpw = "", $oldname = "/", $newname = "/", $tcid = null, $tcpw = null)
   {
-    return $this->getParent()->channelFileRename($this->getId(), $cpw, $oldname, $newname, $tcid, $tcpw);
+    $this->getParent()->channelFileRename($this->getId(), $cpw, $oldname, $newname, $tcid, $tcpw);
   }
 
   /**
@@ -326,7 +326,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function fileDelete($cpw = "", $name = "/")
   {
-    return $this->getParent()->channelFileDelete($this->getId(), $cpw, $name);
+    $this->getParent()->channelFileDelete($this->getId(), $cpw, $name);
   }
 
   /**
@@ -338,7 +338,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function dirCreate($cpw = "", $dirname = "/")
   {
-    return $this->getParent()->channelDirCreate($this->getId(), $cpw, $dirname);
+    $this->getParent()->channelDirCreate($this->getId(), $cpw, $dirname);
   }
 
   /**
@@ -401,7 +401,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
     if($this->iconIsLocal("channel_icon_id") || $this["channel_icon_id"] == 0) return;
 
     $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("channel_icon_id"));
-    $transfer = TeamSpeak3::factory("filetransfer://" . $download["host"] . ":" . $download["port"]);
+    $transfer = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== FALSE ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
     return $transfer->download($download["ftkey"], $download["size"]);
   }
@@ -446,8 +446,6 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
   public function delete($force = FALSE)
   {
     $this->getParent()->channelDelete($this->getId(), $force);
-
-    unset($this);
   }
 
   /**
