@@ -171,8 +171,9 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
         else
         {
           list($ident, $value) = $pair->split(TeamSpeak3::SEPARATOR_PAIR, 2);
-
-          $array[$i][$ident->toString()] = $value->isInt() ? $value->toInt() : (!func_num_args() ? $value->unescape() : $value);
+          if ($ident == 'msg')
+          else
+            $array[$i][$ident->toString()] = $value->isInt() ? $value->toInt() : (!func_num_args() ? $value->unescape() : $value);
         }
       }
     }
