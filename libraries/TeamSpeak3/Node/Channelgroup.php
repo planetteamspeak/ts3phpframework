@@ -148,7 +148,7 @@ class TeamSpeak3_Node_Channelgroup extends TeamSpeak3_Node_Abstract
   /**
    * Returns a list of clients assigned to the server group specified.
    *
-   * @return array
+   * @return array|TeamSpeak3_Node_Client[]
    */
   public function clientList()
   {
