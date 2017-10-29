@@ -9,11 +9,15 @@
    ! Important - Take note!
 ===============================================================================
 
-=== Release 1.1.26 - 18 Jun 2016 ===
+=== Release 1.1.27 - 29 Oct 2017 ===
+- annotations added for IDE type hinting, thanks @thhan
+- documentation update
+
+=== Release 1.1.26 - 28 Oct 2017 ===
 - groups are now correctly sorted by sort id instead of internal id
 - documentation update
 
-=== Release 1.1.25 - 18 Jun 2016 ===
+=== Release 1.1.25 - 8 May 2017 ===
 - fixed PHP 7.1 incompatibile `unset($this)`, fixed by @venyii
 - fixed `serverqueryWaitTimeout` event, reverts #16 (string vs. object
 reference) until cyclic reference fix, fixed by @I-MrFixIt-I 
