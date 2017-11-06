@@ -6,5 +6,6 @@ services:
   - docker
 
 befor_install:
+  - docker pull solidnerd/teamspeak:3.0.13.8
   - docker run -d --name="teamspeak_server" -p "9987:9987/udp" -p 10011:10011 -p 30033:30033 solidnerd/teamspeak:3.0.13.8
   - docker ps -a
