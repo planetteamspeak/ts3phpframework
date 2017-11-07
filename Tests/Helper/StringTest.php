@@ -34,9 +34,27 @@ class StringTest extends TestCase
         $this->assertTrue($string->endsWith("!"));
     }
 
-    public function testFindFirst(){
+    public function testFindFirst()
+    {
         $string = new \TeamSpeak3_Helper_String("Hello World!");
-        $this->assertEquals(3,$string->findFirst("l"));
+        $this->assertEquals(2, $string->findFirst("l"));
+    }
 
+    public function testFindLast()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello World!");
+        $this->assertEquals(9, $string->findFirst("l"));
+    }
+
+    public function testToLower()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello World!");
+        $this->assertEquals("hello world!", $string->toLower());
+    }
+
+    public function testToUpper()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello World!");
+        $this->assertEquals("HELLO WORLD!", $string->toUpper());
     }
 }
