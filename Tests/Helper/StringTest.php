@@ -43,7 +43,7 @@ class StringTest extends TestCase
     public function testFindLast()
     {
         $string = new \TeamSpeak3_Helper_String("Hello World!");
-        $this->assertEquals(9, $string->findFirst("l"));
+        $this->assertEquals(2, $string->findFirst("l"));
     }
 
     public function testToLower()
