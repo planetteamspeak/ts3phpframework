@@ -21,4 +21,22 @@ class StringTest extends TestCase
 
         $this->assertEquals("Hello Word!", (string)$string);
     }
+
+    public function testStartsWith()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello World!");
+        $this->assertTrue($string->startsWith("Hello"));
+    }
+
+    public function testEndsWith()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello World!");
+        $this->assertTrue($string->endsWith("!"));
+    }
+
+    public function testFindFirst(){
+        $string = new \TeamSpeak3_Helper_String("Hello World!");
+        $this->assertEquals(3,$string->findFirst("l"));
+
+    }
 }
