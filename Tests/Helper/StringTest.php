@@ -10,7 +10,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once('../../libraries/TeamSpeak3/Helper/String.php');
+require_once('libraries/TeamSpeak3/Helper/String.php');
 
 class StringTest extends TestCase
 {
@@ -19,6 +19,6 @@ class StringTest extends TestCase
         $string = new \TeamSpeak3_Helper_String("Hello World!");
         $string->replace("World", "Word");
 
-        $this->assertEquals("Hello Word!", (string) $string);
+        $this->assertEquals("Hello Word!", (string)$string);
     }
 }
