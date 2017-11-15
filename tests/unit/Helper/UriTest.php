@@ -1,12 +1,12 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_Constraint_IsType as PHPUnit_IsType;
-
 require_once('lib/TeamSpeak3/Exception.php');
 require_once('lib/TeamSpeak3/Helper/Exception.php');
 require_once('lib/TeamSpeak3/Helper/Signal.php');
 require_once('lib/TeamSpeak3/Helper/Uri.php');
+
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_Constraint_IsType as PHPUnit_IsType;
 
 use \TeamSpeak3_Helper_Uri as TS3_URI;
 
