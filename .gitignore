@@ -1,6 +1,7 @@
 .*
 !.gitignore
 !.travis.yml
+!.ts3config/teamspeak3.yml.dist
 documentation
 Doxyfile
 composer.lock
