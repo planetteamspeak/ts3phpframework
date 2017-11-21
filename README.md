@@ -20,6 +20,18 @@ The TS3 PHP Framework currently supports PHP 5.2.1 or later, but we strongly rec
 
 Note that the majority of TS3 PHP Framework development and deployment is done on nginx, so there is more community experience and testing performed on Apache than on other web servers.
 
+### Installation
+You can either install the TS3 PHP Framework by manually downloading it or using Composer:
+```
+composer require planetteamspeak/ts3-php-framework
+```
+The above command will install the latest stable release version.
+
+If you want to install the TS3 PHP Framework's `master` branch instead (which may not be released / tagged yet), you need to run:
+```
+composer require planetteamspeak/ts3-php-framework:dev-master
+```
+
 ### Features
 
 Features of the TS3 PHP Framework include:
