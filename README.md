@@ -25,9 +25,9 @@ You can either install the TS3 PHP Framework by manually downloading it or using
 ```
 composer require planetteamspeak/ts3-php-framework
 ```
-The above command will install the latest released version.
+The above command will install the latest stable release version.
 
-If you want to install the TS3 PHP Framework's `master` branch - which is may not released / tagged yet - instead, you need to run
+If you want to install the TS3 PHP Framework's `master` branch instead (which may not be released / tagged yet), you need to run:
 ```
 composer require planetteamspeak/ts3-php-framework:dev-master
 ```
