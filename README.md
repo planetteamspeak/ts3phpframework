@@ -2,7 +2,7 @@
 
 Current Version: **1.1.24**
 
-Current Pre-Release: **1.1.27**
+Current Pre-Release: **1.1.28**
 
 Initially released in January 2010, the TS3 PHP Framework is a powerful, open source, object-oriented framework implemented in PHP 5 and licensed under the GNU General Public License. It’s based on simplicity and a rigorously tested agile codebase. Extend the functionality of your servers with scripts or create powerful web applications to manage all features of your TeamSpeak 3 Server instances.
 
