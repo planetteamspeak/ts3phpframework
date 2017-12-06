@@ -1,13 +1,4 @@
 <?php
-/**
- * ts3phpframework
- * Created by PhpStorm.
- * File: StringTest.php
- * User: thhan
- * Date: 07.11.17
- * Time: 10:56
- */
-
 use PHPUnit\Framework\TestCase;
 
 require_once('libraries/TeamSpeak3/Helper/String.php');
