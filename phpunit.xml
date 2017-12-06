@@ -12,7 +12,7 @@
          bootstrap="Tests/bootstrap.php"
 >
   <testsuites>
-    <testsuite name="TS3PHPFramework Test Suite">
+    <testsuite name="Teamspeak 3 PHP Framework Test Suite">
       <directory>./Tests/</directory>
     </testsuite>
   </testsuites>
