@@ -44,6 +44,10 @@ Features of the TS3 PHP Framework include:
 * Query mechanisms for several official services such as the blacklist and auto-update servers
 * Dynamic signal slots for event based scripting
 
+### Tests
+
+To run all tests use `php vendor/phpunit/phpunit`.
+
 ### Useful Links
 
 Visit the following pages for more information about the TS3 PHP Framework:
