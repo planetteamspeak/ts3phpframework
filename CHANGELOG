@@ -10,16 +10,16 @@
 ===============================================================================
 
 === Release 1.1.28 - 6 Dec 2017 ===
-- Added first PHPUnit tests, Travis CI config, thanks @thhan
-- documentation update, thanks @Sebi94nbg and @thhan
++ Added first PHPUnit tests, Travis CI config, thanks @thhan
+* documentation update, thanks @Sebi94nbg and @thhan
 
 === Release 1.1.27 - 29 Oct 2017 ===
-- annotations added for IDE type hinting, thanks @thhan
-- documentation update
++ annotations added for IDE type hinting, thanks @thhan
+* documentation update
 
 === Release 1.1.26 - 28 Oct 2017 ===
-- groups are now correctly sorted by sort id instead of internal id
-- documentation update
+* groups are now correctly sorted by sort id instead of internal id
+* documentation update
 
 === Release 1.1.25 - 8 May 2017 ===
 - fixed PHP 7.1 incompatibile `unset($this)`, fixed by @venyii
