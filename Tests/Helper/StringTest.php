@@ -1,4 +1,5 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 
 require_once('libraries/TeamSpeak3/Helper/String.php');
@@ -63,5 +64,14 @@ class StringTest extends TestCase
         $string = new \TeamSpeak3_Helper_String("Hello world!");
         $this->assertEquals("ello", $string->substr(1, 4));
         $this->assertEquals("world", $string->substr(-6, 5));
+    }
+
+    public function testSplit()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $array  = $string->split('l', 3);
+        $this->assertCount(3, $array);
+        $this->assertEquals('He', $array[0]);
+        $this->assertEmpty($array[1]);
     }
 }
