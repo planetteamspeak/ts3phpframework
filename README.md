@@ -2,7 +2,7 @@
 
 Current Version: **1.1.24**
 
-Current Pre-Release: **1.1.27**
+Current Pre-Release: **1.1.28**
 
 Initially released in January 2010, the TS3 PHP Framework is a powerful, open source, object-oriented framework implemented in PHP 5 and licensed under the GNU General Public License. It’s based on simplicity and a rigorously tested agile codebase. Extend the functionality of your servers with scripts or create powerful web applications to manage all features of your TeamSpeak 3 Server instances.
 
@@ -20,6 +20,18 @@ The TS3 PHP Framework currently supports PHP 5.2.1 or later, but we strongly rec
 
 Note that the majority of TS3 PHP Framework development and deployment is done on nginx, so there is more community experience and testing performed on Apache than on other web servers.
 
+### Installation
+You can either install the TS3 PHP Framework by manually downloading it or using Composer:
+```
+composer require planetteamspeak/ts3-php-framework
+```
+The above command will install the latest stable release version.
+
+If you want to install the TS3 PHP Framework's `master` branch instead (which may not be released / tagged yet), you need to run:
+```
+composer require planetteamspeak/ts3-php-framework:dev-master
+```
+
 ### Features
 
 Features of the TS3 PHP Framework include:
@@ -31,6 +43,10 @@ Features of the TS3 PHP Framework include:
 * Powerful error handling capablities using exceptions and customizable error messages
 * Query mechanisms for several official services such as the blacklist and auto-update servers
 * Dynamic signal slots for event based scripting
+
+### Tests
+
+To run all tests use `php vendor/phpunit/phpunit`.
 
 ### Useful Links
 

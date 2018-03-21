@@ -1,0 +1,18 @@
+sudo: required
+
+language: php
+
+php:
+  - 5.6
+
+services:
+  - docker
+
+before_install:
+  - docker pull solidnerd/teamspeak
+  - docker run -d --name="teamspeak_server" -p "9987:9987/udp" -p 10011:10011 -p 30033:30033 solidnerd/teamspeak:3.0.13.8
+  - docker ps -a
+  - docker logs teamspeak_server
+
+before_script:
+  - composer install
