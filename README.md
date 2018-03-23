@@ -2,7 +2,7 @@
 
 Current Version: **1.1.24**
 
-Current Pre-Release: **1.1.28**
+Current Pre-Release: **1.1.31**
 
 Initially released in January 2010, the TS3 PHP Framework is a powerful, open source, object-oriented framework implemented in PHP 5 and licensed under the GNU General Public License. It’s based on simplicity and a rigorously tested agile codebase. Extend the functionality of your servers with scripts or create powerful web applications to manage all features of your TeamSpeak 3 Server instances.
 
@@ -37,44 +37,82 @@ composer require planetteamspeak/ts3-php-framework:dev-master
 Before you can run commands like "get version of server instance" or "update some settings", you need to specify to which instance you want to connect to. This is done using the URI in `TeamSpeak3::factory("$uri")`.
 
 The base `$uri` looks always like this:
-```
+```php
 $uri = "serverquery://username:password@127.0.0.1:10011/";
 ```
-You also can add some options behind the last `/`. Tell the URI, that you want to connect to a specific virtual TeamSpeak 3 server using it's `virtualserver_port`:
+_Note: If a piece of your URI contains [special characters](https://github.com/planetteamspeak/ts3phpframework#encoding-uri-special-characters), you will need to encode that piece using [urlrawencode](http://us2.php.net/manual/en/function.rawurlencode.php):_
+```php
+$uri = "serverquery://" . urlrawencode('username') . ":" . urlrawencode('password') . "@127.0.0.1:10011/";
+// Example
+$uri = "serverquery://" . urlrawencode('test!@#$%^&*()_+') . ":" . urlrawencode('sd5kjKJ2') . "@127.0.0.1:10011/";
 ```
+
+You also can add some options behind the last `/` in the URI.
+
+To connect to a specific virtual TeamSpeak 3 server using it's `virtualserver_port`:
+```php
 $uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987";
 ```
-Additional options can be added using a simple `&` like in GET-URLs:
-```
+Additional options can be added using a simple `&` like in HTTP GET URLs:
+```php
 $uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987&blocking=0";
 ```
-The list of available options can be found in the documentation: [TeamSpeak3 > factory](https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#aa0f699eba7225b3a95a99f80b14e73b3)
+The list of available options can be found in [TeamSpeak3 > factory](https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#aa0f699eba7225b3a95a99f80b14e73b3)
 
-The TS3 PHP Framework does also support connections to IPv6 TeamSpeak hosts. An IPv6 address must be written within 
+The TS3 PHP Framework supports connecting to IPv6 TeamSpeak hosts. An IPv6 address must be written within 
 square brackets:
-```
+```php
 $uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10011/";
 ```
 
-In your PHP code, you can use this simple trick to always get the correct URI based on the type of your provided IP address `$ip`:
-```
+You can use this simple trick to always get the correct URI based on type of provided IP address `$ip`:
+```php
 if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-	$uri = "serverquery://username:password@${ip}:10011/";
+  $uri = "serverquery://username:password@${ip}:10011/";
 } elseif(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-	$uri = "serverquery://username:password@[${ip}]:10011/";
+  $uri = "serverquery://username:password@[${ip}]:10011/";
 } else {
-	echo "${ip} is no valid IPv4 or IPv6 address!";
+  echo "${ip} is no valid IPv4 or IPv6 address!";
 }
 ```
 
+#### Encoding URI Special Characters
+When passing URI as argument or parameter, some parts may need to contain special characters.
+You should use [urlrawencode](http://us2.php.net/manual/en/function.rawurlencode.php) on these parts:
+```php
+// Bad:
+$uri = "serverquery://test!@#$%^&*()_+:sd5kjKJ2@127.0.0.1:10011/";
+// Good:
+$uri = "serverquery://" . urlrawencode('test!@#$%^&*()_+') . ":sd5kjKJ2@127.0.0.1:10011/";
+```
+_Note: Encode URI components rather than entire URI string. Valid, special characters need to remain unencoded!
+
+Special characters are defined in the newer [RFC 3986](https://tools.ietf.org/html/rfc3986#section-2.3) as any character not in the (ascii, latin) set:
+```
+ALPHA / DIGIT / "-" / "." / "_" / "~"
+```
+
+Additional:
+* Most common situation will be encoding only 'username', 'password' pieces.
+* Do not encode if not using special characters.
+* Path and query components need additional parsing, e.g. we don't want to encode valid '/' and '&'.
+* Fragment component may need to be encoded using older `urlencode`.
+* [RFC 1738](https://tools.ietf.org/html/rfc1738) - Old RFC used for URI encoding
+* [RFC 3986](https://tools.ietf.org/html/rfc3986) - Current URI standard
+* [RFC 2396 - Section 3](https://tools.ietf.org/html/rfc2396#section-3.4) - Valid URI syntax (specifically, components of)
+* [PHP.net - urlrawencode](http://us2.php.net/manual/en/function.rawurlencode.php)
+
+
+
+
 #### Usual PHP Code (`require` solution)
 Usual PHP code means a simple created `file.php`, where you start writing your code like this:
-```
+```php
 <?php
 	echo "Hello World!";
 ```
 When you use this solution, you'll probably start using the TS3 PHP  Framework like this:
-```
+```php
 <?php
 	// load framework files
 	require_once("libraries/TeamSpeak3/TeamSpeak3.php");
@@ -99,7 +137,7 @@ When you use this solution, you'll probably start using the TS3 PHP  Framework l
 
 #### PHP Code in [MVC](https://en.wikipedia.org/wiki/Model–view–controller) (`use` solution)
 When you use a MVC based software like Symfony, CakePHP, Laravel or something similar, you'll probably  use something like this:
-```
+```php
 <?php
 
 use TeamSpeak3;
@@ -147,7 +185,7 @@ Features of the TS3 PHP Framework include:
 
 ### Tests
 
-To run all tests use `php vendor/phpunit/phpunit`.
+To run all tests use `php vendor/bin/phpunit`.
 
 ### Useful Links
 
@@ -155,6 +193,7 @@ Visit the following pages for more information about the TS3 PHP Framework:
 
 * [Online Documentation](https://docs.planetteamspeak.com/ts3/php/framework/index.html)
 * [Changelog](https://docs.planetteamspeak.com/ts3/php/framework/changelog.txt)
+* [Changelog (dev)](https://github.com/planetteamspeak/ts3phpframework/blob/master/CHANGELOG)
 
 Speed up new development and reduce maintenance costs by using this nifty piece of software!
 
