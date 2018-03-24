@@ -305,40 +305,6 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
   }
 
   /**
-   * Returns the first TeamSpeak3_Node_Server object matching the given TSDNS hostname. Like the
-   * TeamSpeak 3 Client, this method will start looking for a TSDNS server on the second-level
-   * domain including a fallback to the third-level domain of the specified $tsdns parameter.
-   *
-   * @param  string $tsdns
-   * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-   * @return TeamSpeak3_Node_Server
-   */
-  public function serverGetByTSDNS($tsdns)
-  {
-    $parts = TeamSpeak3_Helper_Uri::getFQDNParts($tsdns);
-    $query = TeamSpeak3_Helper_String::factory(array_shift($parts));
-
-    while($part = array_shift($parts))
-    {
-      $query->prepend($part);
-
-      try
-      {
-        $port = TeamSpeak3::factory("tsdns://" . $query . "/?timeout=3")->resolve($tsdns)->section(":", 1);
-
-        return $this->serverGetByPort($port == "" ? 9987 : $port);
-      }
-      catch(TeamSpeak3_Transport_Exception $e)
-      {
-        /* skip "Connection timed out" and "Connection refused" */
-        if($e->getCode() != 10060 && $e->getCode() != 10061) throw $e;
-      }
-    }
-
-    throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid serverID", 0x400);
-  }
-
-  /**
    * Creates a new virtual server using given properties and returns an assoc
    * array containing the new ID and initial admin token.
    *
