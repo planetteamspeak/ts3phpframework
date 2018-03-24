@@ -1547,16 +1547,37 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    * @param  integer $cgid
    * @param  integer $cid
    * @param  integer $cldbid
+   * @param  boolean $resolve
    * @return array
    */
-  public function channelGroupClientList($cgid = null, $cid = null, $cldbid = null)
+  public function channelGroupClientList($cgid = null, $cid = null, $cldbid = null, $resolve = FALSE)
   {
     if($this["virtualserver_default_channel_group"] == $cgid)
     {
       return array();
     }
 
-    return $this->execute("channelgroupclientlist", array("cgid" => $cgid, "cid" => $cid, "cldbid" => $cldbid))->toArray();
+    try
+    {
+      $result = $this->execute("channelgroupclientlist", array("cgid" => $cgid, "cid" => $cid, "cldbid" => $cldbid))->toArray();
+    }
+    catch(TeamSpeak3_Adapter_ServerQuery_Exception $e)
+    {
+      /* ERROR_database_empty_result */
+      if($e->getCode() != 0x501) throw $e;
+
+      $result = array();
+    }
+
+    if($resolve)
+    {
+      foreach($result as $k => $v)
+      {
+        $result[$k] = array_merge($v, $this->clientInfoDb($v["cldbid"]));
+      }
+    }
+
+    return $result;
   }
 
   /**
