@@ -2431,7 +2431,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    * @param  TeamSpeak3_Node_Abstract $b
    * @return integer
    */
-  public static function sortGroupList(TeamSpeak3_Node_Abstract $a, TeamSpeak3_Node_Abstract $b)
+  protected static function sortGroupList(TeamSpeak3_Node_Abstract $a, TeamSpeak3_Node_Abstract $b)
   {
     if(get_class($a) != get_class($b))
     {
