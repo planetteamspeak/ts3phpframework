@@ -1274,28 +1274,25 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    * Returns an ordered array of regular server groups available based on a pre-defined
    * set of rules.
    *
+   * @param  integer $type
    * @return array
    */
-  public function serverGroupGetProfiles()
+  public function serverGroupGetProfiles($type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
   {
     $profiles = array();
 
     foreach($this->serverGroupList() as $sgid => $sgroup)
     {
-      if($sgroup["type"] != TeamSpeak3::GROUP_DBTYPE_REGULAR) continue;
+      if($sgroup["type"] != $type) continue;
 
       $profiles[$sgid] = array(
         "b_permission_modify_power_ignore" => 0,
-        "i_group_needed_member_add_power" => 0,
         "i_group_member_add_power" => 0,
-        "i_group_needed_member_remove_power" => 0,
         "i_group_member_remove_power" => 0,
         "i_needed_modify_power_count" => 0,
         "i_needed_modify_power_total" => 0,
         "i_permission_modify_power" => 0,
-        "i_group_needed_modify_power" => 0,
         "i_group_modify_power" => 0,
-        "i_client_needed_modify_power" => 0,
         "i_client_modify_power" => 0,
         "b_virtualserver_servergroup_create" => 0,
         "b_virtualserver_servergroup_delete" => 0,
@@ -1351,11 +1348,12 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    * the ID.
    *
    * @param  integer $mode
+   * @param  integer $type
    * @return TeamSpeak3_Node_Servergroup
    */
-  public function serverGroupIdentify($mode = TeamSpeak3::GROUP_IDENTIFIY_STRONGEST)
+  public function serverGroupIdentify($mode = TeamSpeak3::GROUP_IDENTIFIY_STRONGEST, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
   {
-    $profiles = $this->serverGroupGetProfiles();
+    $profiles = $this->serverGroupGetProfiles($type);
 
     $best_guess_profile = ($mode == TeamSpeak3::GROUP_IDENTIFIY_STRONGEST) ? array_shift($profiles) : array_pop($profiles);
 
