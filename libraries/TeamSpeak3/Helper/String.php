@@ -390,7 +390,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
    */
   public function isInt()
   {
-    return ctype_digit($this->string);
+    return (is_numeric($this->string) && !$this->contains(".") && !$this->contains("x")) ? TRUE : FALSE;
   }
 
   /**

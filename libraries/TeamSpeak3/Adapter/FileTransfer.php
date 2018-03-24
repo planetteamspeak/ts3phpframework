@@ -67,7 +67,7 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
    */
   protected function init($ftkey)
   {
-    if(strlen($ftkey) != 32)
+    if(strlen($ftkey) != 32 && strlen($ftkey) != 16)
     {
       throw new TeamSpeak3_Adapter_FileTransfer_Exception("invalid file transfer key format");
     }

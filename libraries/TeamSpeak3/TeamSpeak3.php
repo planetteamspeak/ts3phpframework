@@ -54,9 +54,19 @@ class TeamSpeak3
   const SCHID = "selected";
 
   /**
+   * TeaSpeak protocol welcome message.
+   */
+  const TEA_READY = "TeaSpeak";
+
+  /**
+   * TeaSpeak protocol greeting message prefix.
+   */
+  const TEA_GREET = "Welcome";
+
+  /**
    * TeamSpeak 3 PHP Framework version.
    */
-  const LIB_VERSION = "1.1.24";
+  const LIB_VERSION = "1.1.32";
 
   /*@
    * TeamSpeak 3 protocol separators.

@@ -286,7 +286,7 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
         }
         elseif($key->contains("_packetloss_"))
         {
-          $info[$key->toString()] = sprintf("%01.2f", floatval($val->toString())*100) . "%";
+          $info[$key->toString()] = sprintf("%01.2f", floatval($val instanceof TeamSpeak3_Helper_String ? $val->toString() : strval($val))*100) . "%";
         }
         elseif($key->endsWith("_uptime"))
         {

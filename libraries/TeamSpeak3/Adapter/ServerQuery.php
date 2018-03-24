@@ -70,9 +70,11 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
 
     TeamSpeak3_Helper_Profiler::init(spl_object_hash($this));
 
-    if(!$this->getTransport()->readLine()->startsWith(TeamSpeak3::READY))
+    $rdy = $this->getTransport()->readLine();
+
+    if(!$rdy->startsWith(TeamSpeak3::READY) && !$rdy->startsWith(TeamSpeak3::TEA_READY))
     {
-      throw new TeamSpeak3_Adapter_Exception("invalid reply from the server");
+      throw new TeamSpeak3_Adapter_Exception("invalid reply from the server (" . $rdy . ")");
     }
 
     TeamSpeak3_Helper_Signal::getInstance()->emit("serverqueryConnected", $this);
