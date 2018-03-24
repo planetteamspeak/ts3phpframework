@@ -124,6 +124,22 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
   }
 
   /**
+   * Returns the TeamSpeak3_Node_Channel object representing the default channel.
+   *
+   * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+   * @return TeamSpeak3_Node_Channel
+   */
+  public function channelGetDefault()
+  {
+    foreach($this->channelList() as $channel)
+    {
+      if($channel["channel_flag_default"]) return $channel;
+    }
+
+    throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid channelID", 0x300);
+  }
+
+  /**
    * Creates a new channel using given properties and returns the new ID.
    *
    * @param  array $properties
