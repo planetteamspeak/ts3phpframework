@@ -324,6 +324,8 @@ class TeamSpeak3_Node_Client extends TeamSpeak3_Node_Abstract
       $groups[] = $this->getParent()->serverGroupGetById($sgid);
     }
 
+    uasort($groups, array(__CLASS__, "sortGroupList"));
+
     return $groups;
   }
 
