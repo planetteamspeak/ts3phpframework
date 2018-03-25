@@ -317,16 +317,17 @@ class TeamSpeak3_Node_Client extends TeamSpeak3_Node_Abstract
    */
   public function memberOf()
   {
-    $groups = array($this->getParent()->channelGroupGetById($this["client_channel_group_id"]));
+    $cgroups = array($this->getParent()->channelGroupGetById($this["client_channel_group_id"]));
+    $sgroups = array();
 
     foreach(explode(",", $this["client_servergroups"]) as $sgid)
     {
-      $groups[] = $this->getParent()->serverGroupGetById($sgid);
+      $sgroups[] = $this->getParent()->serverGroupGetById($sgid);
     }
 
-    uasort($groups, array(__CLASS__, "sortGroupList"));
+    uasort($sgroups, array(__CLASS__, "sortGroupList"));
 
-    return $groups;
+    return array_merge($cgroups, $sgroups);
   }
 
   /**
