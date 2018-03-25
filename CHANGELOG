@@ -17,6 +17,7 @@
  + added TeamSpeak3_Node_Server::channelGetDefault()
  + added optional type arg to TeamSpeak3_Node_Server::serverGroupIdentify()
  + added partial support for TeaSpeak servers
+ - TeamSpeak3_Node_Client::memberOf() will use global sort callback
  * code cleanup
 
 === Release 1.1.31 - 23 Mar 2018 ===
