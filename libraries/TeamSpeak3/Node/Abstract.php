@@ -576,7 +576,7 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
 
     if(!$this->offsetExists($offset))
     {
-      throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
+      throw new TeamSpeak3_Node_Exception("node '" . get_class($this) . "' has no property named '" . $offset . "'");
     }
 
     return $this->nodeInfo[(string) $offset];
