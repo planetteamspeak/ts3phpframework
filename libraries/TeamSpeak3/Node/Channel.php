@@ -80,12 +80,12 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function subChannelGetById($cid)
   {
-    if(!array_key_exists((string) $cid, $this->subChannelList()))
+    if(!array_key_exists((int) $cid, $this->subChannelList()))
     {
       throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid channelID", 0x300);
     }
 
-    return $this->channelList[(string) $cid];
+    return $this->channelList[(int) $cid];
   }
 
   /**
