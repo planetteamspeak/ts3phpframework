@@ -4,8 +4,6 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: ServerQuery.php 06/06/2016 22:27:13 scp@Svens-iMac $
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
- * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
+ * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
 /**
@@ -73,9 +70,11 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
 
     TeamSpeak3_Helper_Profiler::init(spl_object_hash($this));
 
-    if(!$this->getTransport()->readLine()->startsWith(TeamSpeak3::READY))
+    $rdy = $this->getTransport()->readLine();
+
+    if(!$rdy->startsWith(TeamSpeak3::READY) && !$rdy->startsWith(TeamSpeak3::TEA_READY))
     {
-      throw new TeamSpeak3_Adapter_Exception("invalid reply from the server");
+      throw new TeamSpeak3_Adapter_Exception("invalid reply from the server (" . $rdy . ")");
     }
 
     TeamSpeak3_Helper_Signal::getInstance()->emit("serverqueryConnected", $this);

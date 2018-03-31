@@ -272,6 +272,24 @@ class TeamSpeak3_Helper_Convert
 
     return $array;
   }
+  
+  /**
+   * Converts a specified 32-bit unsigned integer value to a signed 32-bit integer value.
+   *
+   * @param  integer $unsigned
+   * @return integer
+   */
+  public static function iconId($unsigned)
+  {
+    $signed = (int) $unsigned;
+    
+    if(PHP_INT_SIZE > 4) // 64-bit
+    {
+      if($signed & 0x80000000) return $signed - 0x100000000;
+    }
+    
+    return $signed;
+  }
 
   /**
    * Converts a given string to a ServerQuery password hash.

@@ -4,8 +4,6 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Client.php 06/06/2016 22:27:13 scp@Svens-iMac $
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
- * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
+ * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
 /**
@@ -320,14 +317,17 @@ class TeamSpeak3_Node_Client extends TeamSpeak3_Node_Abstract
    */
   public function memberOf()
   {
-    $groups = array($this->getParent()->channelGroupGetById($this["client_channel_group_id"]));
+    $cgroups = array($this->getParent()->channelGroupGetById($this["client_channel_group_id"]));
+    $sgroups = array();
 
     foreach(explode(",", $this["client_servergroups"]) as $sgid)
     {
-      $groups[] = $this->getParent()->serverGroupGetById($sgid);
+      $sgroups[] = $this->getParent()->serverGroupGetById($sgid);
     }
 
-    return $groups;
+    uasort($sgroups, array(__CLASS__, "sortGroupList"));
+
+    return array_merge($cgroups, $sgroups);
   }
 
   /**

@@ -1,5 +1,12 @@
-.DS_Store
 documentation
 Doxyfile
+
+# OS-specific
+.DS_Store
+
+# Composer libraries
 vendor
+
+# Intellij IDEA project files
 .idea
+*.iml

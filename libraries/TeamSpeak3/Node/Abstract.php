@@ -4,8 +4,6 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Abstract.php 06/06/2016 22:27:13 scp@Svens-iMac $
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
- * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
+ * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
 /**
@@ -289,7 +286,7 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
         }
         elseif($key->contains("_packetloss_"))
         {
-          $info[$key->toString()] = sprintf("%01.2f", floatval($val->toString())*100) . "%";
+          $info[$key->toString()] = sprintf("%01.2f", floatval($val instanceof TeamSpeak3_Helper_String ? $val->toString() : strval($val))*100) . "%";
         }
         elseif($key->endsWith("_uptime"))
         {
@@ -579,7 +576,7 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
 
     if(!$this->offsetExists($offset))
     {
-      throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
+      throw new TeamSpeak3_Node_Exception("node '" . get_class($this) . "' has no property named '" . $offset . "'");
     }
 
     return $this->nodeInfo[(string) $offset];
