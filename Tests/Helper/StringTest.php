@@ -61,6 +61,8 @@ class StringTest extends TestCase
     public function testContains()
     {
         $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $this->assertTrue($string->contains(""));
+        $this->assertTrue($string->contains("[a-z]{5}", true));
         $this->assertTrue($string->contains("world"));
         $this->assertFalse($string->contains("word"));
     }
