@@ -97,4 +97,11 @@ class StringTest extends TestCase
             $this->assertSame($string->isInt(), $expected);
         }
     }
+
+    public function testFactory()
+    {
+        $string = \TeamSpeak3_Helper_String::factory("hello world");
+
+        $this->assertEquals("hello world", $string->toString());
+    }
 }
