@@ -12,6 +12,12 @@ class StringTest extends TestCase
         $string->replace("world", "word");
 
         $this->assertEquals("Hello word!", (string) $string);
+
+
+        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string->replace("hello", "Hey", false);
+
+        $this->assertEquals("Hey world!", (string) $string);
     }
 
     public function testStartsWith()
