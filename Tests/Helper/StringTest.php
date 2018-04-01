@@ -152,8 +152,7 @@ class StringTest extends TestCase
         $section = $string->section(' ', 0, 1);
         $this->assertEquals("Hello world!", $section->toString());
 
-        $string  = new \TeamSpeak3_Helper_String("");
-        $section = $string->section(' ');
+        $section = $string->section(' ', 3, 3);
         $this->assertNull($section);
     }
 }
