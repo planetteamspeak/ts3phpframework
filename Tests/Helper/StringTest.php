@@ -155,4 +155,31 @@ class StringTest extends TestCase
         $section = $string->section(' ', 3, 3);
         $this->assertNull($section);
     }
+
+    public function testToCrc32()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $this->assertEquals(crc32("Hello world!"), $string->toString());
+    }
+
+    public function testToMd5()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $this->assertEquals(md5("Hello world!"), $string);
+    }
+
+    public function testToSha1()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $this->assertEquals(sha1("Hello world!"), $string->toString());
+    }
+
+    public function testIsUtf8()
+    {
+        $string = new \TeamSpeak3_Helper_String("Äpfel");
+        $this->assertTrue($string->isUtf8());
+
+        $string = new \TeamSpeak3_Helper_String(utf8_decode("Äpfel"));
+        $this->assertNotTrue($string->isUtf8());
+    }
 }
