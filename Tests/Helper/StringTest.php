@@ -176,10 +176,10 @@ class StringTest extends TestCase
 
     public function testIsUtf8()
     {
-        $string = new \TeamSpeak3_Helper_String("Ä€¿");
+        $string = new \TeamSpeak3_Helper_String(utf8_encode("Äpfel"));
         $this->assertTrue($string->isUtf8());
 
-        $string = new \TeamSpeak3_Helper_String(utf8_decode("Ä€¿"));
+        $string = new \TeamSpeak3_Helper_String(utf8_decode("Äpfel"));
         $this->assertNotTrue($string->isUtf8());
     }
 }
