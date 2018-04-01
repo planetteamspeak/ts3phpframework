@@ -182,4 +182,33 @@ class StringTest extends TestCase
         $string = new \TeamSpeak3_Helper_String(utf8_decode("Äpfel"));
         $this->assertNotTrue($string->isUtf8());
     }
+
+    public function testToUft8()
+    {
+        $notUtf8 = utf8_decode("Äpfel");
+        $string  = new \TeamSpeak3_Helper_String($notUtf8);
+        $this->assertEquals(utf8_encode($notUtf8), $string->toUtf8());
+    }
+
+    public function testToBase64()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $this->assertEquals(base64_encode("Hello world!"), $string->toBase64());
+    }
+
+    public function testFromBase64(){
+        $string = \TeamSpeak3_Helper_String::fromBase64(base64_encode("Hello world!"));
+        $this->assertEquals("Hello world!", $string->toString());
+    }
+
+    public function testToHex(){
+        \TeamSpeak3::init();
+        $string = new \TeamSpeak3_Helper_String("Hello");
+        $this->assertEquals("48656C6C6F", $string->toHex());
+    }
+
+    public function testFromHex(){
+        $string = \TeamSpeak3_Helper_String::fromHex("48656C6C6F");
+        $this->assertEquals("Hello", $string->toString());
+    }
 }
