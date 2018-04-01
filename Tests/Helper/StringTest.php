@@ -128,9 +128,14 @@ class StringTest extends TestCase
     public function testAppend()
     {
         $string = new \TeamSpeak3_Helper_String("Hello world");
-
         $string->append('!');
+        $this->assertEquals("Hello world!", $string->toString());
+    }
 
+    public function testPrepend()
+    {
+        $string = new \TeamSpeak3_Helper_String("world!");
+        $string->prepend("Hello ");
         $this->assertEquals("Hello world!", $string->toString());
     }
 }
