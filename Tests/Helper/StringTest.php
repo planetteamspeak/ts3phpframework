@@ -115,12 +115,12 @@ class StringTest extends TestCase
 
     public function testArg()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello");
+        $string = new \TeamSpeak3_Helper_String("%h %w");
 
-        $string->arg(["world", "!"]);
+        $string->arg(["w" => "world", "h" => "Hello"]);
 
         $this->assertEquals(
-            "Hello%world%!",
+            "Hello world",
             $string->toString()
         );
     }
