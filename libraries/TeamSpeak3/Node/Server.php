@@ -720,7 +720,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
   }
 
   /**
-   * Returns a list of client database IDs matching a given pattern. You can either search for a clients
+   * Returns a list of client database information matching a given pattern. You can either search for a clients
    * last known nickname or his unique identity by using the $uid option.
    *
    * @param  string  $pattern
@@ -729,7 +729,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    */
   public function clientFindDb($pattern, $uid = FALSE)
   {
-    return array_keys($this->execute("clientdbfind", array("pattern" => $pattern, ($uid) ? "-uid" : null))->toAssocArray("cldbid"));
+    return array_keys($this->execute("clientdbfind", array("pattern" => $pattern, ($uid) ? "-uid" : null, "-details"))->toAssocArray("cldbid"));
   }
 
   /**
