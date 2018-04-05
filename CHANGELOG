@@ -20,6 +20,7 @@
  + added mapping option for TeamSpeak3_Node_Server::serverSnapshotDeploy() to
    retreive a list of old/new channel IDs when restoring a virtual server
  - TeamSpeak3_Node_Client::memberOf() will use global sort callback
+ * TeamSpeak3_Node_Server::clientFindDb() now returns more information
  * code cleanup
 
 === Release 1.1.31 - 23 Mar 2018 ===
