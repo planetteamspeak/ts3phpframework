@@ -1917,14 +1917,22 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
         break;
     }
 
-    $detail = $this->request("serversnapshotdeploy " . $data)->toList();
+    $detail = $this->request("serversnapshotdeploy -mapping " . $data)->toList();
 
-    if(array_key_exists("sid", $detail))
+    if(array_key_exists("sid", $detail[0]))
     {
-      TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServercreated", $this->getParent(), $detail["sid"]);
+      TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServercreated", $this->getParent(), $detail[0]["sid"]);
+
+      $server = array_shift($detail);
+    }
+    else
+    {
+      $server = array();
     }
 
-    return $detail;
+    $server["mapping"] = $detail;
+    
+    return $server;
   }
 
   /**
