@@ -4,20 +4,40 @@ Initially released in January 2010, the TS3 PHP Framework is a powerful, open so
 
 Tested. Thoroughly. Enterprise-ready and built with agile methods, the TS3 PHP Framework has been unit-tested from the start to ensure that all code remains stable and easy for you to extend, re-test with your extensions, and further maintain.
 
-### Why should I use the TS3 PHP Framework rather than other PHP libraries?
+### Why is TS3 PHP Framework better than other libraries?
 
 The TS3 PHP Framework is a is a modern use-at-will framework that provides individual components to communicate with the TeamSpeak 3 Server.
 
 There are lots of arguments for the TS3 PHP Framework in comparison with other PHP based libraries. It is the most dynamic and feature-rich piece of software in its class and delivers unprecedented performance when used correctly.
 
-### Requirements
+### Features
 
-The TS3 PHP Framework currently supports PHP 5.2.1 or later, but we strongly recommend the most current release of PHP for critical security and performance enhancements. If you want to create a web application using the TS3 PHP Framework, you need a PHP 5+ interpreter with a web server configured to handle PHP scripts correctly.
+Features of the TS3 PHP Framework include:
+
+* Fully object-oriented PHP 5 and E_STRICT compliant components
+* Access to all TeamSpeak 3 Server features via ServerQuery
+* Integrated full featured and customizable TSViewer interfaces
+* Full support for file transfers to up- and /or download custom icons and other stuff
+* Powerful error handling capablities using exceptions and customizable error messages
+* Query mechanisms for several official services such as the blacklist and auto-update servers
+* Dynamic signal slots for event based scripting
+
+Speed up new development and reduce maintenance costs by using this nifty piece of software!
+
+### Installation
+
+**Requirements**
+
+* PHP7 - Developed on PHP 7.x, with 7.2.x targeted for testing.
+
+**Often used with...**
+* Server - Apache, nginx, php-fpm, CLI
+* Database - Standalone (sqlite), Maria DB, PostgreSQL
+* Dev - Git, composer, docker, PHPUnit 
 
 Note that the majority of TS3 PHP Framework development and deployment is done on nginx, so there is more community experience and testing performed on Apache than on other web servers.
 
-### Installation
-You can either install the TS3 PHP Framework by manually downloading it or using Composer:
+You can install the TS3 PHP Framework by [manually downloading](https://github.com/ronindesign/ts3phpframework/archive/master.zip) it or using Composer:
 ```
 composer require planetteamspeak/ts3-php-framework
 ```
@@ -28,8 +48,22 @@ If you want to install the TS3 PHP Framework's `master` branch instead (which ma
 composer require planetteamspeak/ts3-php-framework:dev-master
 ```
 
+### Tests
+
+To run all tests use `php vendor/bin/phpunit`.
+
+### Useful Links
+
+Visit the following pages for more information about the TS3 PHP Framework:
+
+* [Online Documentation](https://docs.planetteamspeak.com/ts3/php/framework/index.html)
+* [Changelog](https://docs.planetteamspeak.com/ts3/php/framework/changelog.txt)
+* [Changelog (dev)](https://github.com/planetteamspeak/ts3phpframework/blob/master/CHANGELOG)
+
 ### Getting Started
+
 #### Connection URI (Options + IPv4 vs IPv6)
+
 Before you can run commands like "get version of server instance" or "update some settings", you need to specify to which instance you want to connect to. This is done using the URI in `TeamSpeak3::factory("$uri")`.
 
 The base `$uri` looks always like this:
@@ -165,31 +199,39 @@ class TeamspeakController extends Controller
 	}
 }
 ```
-For further information please visit the documentation (see [Useful Links](#useful-links)).
+For further information please visit the documentation (see [Useful Links](#useful-links) above).
 
-### Features
+### Docker
 
-Features of the TS3 PHP Framework include:
+Setup a local test instance of TeamSpeak3 (amd64, Alpine Linux):
+```
+docker run --name teamspeak_server -p 9987:9987/udp -p 10011:10011 -p 30033:30033 -e TS3SERVER_LICENSE=accept teamspeak:latest
+```
+_Add `-d` flag to run in background. Options / Examples: [Docs @ Docker](https://docs.docker.com/samples/library/teamspeak/) | [Hub @ Docker](https://hub.docker.com/_/teamspeak/)_
 
-* Fully object-oriented PHP 5 and E_STRICT compliant components
-* Access to all TeamSpeak 3 Server features via ServerQuery
-* Integrated full featured and customizable TSViewer interfaces
-* Full support for file transfers to up- and /or download custom icons and other stuff
-* Powerful error handling capablities using exceptions and customizable error messages
-* Query mechanisms for several official services such as the blacklist and auto-update servers
-* Dynamic signal slots for event based scripting
+Use full docker stack to deploy TeamSpeak 3 with Maria DB:
+```
+// If fresh Docker install, you might need to:
+docker swarm init
+// Deploy stack with latest TS3, PHP 7.x, Maria DB:
+docker stack deploy -c docker-compose.yml teamspeak
+```
 
-### Tests
+Additional useful commands:
+```
+docker logs teamspeak_server # View container logs
+docker exec -it teamspeak_server sh # Open shell in container
+docker stop teamspeak_server # Stop container
+docker rm teamspeak_server # Remove container
+docker ps # Show all processes
+docker stack ps # Show stack processes
+docker stack ls # List stacks
+```
 
-To run all tests use `php vendor/bin/phpunit`.
-
-### Useful Links
-
-Visit the following pages for more information about the TS3 PHP Framework:
-
-* [Online Documentation](https://docs.planetteamspeak.com/ts3/php/framework/index.html)
-* [Changelog](https://docs.planetteamspeak.com/ts3/php/framework/changelog.txt)
-* [Changelog (dev)](https://github.com/planetteamspeak/ts3phpframework/blob/master/CHANGELOG)
-
-Speed up new development and reduce maintenance costs by using this nifty piece of software!
-
+_Note: When deploying docker stack, containers are named uniquely:_
+```
+$ docker stack ps teamspeak
+CONTAINER ID        IMAGE               ...   NAMES
+f97fe9827b08        mariadb:latest      ...   teamspeak_db.1.xbwjm6jcu5qow44u5i9da2hcv
+f9c1538b9875        teamspeak:latest    ...   teamspeak_teamspeak.1.rr3sipmw6dhod92wuhgs3s1rn
+```
