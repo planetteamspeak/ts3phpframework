@@ -23,6 +23,6 @@
     "phpunit/phpunit": "5.7.*"
   },
   "autoload": {
-    "files": ["libraries/TeamSpeak3/TeamSpeak3.php"]
+    "files": ["lib/TeamSpeak3/TeamSpeak3.php"]
   }
 }
