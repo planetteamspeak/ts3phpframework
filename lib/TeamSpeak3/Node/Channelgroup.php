@@ -4,8 +4,6 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Channelgroup.php 06/06/2016 22:27:13 scp@Svens-iMac $
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
- * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
+ * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
 /**
@@ -146,13 +143,16 @@ class TeamSpeak3_Node_Channelgroup extends TeamSpeak3_Node_Abstract
   }
 
   /**
-   * Returns a list of clients assigned to the server group specified.
+   * Returns a list of clients assigned to the channel group specified.
    *
-   * @return array|TeamSpeak3_Node_Client[]
+   * @param  integer $cid
+   * @param  integer $cldbid
+   * @param  boolean $resolve
+   * @return array
    */
-  public function clientList()
+  public function clientList($cid = null, $cldbid = null, $resolve = FALSE)
   {
-    return $this->getParent()->channelGroupClientList($this->getId());
+    return $this->getParent()->channelGroupClientList($this->getId(), $cid, $cldbid, $resolve);
   }
 
   /**
