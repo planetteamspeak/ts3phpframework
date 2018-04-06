@@ -4,8 +4,6 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Text.php 06/06/2016 22:27:13 scp@Svens-iMac $
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
- * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
+ * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
 /**
@@ -548,25 +545,7 @@ class TeamSpeak3_Viewer_Html implements TeamSpeak3_Viewer_Interface
       }
     }
 
-    // Get current groups the client is a member of.
-    // Shift off first group (channel group), leaving only server groups.
-    $groups = $this->currObj->memberOf();
-    $clientGroups = [$groups[0]];
-    unset($groups[0]);
-
-    // Create temp assoc array to use in custom uasort function.
-    $sgroups = [];
-    foreach($groups as $group) {
-      $sgroups[$group['sgid']] = $group;
-    }
-    // Use same server group sort function from TeamSpeak3_Node_Server class.
-    uasort($sgroups, array(get_class($this->currObj->getParent()), "sortGroupList"));
-
-    // Append first group (channel group), convert to non-assoc array.
-    $clientGroups = array_merge($clientGroups, array_values($sgroups));
-    unset($sgroups); // Clean-up temp sorting array.
-
-    foreach($clientGroups as $group)
+    foreach($this->currObj->memberOf() as $group)
     {
       if(!$group["iconid"]) continue;
 

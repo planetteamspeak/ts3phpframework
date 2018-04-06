@@ -9,23 +9,51 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Release 1.1.32 - WIP ===
+ ! updated online and offline docs to Doxygen 1.8.13
+ ! removed deprecated TeamSpeak3_Adapter_Blacklist
+ ! removed deprecated TeamSpeak3_Adapter_Update
+ ! removed deprecated TeamSpeak3_Adapter_TSDNS
+ + added TeamSpeak3_Node_Server::channelGetDefault()
+ + added optional type arg to TeamSpeak3_Node_Server::serverGroupIdentify()
+ + added partial support for TeaSpeak servers
+ + added mapping option for TeamSpeak3_Node_Server::serverSnapshotDeploy() to
+   retreive a list of old/new channel IDs when restoring a virtual server
+ - TeamSpeak3_Node_Client::memberOf() will use global sort callback
+ * TeamSpeak3_Node_Server::clientFindDb() now returns more information
+ * code cleanup
+
+=== Release 1.1.31 - 23 Mar 2018 ===
+ + Git ignores Intellij IDEA IDE support files.
+ - URI helper uses urlrawdecode() in component getters to properly handle 
+   special characters. Thanks @Newcomer1989
+ * README includes note use urlrawencode() on URI parts with special 
+   characters.
+
+=== Release 1.1.30 - 21 Mar 2017 ===
+ - TeamSpeak3\Helper\String::isInt() uses `ctype_int` to check if string is 
+   numerical.
+
+=== Release 1.1.29 - 21 Mar 2018 ===
+ * README includes `Getting Started` section. Thanks @Sebi94nbg
+
 === Release 1.1.28 - 6 Dec 2017 ===
-+ Added first PHPUnit tests, Travis CI config, thanks @thhan
-* documentation update, thanks @Sebi94nbg and @thhan
+ + Added first PHPUnit tests, Travis CI config, thanks @thhan
+ * documentation update, thanks @Sebi94nbg and @thhan
 
 === Release 1.1.27 - 29 Oct 2017 ===
-+ annotations added for IDE type hinting, thanks @thhan
-* documentation update
+ + annotations added for IDE type hinting, thanks @thhan
+ * documentation update
 
 === Release 1.1.26 - 28 Oct 2017 ===
-* groups are now correctly sorted by sort id instead of internal id
-* documentation update
+ * groups are now correctly sorted by sort id instead of internal id
+ * documentation update
 
 === Release 1.1.25 - 8 May 2017 ===
-- fixed PHP 7.1 incompatibile `unset($this)`, fixed by @venyii
-- fixed `serverqueryWaitTimeout` event, reverts #16 (string vs. object
-reference) until cyclic reference fix, fixed by @I-MrFixIt-I 
-- minor bug fixes, documentation update
+ - fixed PHP 7.1 incompatibile `unset($this)`, fixed by @venyii
+ - fixed `serverqueryWaitTimeout` event, reverts #16 (string vs. object
+   reference) until cyclic reference fix, fixed by @I-MrFixIt-I 
+ - minor bug fixes, documentation update
 
 === Release 1.1.24 - 18 Jun 2016 ===
  + added IPv6 support
