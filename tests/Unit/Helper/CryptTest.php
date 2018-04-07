@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_Constraint_IsType as PHPUnit_IsType;
+use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 
 require_once('lib/TeamSpeak3/Helper/Crypt.php');
 

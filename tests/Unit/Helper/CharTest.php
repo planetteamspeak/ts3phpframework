@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_Constraint_IsType as PHPUnit_IsType;
+use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 
 require_once('lib/TeamSpeak3/Helper/Char.php');
 
@@ -251,7 +251,14 @@ class CharTest extends TestCase
   }
   */
   
-  private static function calculateUTF8Ordinal(string $char) {
+  /**
+   * Return integer value of a string, specifically for UTF8 strings.
+   * 
+   * @param string $char
+   *
+   * @return int
+   */
+  private static function calculateUTF8Ordinal($char) {
     $charString = mb_substr($char, 0, 1, 'utf-8');
     $charLength = strlen($charString);
     $ordinal    = ord($charString[0]) & (0xFF >> $charLength);

@@ -2,6 +2,9 @@
 .ts3config/*
 !.ts3config/*.dist
 
+# Build related
+build/
+
 # OS-specific
 .DS_Store
 
