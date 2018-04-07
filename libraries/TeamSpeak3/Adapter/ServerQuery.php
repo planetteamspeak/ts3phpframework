@@ -72,7 +72,7 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
 
     $rdy = $this->getTransport()->readLine();
 
-    if(!$rdy->startsWith(TeamSpeak3::READY) && !$rdy->startsWith(TeamSpeak3::TEA_READY))
+    if(!$rdy->startsWith(TeamSpeak3::TS3_PROTO_IDENT) && !$rdy->startsWith(TeamSpeak3::TEA_PROTO_IDENT) && !(defined("CUSTOM_PROTO_IDENT") && $rdy->startsWith(CUSTOM_PROTO_IDENT)))
     {
       throw new TeamSpeak3_Adapter_Exception("invalid reply from the server (" . $rdy . ")");
     }
