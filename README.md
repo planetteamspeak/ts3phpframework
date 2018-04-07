@@ -72,6 +72,12 @@ if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 }
 ```
 
+Secure ServerQuery connections can be established using the optional `tls` parameter:
+
+```php
+$uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10011/?tls=1";
+```
+
 #### Encoding URI Special Characters
 When passing URI as argument or parameter, some parts may need to contain special characters.
 You should use [urlrawencode](http://us2.php.net/manual/en/function.rawurlencode.php) on these parts:
