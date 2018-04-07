@@ -9,11 +9,13 @@
    ! Important - Take note!
 ===============================================================================
 
-=== Release 1.1.32 - WIP ===
+=== Release 1.1.32 - 8 Apr 2018 ===
  ! updated online and offline docs to Doxygen 1.8.13
  ! removed deprecated TeamSpeak3_Adapter_Blacklist
  ! removed deprecated TeamSpeak3_Adapter_Update
  ! removed deprecated TeamSpeak3_Adapter_TSDNS
+ ! TeamSpeak3::factory() uri now features an optional parameter to enable the
+   encrypted ServerQuery connections via SSL/TLS
  + added TeamSpeak3_Node_Server::channelGetDefault()
  + added optional type arg to TeamSpeak3_Node_Server::serverGroupIdentify()
  + added partial support for TeaSpeak servers
