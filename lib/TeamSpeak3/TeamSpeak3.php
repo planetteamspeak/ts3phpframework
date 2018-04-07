@@ -4,8 +4,6 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: TeamSpeak3.php 06/06/2016 22:27:13 scp@Svens-iMac $
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
- * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
+ * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
 /**
@@ -57,9 +54,19 @@ class TeamSpeak3
   const SCHID = "selected";
 
   /**
+   * TeaSpeak protocol welcome message.
+   */
+  const TEA_READY = "TeaSpeak";
+
+  /**
+   * TeaSpeak protocol greeting message prefix.
+   */
+  const TEA_GREET = "Welcome";
+
+  /**
    * TeamSpeak 3 PHP Framework version.
    */
-  const LIB_VERSION = "1.1.24";
+  const LIB_VERSION = "1.1.32";
 
   /*@
    * TeamSpeak 3 protocol separators.
@@ -284,7 +291,7 @@ class TeamSpeak3
    *   - no_query_clients
    *   - use_offline_as_virtual
    *   - clients_before_channels
-   *   - server_id|server_uid|server_port|server_name|server_tsdns
+   *   - server_id|server_uid|server_port|server_name
    *   - channel_id|channel_name
    *   - client_id|client_uid|client_name
    *
@@ -299,8 +306,6 @@ class TeamSpeak3
    *   - serverquery://127.0.0.1:10011/?server_port=9987&channel_id=1#no_query_clients
    *   - serverquery://127.0.0.1:10011/?server_port=9987&client_name=ScP
    *   - filetransfer://127.0.0.1:30011/
-   *   - blacklist
-   *   - update
    *
    * @param  string $uri
    * @return TeamSpeak3_Adapter_Abstract
@@ -377,10 +382,6 @@ class TeamSpeak3
       elseif($uri->hasQueryVar("server_name"))
       {
         $node = $node->serverGetByName($uri->getQueryVar("server_name"));
-      }
-      elseif($uri->hasQueryVar("server_tsdns"))
-      {
-        $node = $node->serverGetByTSDNS($uri->getQueryVar("server_tsdns"));
       }
 
       if($node instanceof TeamSpeak3_Node_Server)
@@ -624,7 +625,6 @@ class TeamSpeak3
  *   - Integrated full featured and customizable TSViewer interfaces
  *   - Full support for file transfers to up- and /or download custom icons and other stuff
  *   - Powerful error handling capablities using exceptions and customizable error messages
- *   - Query mechanisms for several official services such as the blacklist and auto-update servers
  *   - Dynamic signal slots for event based scripting
  *   - ...
  *
@@ -788,59 +788,7 @@ class TeamSpeak3
  *   ));
  * @endcode
  *
- * \subsection example9 9. Send a Text Message to outdated Clients
- * @code
- *   // load framework files
- *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
- *
- *   // connect to local server, authenticate and spawn an object for the virtual server on port 9987
- *   $ts3_VirtualServer = TeamSpeak3::factory("serverquery://username:password@127.0.0.1:10011/?server_port=9987");
- *
- *   // connect to default update server
- *   $ts3_UpdateServer = TeamSpeak3::factory("update");
- *
- *   // walk through list of clients on virtual server
- *   foreach($ts3_VirtualServer->clientList() as $ts3_Client)
- *   {
- *     // skip query clients
- *     if($ts3_Client["client_type"]) continue;
- *
- *     // send test message if client build is outdated
- *     if($ts3_Client->getRev() < $ts3_UpdateServer->getClientRev())
- *     {
- *       $ts3_Client->message("[COLOR=red]your client is [B]outdated[/B]... update to [U]" . $ts3_UpdateServer->getClientVersion() . "[/U] now![/COLOR]");
- *     }
- *   }
- * @endcode
- *
- * \subsection example10 10. Check if the Server Instance is Outdated or Blacklisted
- * @code
- *   // load framework files
- *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
- *
- *   // connect to local server, authenticate and spawn an object for the server instance
- *   $ts3_ServerInstance = TeamSpeak3::factory("serverquery://username:password@127.0.0.1:10011/");
- *
- *   // connect to default update server
- *   $ts3_UpdateServer = TeamSpeak3::factory("update");
- *
- *   // send global text message if the server is outdated
- *   if($ts3_ServerInstance->version("build") < $ts3_UpdateServer->getServerRev())
- *   {
- *     $ts3_ServerInstance->message("[COLOR=red]your server is [B]outdated[/B]... update to [U]" . $ts3_UpdateServer->getServerVersion() . "[/U]  now![/COLOR]");
- *   }
- *
- *   // connect to default blacklist server
- *   $ts3_BlacklistServer = TeamSpeak3::factory("blacklist");
- *
- *   // send global text message if the server is blacklisted
- *   if($ts3_BlacklistServer->isBlacklisted($ts3_ServerInstance))
- *   {
- *     $ts3_ServerInstance->message("[COLOR=red]your server is [B]blacklisted[/B]... disconnect now![/COLOR]");
- *   }
- * @endcode
- *
- * \subsection example11 11. Create a simple TSViewer for your Website
+ * \subsection example9 9. Create a simple TSViewer for your Website
  * @code
  *   // load framework files
  *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
@@ -852,7 +800,7 @@ class TeamSpeak3
  *   echo $ts3_VirtualServer->getViewer(new TeamSpeak3_Viewer_Html("images/viewericons/", "images/countryflags/", "data:image"));
  * @endcode
  *
- * \subsection example12 12. Update all outdated Audio Codecs to their Opus equivalent
+ * \subsection example10 10. Update all outdated Audio Codecs to their Opus equivalent
  * @code
  *   // load framework files
  *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
@@ -874,7 +822,7 @@ class TeamSpeak3
  *   }
  * @endcode
  *
- * \subsection example13 13. Display the Avatar of a connected User
+ * \subsection example11 11. Display the Avatar of a connected User
  * @code
  *   // load framework files
  *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
@@ -893,7 +841,7 @@ class TeamSpeak3
  *   echo $avatar;
  * @endcode
  *
- * \subsection example14 14. Create a Simple Bot waiting for Events
+ * \subsection example12 12. Create a Simple Bot waiting for Events
  * @code
  *   // load framework files
  *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
@@ -917,7 +865,7 @@ class TeamSpeak3
  *   }
  * @endcode
  *
- * \subsection example15 15. Handle Errors using Exceptions and Custom Error Messages
+ * \subsection example13 13. Handle Errors using Exceptions and Custom Error Messages
  * @code
  *   // load framework files
  *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
@@ -940,7 +888,7 @@ class TeamSpeak3
  *   }
  * @endcode
  *
- * \subsection example16 16. Save Connection State in Persistent Session Variable
+ * \subsection example14 14. Save Connection State in Persistent Session Variable
  * @code
  *   // load framework files
  *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
@@ -955,7 +903,7 @@ class TeamSpeak3
  *   $_SESSION["_TS3"] = serialize($ts3_VirtualServer);
  * @endcode
  *
- * \subsection example17 17. Restore Connection State from Persistent Session Variable
+ * \subsection example15 15. Restore Connection State from Persistent Session Variable
  * @code
  *   // load framework files
  *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");

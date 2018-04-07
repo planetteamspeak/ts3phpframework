@@ -4,15 +4,31 @@ language: php
 
 php:
   - 5.6
+  - 7
+  - 7.2
+  - nightly
 
 services:
   - docker
+  
+matrix:
+  include:
+    - php: 5.6
+      env: dependencies=lowest
+    - php: 7
+      env: dependencies=lowest
+    - php: 5.6
+      env: dependencies=highest
+    - php: 7
+      env: dependencies=highest
 
 before_install:
-  - docker pull solidnerd/teamspeak
-  - docker run -d --name="teamspeak_server" -p "9987:9987/udp" -p 10011:10011 -p 30033:30033 solidnerd/teamspeak:3.0.13.8
+  - docker run -d --name="teamspeak_server" -p "9987:9987/udp" -p 10011:10011 -p 30033:30033 teamspeak:latest
   - docker ps -a
   - docker logs teamspeak_server
 
 before_script:
-  - composer install
+  - composer self-update -q
+  - if [ -z "$dependencies" ]; then composer install; fi;
+  - if [ "$dependencies" = "lowest" ]; then composer update --prefer-lowest -n; fi;
+  - if [ "$dependencies" = "highest" ]; then composer update -n; fi;

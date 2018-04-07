@@ -65,4 +65,27 @@ class StringTest extends TestCase
         $this->assertEquals("ello", $string->substr(1, 4));
         $this->assertEquals("world", $string->substr(-6, 5));
     }
+
+    public function testIsInt()
+    {
+        $tests = [
+            "1"     => true,
+            "+1"    => false,
+            "-1"    => false,
+            "hello" => false,
+            "1.0"   => false,
+            ".1"    => false,
+
+            // From https://goo.gl/C5v9wT
+            "0x539"         => false,
+            "0b10100111001" => false,
+            "1337e0"        => false,
+            "9.1"           => false,
+        ];
+
+        foreach ($tests as $test => $expected) {
+            $string = new \TeamSpeak3_Helper_String($test);
+            $this->assertSame($string->isInt(), $expected);
+        }
+    }
 }

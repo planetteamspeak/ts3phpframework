@@ -1,8 +1,9 @@
-.*
-!.gitignore
-!.travis.yml
-!.ts3config/teamspeak3.yml.dist
-documentation
-Doxyfile
-composer.lock
+# OS-specific
+.DS_Store
+
+# Composer libraries
 vendor/
+
+# Intellij project files
+.idea
+*.iml

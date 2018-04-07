@@ -4,8 +4,6 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Interface.php 06/06/2016 22:27:13 scp@Svens-iMac $
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   TeamSpeak3
- * @version   1.1.24
  * @author    Sven 'ScP' Paulsen
- * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
+ * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
 /**
@@ -37,8 +34,6 @@ interface TeamSpeak3_Helper_Signal_Interface
    * === Examples ===
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("serverqueryConnected", array($object, "onConnect"));
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("filetransferConnected", array($object, "onConnect"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("blacklistConnected", array($object, "onConnect"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("updateConnected", array($object, "onConnect"));
    *
    * @param  TeamSpeak3_Adapter_Abstract $adapter
    * @return void
@@ -51,8 +46,6 @@ interface TeamSpeak3_Helper_Signal_Interface
    * === Examples ===
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("serverqueryDisconnected", array($object, "onDisconnect"));
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("filetransferDisconnected", array($object, "onDisconnect"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("blacklistDisconnected", array($object, "onDisconnect"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("updateDisconnected", array($object, "onDisconnect"));
    *
    * @return void
    */
@@ -303,8 +296,6 @@ interface TeamSpeak3_Helper_Signal_Interface
    * === Examples ===
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("serverqueryDataRead", array($object, "onDebugDataRead"));
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("filetransferDataRead", array($object, "onDebugDataRead"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("blacklistDataRead", array($object, "onDebugDataRead"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("updateDataRead", array($object, "onDebugDataRead"));
    *
    * @param  string $data
    * @return void
@@ -317,8 +308,6 @@ interface TeamSpeak3_Helper_Signal_Interface
    * === Examples ===
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("serverqueryDataSend", array($object, "onDebugDataSend"));
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("filetransferDataSend", array($object, "onDebugDataSend"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("blacklistDataSend", array($object, "onDebugDataSend"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("updateDataSend", array($object, "onDebugDataSend"));
    *
    * @param  string $data
    * @return void
@@ -331,8 +320,6 @@ interface TeamSpeak3_Helper_Signal_Interface
    * === Examples ===
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("serverqueryWaitTimeout", array($object, "onWaitTimeout"));
    *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("filetransferWaitTimeout", array($object, "onWaitTimeout"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("blacklistWaitTimeout", array($object, "onWaitTimeout"));
-   *   - TeamSpeak3_Helper_Signal::getInstance()->subscribe("updateWaitTimeout", array($object, "onWaitTimeout"));
    *
    * @param  integer $time
    * @param  TeamSpeak3_Adapter_Abstract $adapter
