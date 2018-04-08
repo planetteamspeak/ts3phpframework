@@ -4,6 +4,7 @@
 
 # Build related
 build/
+.php_cs.cache
 
 # OS-specific
 .DS_Store
