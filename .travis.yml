@@ -37,7 +37,7 @@ before_script:
 
 script:
   - vendor/bin/phpunit --coverage-text
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --debug; fi
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls -v
