@@ -36,11 +36,11 @@ The base `$uri` looks always like this:
 ```php
 $uri = "serverquery://username:password@127.0.0.1:10011/";
 ```
-_Note: If a piece of your URI contains [special characters](https://github.com/planetteamspeak/ts3phpframework#encoding-uri-special-characters), you will need to encode that piece using [urlrawencode](http://us2.php.net/manual/en/function.rawurlencode.php):_
+_Note: If a piece of your URI contains [special characters](https://github.com/planetteamspeak/ts3phpframework#encoding-uri-special-characters), you will need to encode that piece using [rawurlencode](http://us2.php.net/manual/en/function.rawurlencode.php):_
 ```php
-$uri = "serverquery://" . urlrawencode('username') . ":" . urlrawencode('password') . "@127.0.0.1:10011/";
+$uri = "serverquery://" . rawurlencode('username') . ":" . rawurlencode('password') . "@127.0.0.1:10011/";
 // Example
-$uri = "serverquery://" . urlrawencode('test!@#$%^&*()_+') . ":" . urlrawencode('sd5kjKJ2') . "@127.0.0.1:10011/";
+$uri = "serverquery://" . rawurlencode('test!@#$%^&*()_+') . ":" . rawurlencode('sd5kjKJ2') . "@127.0.0.1:10011/";
 ```
 
 You also can add some options behind the last `/` in the URI.
