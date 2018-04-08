@@ -11,12 +11,21 @@ php:
   - 5.6
   - 7.0
   - 7.1
-  - 7.2
   - nightly
+
+matrix:
+  include:
+    - php: 7.2
+      env: COVERAGE=yes
+    - php: 7.2
+      env: EXECUTE_CS_CHECK=yes
+  fast_finish: true
+  allow_failures:
+    - php: nightly
 
 services:
   - docker
-      
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -26,17 +35,24 @@ before_install:
   - docker run -d --name="teamspeak_server" -p "9987:9987/udp" -p 10011:10011 -p 30033:30033 teamspeak:latest
   - docker ps -a
   - docker logs teamspeak_server
+  - if [[ $TRAVIS_PHP_VERSION != hhvm && $TRAVIS_PHP_VERSION != nightly && $COVERAGE != yes ]]; then phpenv config-rm xdebug.ini; fi
+  - if [[ $TRAVIS_PHP_VERSION != hhvm ]]; then echo 'opcache.enable=1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+  - if [[ $TRAVIS_PHP_VERSION != hhvm ]]; then echo 'opcache.enable_cli=1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+  - travis_retry composer self-update
+
+install:
+  - travis_retry composer update --optimize-autoloader --prefer-dist --prefer-stable --no-progress --no-interaction $COMPOSER_FLAGS
 
 before_script:
-  - composer self-update
-  - composer update --prefer-source
   - cp phpunit.xml.dist phpunit.xml
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
 script:
-  - vendor/bin/phpunit --coverage-text
+  - composer validate
+  - if [[ $COVERAGE == yes ]]; then vendor/bin/phpunit --coverage-text; else vendor/bin/phpunit --no-coverage; fi
+  - if [[ $EXECUTE_CS_CHECK == yes ]]; then php -n -d memory_limit=768M vendor/bin/php-cs-fixer fix --config=.php_cs --verbose --diff --dry-run; fi
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 
 after_success:
