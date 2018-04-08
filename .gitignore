@@ -1,7 +1,15 @@
+# Configuration files
+.ts3config/*
+!.ts3config/*.dist
+
+# Build related
+build/
+
 # OS-specific
 .DS_Store
 
 # Composer libraries
+composer.lock 
 vendor/
 
 # Intellij project files

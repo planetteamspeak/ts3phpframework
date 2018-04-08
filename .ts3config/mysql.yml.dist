@@ -1,0 +1,7 @@
+server:
+  host: localhost
+  port: 3306
+  database: teamspeak
+auth:
+  username: teamspeak
+  password: password

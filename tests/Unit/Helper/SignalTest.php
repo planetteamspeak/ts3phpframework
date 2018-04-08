@@ -7,7 +7,7 @@ require_once('lib/TeamSpeak3/Helper/Signal/Handler.php');
 require_once('lib/TeamSpeak3/Helper/Signal/Exception.php');
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_Constraint_IsType as PHPUnit_IsType;
+use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 
 use \TeamSpeak3_Helper_Signal as TS3_Signal;
 use \TeamSpeak3_Helper_Signal_Handler as TS3_Signal_Handler;

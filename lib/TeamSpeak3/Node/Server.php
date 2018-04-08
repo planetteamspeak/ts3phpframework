@@ -638,7 +638,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    * Returns an array filled with TeamSpeak3_Node_Client objects.
    *
    * @param  array $filter
-   * @return array|TeamSpeak3_Node_Client[]
+   * @return array | TeamSpeak3_Node_Client[]
    */
   public function clientList(array $filter = array())
   {
@@ -1036,7 +1036,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    * Returns a list of server groups available.
    *
    * @param  filter $filter
-   * @return array|TeamSpeak3_Node_Servergroup[]
+   * @return array | TeamSpeak3_Node_Servergroup[]
    */
   public function serverGroupList(array $filter = array())
   {
@@ -1364,7 +1364,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    * Returns a list of channel groups available.
    *
    * @param  array $filter
-   * @return array|TeamSpeak3_Node_Channelgroup[]
+   * @return array | TeamSpeak3_Node_Channelgroup[]
    */
   public function channelGroupList(array $filter = array())
   {
