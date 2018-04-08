@@ -12,14 +12,10 @@ php:
   - 7.0
   - 7.1
   - 7.2
+  - nightly
 
 services:
   - docker
-  
-matrix:
-  include:
-    allow_failures:
-      - php: nightly
       
 cache:
   directories:
@@ -34,20 +30,14 @@ before_install:
 before_script:
   - composer self-update
   - composer update --prefer-source
-  # @todo Re-enable extended tests when high impact
-  #- if [ -z "$dependencies" ]; then composer install; fi;
-  #- if [ "$dependencies" = "lowest" ]; then composer update --prefer-lowest -n; fi;
-  #- if [ "$dependencies" = "highest" ]; then composer update -n; fi;
   - cp phpunit.xml.dist phpunit.xml
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
 script:
-  #- mkdir -p build/logs
   - "phpunit --coverage-text --coverage-clover build/logs/clover.xml"
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
-  #- ./vendor/bin/phpunit
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls -v
