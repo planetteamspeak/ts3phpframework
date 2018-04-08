@@ -27,7 +27,9 @@
       <directory>./</directory>
       <exclude>
         <directory>./images</directory>
+        <directory>./public</directory>
         <directory>./tests</directory>
+        <directory>./build</directory>
         <directory>./vendor</directory>
       </exclude>
     </whitelist>
