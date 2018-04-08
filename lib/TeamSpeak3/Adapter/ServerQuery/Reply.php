@@ -327,7 +327,7 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
   {
     foreach($rpl as $key => $val)
     {
-      if($val->startsWith(TeamSpeak3::GREET))
+      if($val->startsWith(TeamSpeak3::TS3_MOTD_PREFIX) || $val->startsWith(TeamSpeak3::TEA_MOTD_PREFIX) || (defined("CUSTOM_MOTD_PREFIX") && $val->startsWith(CUSTOM_MOTD_PREFIX)))
       {
         unset($rpl[$key]);
       }

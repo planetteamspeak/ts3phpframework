@@ -31,12 +31,22 @@ class TeamSpeak3
   /**
    * TeamSpeak 3 protocol welcome message.
    */
-  const READY = "TS3";
+  const TS3_PROTO_IDENT = "TS3";
 
   /**
    * TeamSpeak 3 protocol greeting message prefix.
    */
-  const GREET = "Welcome";
+  const TS3_MOTD_PREFIX = "Welcome";
+
+  /**
+   * TeaSpeak protocol welcome message.
+   */
+  const TEA_PROTO_IDENT = "TeaSpeak";
+
+  /**
+   * TeaSpeak protocol greeting message prefix.
+   */
+  const TEA_MOTD_PREFIX = "Welcome";
 
   /**
    * TeamSpeak 3 protocol error message prefix.
@@ -52,16 +62,6 @@ class TeamSpeak3
    * TeamSpeak 3 protocol server connection handler ID prefix.
    */
   const SCHID = "selected";
-
-  /**
-   * TeaSpeak protocol welcome message.
-   */
-  const TEA_READY = "TeaSpeak";
-
-  /**
-   * TeaSpeak protocol greeting message prefix.
-   */
-  const TEA_GREET = "Welcome";
 
   /**
    * TeamSpeak 3 PHP Framework version.
@@ -320,7 +320,7 @@ class TeamSpeak3
     $uri = new TeamSpeak3_Helper_Uri($uri);
 
     $adapter = self::getAdapterName($uri->getScheme());
-    $options = array("host" => $uri->getHost(), "port" => $uri->getPort(), "timeout" => (int) $uri->getQueryVar("timeout", 10), "blocking" => (int) $uri->getQueryVar("blocking", 1));
+    $options = array("host" => $uri->getHost(), "port" => $uri->getPort(), "timeout" => (int) $uri->getQueryVar("timeout", 10), "blocking" => (int) $uri->getQueryVar("blocking", 1), "tls" => (int) $uri->getQueryVar("tls", 0));
 
     self::loadClass($adapter);
 

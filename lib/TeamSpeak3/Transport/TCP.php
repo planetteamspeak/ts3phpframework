@@ -42,13 +42,19 @@ class TeamSpeak3_Transport_TCP extends TeamSpeak3_Transport_Abstract
     $port = strval($this->config["port"]);
 
     $address = "tcp://" . (strstr($host, ":") !== FALSE ? "[" . $host . "]" : $host) . ":" . $port;
+    $options = empty($this->config["tls"]) ? array() : array("ssl" => array("allow_self_signed" => TRUE, "verify_peer" => FALSE, "verify_peer_name" => FALSE));
     $timeout = (int) $this->config["timeout"];
 
-    $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout);
+    $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, stream_context_create($options));
 
     if($this->stream === FALSE)
     {
       throw new TeamSpeak3_Transport_Exception(TeamSpeak3_Helper_String::factory($errstr)->toUtf8()->toString(), $errno);
+    }
+
+    if(!empty($this->config["tls"]))
+    {
+      stream_socket_enable_crypto($this->stream, TRUE, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
     }
 
     @stream_set_timeout($this->stream, $timeout);
@@ -144,7 +150,7 @@ class TeamSpeak3_Transport_TCP extends TeamSpeak3_Transport_Abstract
   {
     $this->connect();
 
-    @stream_socket_sendto($this->stream, $data);
+    @fwrite($this->stream, $data);
 
     TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
   }
