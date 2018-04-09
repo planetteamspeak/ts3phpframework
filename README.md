@@ -17,51 +17,66 @@ The TS3 PHP Framework currently supports PHP 5.2.1 or later, but we strongly rec
 Note that the majority of TS3 PHP Framework development and deployment is done on nginx, so there is more community experience and testing performed on Apache than on other web servers.
 
 ### Installation
+
 You can either install the TS3 PHP Framework by manually downloading it or using Composer:
+
 ```
 composer require planetteamspeak/ts3-php-framework
 ```
+
 The above command will install the latest available release.
 
 If you want to install the TS3 PHP Framework's `master` branch instead (which may not be released / tagged yet), you need to run:
+
 ```
 composer require planetteamspeak/ts3-php-framework:dev-master
 ```
 
 ### Getting Started
+
 #### Connection URI (Options + IPv4 vs IPv6)
-Before you can run commands like "get version of server instance" or "update some settings", you need to specify to which instance you want to connect to. This is done using the URI in `TeamSpeak3::factory("$uri")`.
+
+Before you can run commands like "get version of server instance" or "update some settings", you need to specify to which instance you want to connect to. This is done using the URI in `TeamSpeak3::factory($uri)`.
 
 The base `$uri` looks always like this:
+
 ```php
 $uri = "serverquery://username:password@127.0.0.1:10011/";
 ```
-_Note: If a piece of your URI contains [special characters](https://github.com/planetteamspeak/ts3phpframework#encoding-uri-special-characters), you will need to encode that piece using [rawurlencode](http://us2.php.net/manual/en/function.rawurlencode.php):_
+
+_**Note:** If a piece of your URI contains [special characters](https://github.com/planetteamspeak/ts3phpframework#encoding-uri-special-characters), you will need to encode that piece using [rawurlencode](http://us2.php.net/manual/en/function.rawurlencode.php):_
+
 ```php
-$uri = "serverquery://" . rawurlencode('username') . ":" . rawurlencode('password') . "@127.0.0.1:10011/";
+$uri = "serverquery://" . rawurlencode("username") . ":" . rawurlencode('password') . "@127.0.0.1:10011/";
 // Example
-$uri = "serverquery://" . rawurlencode('test!@#$%^&*()_+') . ":" . rawurlencode('sd5kjKJ2') . "@127.0.0.1:10011/";
+$uri = "serverquery://" . rawurlencode("test!@#$%^&*()_+") . ":" . rawurlencode('sd5kjKJ2') . "@127.0.0.1:10011/";
 ```
 
 You also can add some options behind the last `/` in the URI.
 
 To connect to a specific virtual TeamSpeak 3 server using it's `virtualserver_port`:
+
 ```php
 $uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987";
 ```
+
 Additional options can be added using a simple `&` like in HTTP GET URLs:
+
 ```php
 $uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987&blocking=0";
 ```
+
 The list of available options can be found in [TeamSpeak3 > factory](https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#aa0f699eba7225b3a95a99f80b14e73b3)
 
 The TS3 PHP Framework supports connecting to IPv6 TeamSpeak hosts. An IPv6 address must be written within 
 square brackets:
+
 ```php
 $uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10011/";
 ```
 
 You can use this simple trick to always get the correct URI based on type of provided IP address `$ip`:
+
 ```php
 if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
   $uri = "serverquery://username:password@${ip}:10011/";
@@ -91,16 +106,19 @@ define("CUSTOM_MOTD_PREFIX", "Hello");
 
 #### Encoding URI Special Characters
 When passing URI as argument or parameter, some parts may need to contain special characters.
-You should use [urlrawencode](http://us2.php.net/manual/en/function.rawurlencode.php) on these parts:
+You should use [rawurlencode](http://us2.php.net/manual/en/function.rawurlencode.php) on these parts:
+
 ```php
 // Bad:
 $uri = "serverquery://test!@#$%^&*()_+:sd5kjKJ2@127.0.0.1:10011/";
 // Good:
-$uri = "serverquery://" . urlrawencode('test!@#$%^&*()_+') . ":sd5kjKJ2@127.0.0.1:10011/";
+$uri = "serverquery://" . rawurlencode("test!@#$%^&*()_+") . ":sd5kjKJ2@127.0.0.1:10011/";
 ```
-_Note: Encode URI components rather than entire URI string. Valid, special characters need to remain unencoded!
+
+_**Note:** Encode URI components rather than entire URI string. Valid, special characters need to remain unencoded!
 
 Special characters are defined in the newer [RFC 3986](https://tools.ietf.org/html/rfc3986#section-2.3) as any character not in the (ascii, latin) set:
+
 ```
 ALPHA / DIGIT / "-" / "." / "_" / "~"
 ```
@@ -113,43 +131,45 @@ Additional:
 * [RFC 1738](https://tools.ietf.org/html/rfc1738) - Old RFC used for URI encoding
 * [RFC 3986](https://tools.ietf.org/html/rfc3986) - Current URI standard
 * [RFC 2396 - Section 3](https://tools.ietf.org/html/rfc2396#section-3.4) - Valid URI syntax (specifically, components of)
-* [PHP.net - urlrawencode](http://us2.php.net/manual/en/function.rawurlencode.php)
-
-
-
+* [PHP.net - rawurlencode](http://us2.php.net/manual/en/function.rawurlencode.php)
 
 #### Usual PHP Code (`require` solution)
 Usual PHP code means a simple created `file.php`, where you start writing your code like this:
+
 ```php
 <?php
-	echo "Hello World!";
+
+echo "Hello World!";
 ```
+
 When you use this solution, you'll probably start using the TS3 PHP  Framework like this:
+
 ```php
 <?php
-	// load framework files
-	require_once("libraries/TeamSpeak3/TeamSpeak3.php");
-	
-	try
-	{
-		// IPv4 connection URI
-		$uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987";
+// load framework files
+require_once("libraries/TeamSpeak3/TeamSpeak3.php");
+  
+try
+{
+  // IPv4 connection URI
+  $uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987";
 
-		// connect to above specified server, authenticate and spawn an object for the virtual server on port 9987
-		$ts3_VirtualServer = TeamSpeak3::factory("$uri");
+  // connect to above specified server, authenticate and spawn an object for the virtual server on port 9987
+  $ts3_VirtualServer = TeamSpeak3::factory($uri);
 
-		// spawn an object for the channel using a specified name
-		$ts3_Channel = $ts3_VirtualServer->channelGetByName("I do not exist");
-	}
-	catch(TeamSpeak3_Exception $e)
-	{
-		// print the error message returned by the server
-		echo "Error " . $e->getCode() . ": " . $e->getMessage();
-	}
+  // spawn an object for the channel using a specified name
+  $ts3_Channel = $ts3_VirtualServer->channelGetByName("I do not exist");
+}
+catch(TeamSpeak3_Exception $e)
+{
+  // print the error message returned by the server
+  echo "Error " . $e->getCode() . ": " . $e->getMessage();
+}
 ```
 
 #### PHP Code in [MVC](https://en.wikipedia.org/wiki/Model–view–controller) (`use` solution)
 When you use a MVC based software like Symfony, CakePHP, Laravel or something similar, you'll probably  use something like this:
+
 ```php
 <?php
 
@@ -158,30 +178,31 @@ use TeamSpeak3_Exception;
 
 class TeamspeakController extends Controller
 {
-	public function doSomething()
+  public function doSomething()
     {
-		try
-		{
-			// IPv4 connection URI
-			$uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987";
-			
-			// Create new object of TS3 PHP Framework class
-			$TS3PHPFramework = new TeamSpeak3();
-			
-			// connect to above specified server, authenticate and spawn an object for the virtual server on port 9987
-			$ts3_VirtualServer = $TS3PHPFramework->factory("$uri");
-			
-			// spawn an object for the channel using a specified name
-			$ts3_Channel = $ts3_VirtualServer->channelGetByName("I do not exist");
-		}
-		catch(TeamSpeak3_Exception $e)
-		{
-			// print the error message returned by the server
-			return "Error " . $e->getCode() . ": " . $e->getMessage();
-		}
-	}
+    try
+    {
+      // IPv4 connection URI
+      $uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987";
+      
+      // Create new object of TS3 PHP Framework class
+      $TS3PHPFramework = new TeamSpeak3();
+      
+      // connect to above specified server, authenticate and spawn an object for the virtual server on port 9987
+      $ts3_VirtualServer = $TS3PHPFramework->factory($uri);
+      
+      // spawn an object for the channel using a specified name
+      $ts3_Channel = $ts3_VirtualServer->channelGetByName("I do not exist");
+    }
+    catch(TeamSpeak3_Exception $e)
+    {
+      // print the error message returned by the server
+      return "Error " . $e->getCode() . ": " . $e->getMessage();
+    }
+  }
 }
 ```
+
 For further information please visit the documentation (see [Useful Links](#useful-links)).
 
 ### Features
@@ -205,8 +226,6 @@ To run all tests use `php vendor/bin/phpunit`.
 Visit the following pages for more information about the TS3 PHP Framework:
 
 * [Online Documentation](https://docs.planetteamspeak.com/ts3/php/framework/index.html)
-* [Changelog](https://docs.planetteamspeak.com/ts3/php/framework/changelog.txt)
-* [Changelog (dev)](https://github.com/planetteamspeak/ts3phpframework/blob/master/CHANGELOG)
+* [Changelog](https://github.com/planetteamspeak/ts3phpframework/blob/master/CHANGELOG)
 
 Speed up new development and reduce maintenance costs by using this nifty piece of software!
-
