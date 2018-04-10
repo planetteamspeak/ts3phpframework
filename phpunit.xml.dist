@@ -12,15 +12,21 @@
          bootstrap="Tests/bootstrap.php"
 >
   <testsuites>
-    <testsuite name="Teamspeak 3 PHP Framework Test Suite">
+    <testsuite name="TeamSpeak 3 PHP Framework Test Suite">
       <directory>./Tests/</directory>
     </testsuite>
   </testsuites>
+
+  <logging>
+    <log type="coverage-clover" target="build/logs/clover.xml"/>
+    <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
+  </logging>
 
   <filter>
     <whitelist>
       <directory>./</directory>
       <exclude>
+        <directory>./images</directory>
         <directory>./Tests</directory>
         <directory>./vendor</directory>
       </exclude>
