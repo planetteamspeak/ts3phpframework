@@ -20,7 +20,8 @@
     "php": ">=5.2.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "5.7.*"
+    "phpunit/phpunit": "^4.8.35 || ^5.4.3 || ^6.0",
+    "satooshi/php-coveralls": "^1.1 || ^2.0"
   },
   "autoload": {
     "files": ["libraries/TeamSpeak3/TeamSpeak3.php"]
