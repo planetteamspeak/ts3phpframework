@@ -86,8 +86,6 @@ class UDPTest extends TestCase
     $transport = new \TeamSpeak3_Transport_UDP(
       ['host' => '127.0.0.1', 'port' => 12345]
     );
-    //$this->expectException(\TeamSpeak3_Transport_Exception::class);
-    //$this->expectExceptionMessage('Connection refused');
     $this->assertNull($transport->connect());
     $this->assertInternalType(
       PHPUnit_IsType::TYPE_RESOURCE,
