@@ -16,6 +16,8 @@
  ! removed deprecated TeamSpeak3_Adapter_TSDNS
  ! TeamSpeak3::factory() uri now features an optional parameter to enable the
    encrypted ServerQuery connections via SSL/TLS
+ + added option to specify custom protocol identifier and/or MOTD using the
+   CUSTOM_PROTO_IDENT and CUSTOM_MOTD_PREFIX constants
  + added TeamSpeak3_Node_Server::channelGetDefault()
  + added optional type arg to TeamSpeak3_Node_Server::serverGroupIdentify()
  + added partial support for TeaSpeak servers
