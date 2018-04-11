@@ -5,7 +5,7 @@ namespace Tests\Unit\Adapter\ServerQuery;
 use \PHPUnit\Framework\TestCase;
 use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 
-require_once 'lib/TeamSpeak3/Adapter/ServerQuery/Reply.php';
+require_once 'libraries/TeamSpeak3/Adapter/ServerQuery/Reply.php';
 
 /**
  * Class ReplyTest

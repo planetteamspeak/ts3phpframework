@@ -27,11 +27,11 @@
     "symfony/yaml": "~2.1|~3.0|~4.0"
   },
   "autoload": {
-    "files": ["lib/TeamSpeak3/TeamSpeak3.php"]
+    "files": ["libraries/TeamSpeak3/TeamSpeak3.php"]
   },
   "autoload-dev": {
     "psr-0": {
-      "": "lib/"
+      "": "libraries/"
     },
     "psr-4": {
       "Tests\\": "tests"

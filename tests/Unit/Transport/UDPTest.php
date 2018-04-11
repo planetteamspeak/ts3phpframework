@@ -5,7 +5,7 @@ namespace Tests\Unit\Transport;
 use \PHPUnit\Framework\TestCase;
 use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 
-require_once 'lib/TeamSpeak3/Transport/UDP.php';
+require_once 'libraries/TeamSpeak3/Transport/UDP.php';
 
 class UDPTest extends TestCase
 {

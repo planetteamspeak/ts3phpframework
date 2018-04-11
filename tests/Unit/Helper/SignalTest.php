@@ -1,10 +1,10 @@
 <?php
 
-require_once('lib/TeamSpeak3/Exception.php');
-require_once('lib/TeamSpeak3/Helper/Exception.php');
-require_once('lib/TeamSpeak3/Helper/Signal.php');
-require_once('lib/TeamSpeak3/Helper/Signal/Handler.php');
-require_once('lib/TeamSpeak3/Helper/Signal/Exception.php');
+require_once('libraries/TeamSpeak3/Exception.php');
+require_once('libraries/TeamSpeak3/Helper/Exception.php');
+require_once('libraries/TeamSpeak3/Helper/Signal.php');
+require_once('libraries/TeamSpeak3/Helper/Signal/Handler.php');
+require_once('libraries/TeamSpeak3/Helper/Signal/Exception.php');
 
 use PHPUnit\Framework\TestCase;
 use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;

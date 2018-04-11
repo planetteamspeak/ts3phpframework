@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-require_once('lib/TeamSpeak3/Helper/String.php');
+require_once('libraries/TeamSpeak3/Helper/String.php');
 
 class StringTest extends TestCase
 {

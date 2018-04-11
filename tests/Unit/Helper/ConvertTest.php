@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 
-require_once('lib/TeamSpeak3/Helper/Convert.php');
+require_once('libraries/TeamSpeak3/Helper/Convert.php');
 
 class ConvertTest extends TestCase
 {
