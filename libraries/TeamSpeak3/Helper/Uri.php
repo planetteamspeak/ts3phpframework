@@ -322,7 +322,10 @@ class TeamSpeak3_Helper_Uri
   /**
    * Returns TRUE if the host is valid.
    *
+   * @todo: Implement check for host URI segment
+   *
    * @param string $host
+   *
    * @return boolean
    */
   public function checkHost($host = null)
@@ -359,7 +362,10 @@ class TeamSpeak3_Helper_Uri
   /**
    * Returns TRUE if the port is valid.
    *
+   * @todo: Implement check for port URI segment
+   *
    * @param  integer $port
+   *
    * @return boolean
    */
   public function checkPort($port = null)

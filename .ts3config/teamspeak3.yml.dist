@@ -1,0 +1,11 @@
+server:
+  host: localhost
+  ports:
+    voice: 9987
+    query: 10011
+    file:  30033
+    tsdns: 41144
+auth:
+  query:
+    username: serveradmin
+    password: password

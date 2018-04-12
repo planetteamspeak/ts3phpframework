@@ -1,12 +1,18 @@
-documentation
-Doxyfile
+# Configuration files
+.ts3config/*
+!.ts3config/*.dist
+
+# Build related
+build/
+.php_cs.cache
 
 # OS-specific
 .DS_Store
 
 # Composer libraries
-vendor
+composer.lock 
+vendor/
 
-# Intellij IDEA project files
+# Intellij project files
 .idea
 *.iml
