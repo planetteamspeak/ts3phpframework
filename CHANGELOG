@@ -9,6 +9,12 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Release 1.1.33 - WIP ===
+ + added TeamSpeak3_Viewer_Json which builds a JSON struct similar to what is
+   provided by the Planet TeamSpeak Simple REST API (servernodes) and is fully
+   compatible to the jquery-ts3viewer plugin
+ * documentation fixes
+
 === Release 1.1.32 - 8 Apr 2018 ===
  ! updated online and offline docs to Doxygen 1.8.13
  ! removed deprecated TeamSpeak3_Adapter_Blacklist
