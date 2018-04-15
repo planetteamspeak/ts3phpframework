@@ -43,7 +43,7 @@ class TeamSpeak3_Viewer_Html implements TeamSpeak3_Viewer_Interface
   protected $currObj = null;
 
   /**
-   * An array filled with siblingsfor the  TeamSpeak3_Node_Abstract object which is currently
+   * An array filled with siblings for the TeamSpeak3_Node_Abstract object which is currently
    * processed.
    *
    * @var array
