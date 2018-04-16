@@ -301,6 +301,36 @@ class TeamSpeak3_Node_Client extends TeamSpeak3_Node_Abstract
   }
 
   /**
+   * Returns TRUE if the client is using Overwolf.
+   *
+   * @return boolean
+   */
+  public function hasOverwolf()
+  {
+    return strstr($this["client_badges"], "overwolf=1") !== FALSE;
+  }
+
+  /**
+   * Returns a list of equipped badges for this client.
+   *
+   * @return array
+   */
+  public function getBadges()
+  {
+    $badges = array();
+
+    foreach(explode(":", $this["client_badges"]) as $set)
+    {
+      if(substr($set, 0, 7) == "badges=")
+      {
+        $badges[] = array_map("trim", explode(",", substr($set, 7)));
+      }
+    }
+
+    return $badges;
+  }
+
+  /**
    * Returns the revision/build number from the clients version string.
    *
    * @return integer
