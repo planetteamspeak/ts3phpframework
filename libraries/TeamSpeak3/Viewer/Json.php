@@ -415,6 +415,7 @@ class TeamSpeak3_Viewer_Json implements TeamSpeak3_Viewer_Interface
       $props->country  = strlen($this->currObj->client_country) ? trim($this->currObj->client_country) : null;
       $props->awaymesg = strlen($this->currObj->client_away_message) ? trim($this->currObj->client_away_message) : null;
       $props->memberof = array();
+      $props->badges   = $this->currObj->getBadges();
       $props->flags    = 0;
 
       foreach($this->currObj->memberOf() as $num => $group)
