@@ -1,4 +1,4 @@
-# TeamSpeak 3 PHP Framework [![Build Status](https://travis-ci.org/planetteamspeak/ts3phpframework.svg?branch=testing "Travis CI Build Test Status")](https://travis-ci.org/planetteamspeak/ts3phpframework/branches) [![Coverage Status](https://coveralls.io/repos/github/thhan/ts3phpframework/badge.svg?branch=master)](https://coveralls.io/github/thhan/ts3phpframework?branch=master)
+# TeamSpeak 3 PHP Framework [![Build Status](https://travis-ci.org/planetteamspeak/ts3phpframework.svg?branch=master "Travis CI Build Test Status")](https://travis-ci.org/planetteamspeak/ts3phpframework/branches) [![Coverage Status](https://coveralls.io/repos/github/ronindesign/ts3phpframework/badge.svg?branch=testing)](https://coveralls.io/github/ronindesign/ts3phpframework?branch=testing)
 
 Initially released in January 2010, the TS3 PHP Framework is a powerful, open source, object-oriented framework implemented in PHP 5 and licensed under the GNU General Public License. It’s based on simplicity and a rigorously tested agile codebase. Extend the functionality of your servers with scripts or create powerful web applications to manage all features of your TeamSpeak 3 Server instances.
 
