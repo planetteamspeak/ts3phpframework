@@ -13,6 +13,8 @@
  + added TeamSpeak3_Viewer_Json which builds a JSON struct similar to what is
    provided by the Planet TeamSpeak Simple REST API (servernodes) and is fully
    compatible to the jquery-ts3viewer plugin
+ + added TeamSpeak3_Node_Client::getBadges()
+ + added TeamSpeak3_Node_Client::hasOverwolf()
  * documentation fixes
 
 === Release 1.1.32 - 8 Apr 2018 ===
