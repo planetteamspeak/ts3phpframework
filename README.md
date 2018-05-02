@@ -118,7 +118,7 @@ if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 }
 ```
 
-#### SSL/TLS Connections
+#### SSL/TLS Connections ([TeaSpeak Server](https://www.teaspeak.de) only)
 
 Secure ServerQuery connections can be established using the optional `tls` parameter:
 
@@ -126,7 +126,7 @@ Secure ServerQuery connections can be established using the optional `tls` param
 $uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10011/?tls=1";
 ```
 
-#### Custom Protocol Welcome Message and/or MOTD
+#### Custom Protocol Welcome Message and/or MOTD ([TeaSpeak Server](https://www.teaspeak.de) only)
 
 If you're running a [TeaSpeak Server](https://www.teaspeak.de) with a custom MOTD, simply define `CUSTOM_PROTO_IDENT` and/or `CUSTOM_MOTD_PREFIX` before starting the ServerQuery connection:
 
