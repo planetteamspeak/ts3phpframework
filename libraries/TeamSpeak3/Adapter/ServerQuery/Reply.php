@@ -313,7 +313,7 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
         $suffix = "";
       }
       
-      throw new TeamSpeak3_Adapter_ServerQuery_Exception($this->getErrorProperty("msg") . $suffix, $this->getErrorProperty("id"));
+      throw new TeamSpeak3_Adapter_ServerQuery_Exception($this->getErrorProperty("msg") . $suffix, $this->getErrorProperty("id"), $this->getErrorProperty("return_code"));
     }
   }
 
