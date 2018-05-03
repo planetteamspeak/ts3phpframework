@@ -13,6 +13,8 @@
  + added TeamSpeak3_Viewer_Json which builds a JSON struct similar to what is
    provided by the Planet TeamSpeak Simple REST API (servernodes) and is fully
    compatible to the jquery-ts3viewer plugin
+ + added TeamSpeak3_Adapter_ServerQuery_Exception::hasReturnCode()
+ + added TeamSpeak3_Adapter_ServerQuery_Exception::getReturnCode()
  + added TeamSpeak3_Node_Client::getBadges()
  + added TeamSpeak3_Node_Client::hasOverwolf()
  * documentation fixes
@@ -22,10 +24,10 @@
  ! removed deprecated TeamSpeak3_Adapter_Blacklist
  ! removed deprecated TeamSpeak3_Adapter_Update
  ! removed deprecated TeamSpeak3_Adapter_TSDNS
- ! TeamSpeak3::factory() uri now features an optional parameter to enable the
-   encrypted ServerQuery connections via SSL/TLS
+ ! TeamSpeak3::factory() uri now features an optional parameter to enable
+   encrypted ServerQuery connections via SSL/TLS (TeaSpeak only)
  + added option to specify custom protocol identifier and/or MOTD using the
-   CUSTOM_PROTO_IDENT and CUSTOM_MOTD_PREFIX constants
+   CUSTOM_PROTO_IDENT and CUSTOM_MOTD_PREFIX constants (TeaSpeak only)
  + added TeamSpeak3_Node_Server::channelGetDefault()
  + added optional type arg to TeamSpeak3_Node_Server::serverGroupIdentify()
  + added partial support for TeaSpeak servers
