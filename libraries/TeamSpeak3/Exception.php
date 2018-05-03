@@ -29,6 +29,20 @@
 class TeamSpeak3_Exception extends Exception
 {
   /**
+   * Stores the original error code.
+   *
+   * @var integer
+   */
+  protected $raw_code = 0x00;
+
+  /**
+   * Stores the original error message.
+   *
+   * @var string
+   */
+  protected $raw_mesg = null;
+
+  /**
    * Stores custom error messages.
    *
    * @var array
@@ -45,6 +59,9 @@ class TeamSpeak3_Exception extends Exception
   public function __construct($mesg, $code = 0x00)
   {
     parent::__construct($mesg, $code);
+
+    $this->raw_code = $code;
+    $this->raw_mesg = $mesg;
 
     if(array_key_exists((int) $code, self::$messages))
     {
@@ -110,6 +127,26 @@ class TeamSpeak3_Exception extends Exception
     }
 
     unset(self::$messages[(int) $code]);
+  }
+
+  /**
+   * Returns the original error code.
+   *
+   * @return integer
+   */
+  public function getRawCode()
+  {
+    return $this->raw_code;
+  }
+
+  /**
+   * Returns the original error message.
+   *
+   * @return integer
+   */
+  public function getRawMessage()
+  {
+    return $this->raw_mesg;
   }
 
   /**
