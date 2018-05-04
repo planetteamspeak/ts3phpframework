@@ -2126,12 +2126,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    *
    * @param  integer $cldbid
    * @param  string  $ident
-   * @param  string  $value
    * @return void
    */
   public function customDelete($cldbid, $ident)
   {
-    $this->execute("customset", array("cldbid" => $cldbid, "ident" => $ident));
+    $this->execute("customdelete", array("cldbid" => $cldbid, "ident" => $ident));
   }
 
   /**
