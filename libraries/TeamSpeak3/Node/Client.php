@@ -165,6 +165,29 @@ class TeamSpeak3_Node_Client extends TeamSpeak3_Node_Abstract
   }
 
   /**
+   * Creates or updates a custom property for the client.
+   *
+   * @param  string $ident
+   * @param  string $value
+   * @return void
+   */
+  public function customSet($ident, $value)
+  {
+    $this->getParent()->customSet($this["client_database_id"], $ident, $value);
+  }
+
+  /**
+   * Removes a custom property from the client.
+   *
+   * @param  string $ident
+   * @return void
+   */
+  public function customDelete($ident)
+  {
+    $this->getParent()->customDelete($this["client_database_id"], $ident);
+  }
+
+  /**
    * Returns an array containing the permission overview of the client.
    *
    * @param  integer $cid
@@ -468,4 +491,3 @@ class TeamSpeak3_Node_Client extends TeamSpeak3_Node_Abstract
     return (string) $this["client_nickname"];
   }
 }
-
