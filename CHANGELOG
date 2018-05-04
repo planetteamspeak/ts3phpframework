@@ -13,6 +13,7 @@
  + added TeamSpeak3_Viewer_Json which builds a JSON struct similar to what is
    provided by the Planet TeamSpeak Simple REST API (servernodes) and is fully
    compatible to the jquery-ts3viewer plugin
+ + added support for optional server shutdown messages
  + added TeamSpeak3_Adapter_ServerQuery_Exception::hasReturnCode()
  + added TeamSpeak3_Adapter_ServerQuery_Exception::getReturnCode()
  + added TeamSpeak3_Node_Client::getBadges()
