@@ -2109,6 +2109,32 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
   }
 
   /**
+   * Creates or updates a custom property for the client specified by $cldbid.
+   *
+   * @param  integer $cldbid
+   * @param  string  $ident
+   * @param  string  $value
+   * @return void
+   */
+  public function customSet($cldbid, $ident, $value)
+  {
+    $this->execute("customset", array("cldbid" => $cldbid, "ident" => $ident, "value" => $value));
+  }
+
+  /**
+   * Removes a custom property from the client specified by $cldbid.
+   *
+   * @param  integer $cldbid
+   * @param  string  $ident
+   * @param  string  $value
+   * @return void
+   */
+  public function customDelete($cldbid, $ident)
+  {
+    $this->execute("customset", array("cldbid" => $cldbid, "ident" => $ident));
+  }
+
+  /**
    * Returns a list of active bans on the selected virtual server.
    *
    * @return array
