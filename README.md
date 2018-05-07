@@ -28,8 +28,8 @@ Speed up new development and reduce maintenance costs by using this nifty piece 
 
 **Requirements**
 
-* PHP7 - Developed on PHP 7.x, with 7.2.x targeted for testing.
-* TeamSpeak3 - v3.1.4 (build >= 1525440042) or higher
+* PHP - Developed on PHP 7.x, with 7.2.x targeted for testing.
+* TeamSpeak Server - v3.2.0 (build >= 1525708231) or higher.
 
 **Often used with...**
 * Server - Apache, nginx, php-fpm, CLI
