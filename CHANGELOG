@@ -10,7 +10,7 @@
 ===============================================================================
 
 === Release 1.1.33 - WIP ===
- ! upgrading your servers to 3.1.4 (build >= 1525440042) is mandatory
+ ! upgrading your servers to 3.2.0 (build >= 1525708231) is recommended
  + added TeamSpeak3_Viewer_Json which builds a JSON struct similar to what is
    provided by the Planet TeamSpeak Simple REST API (servernodes) and is fully
    compatible to the jquery-ts3viewer plugin
