@@ -119,6 +119,10 @@ if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 }
 ```
 
+#### SSH Connections ([TeamSpeak Server](https://www.teamspeak.com) only)
+
+WIP
+
 #### SSL/TLS Connections ([TeaSpeak Server](https://www.teaspeak.de) only)
 
 Secure ServerQuery connections can be established using the optional `tls` parameter:
