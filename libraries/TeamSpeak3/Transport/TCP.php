@@ -54,7 +54,7 @@ class TeamSpeak3_Transport_TCP extends TeamSpeak3_Transport_Abstract
 
     if(!empty($this->config["tls"]))
     {
-      stream_socket_enable_crypto($this->stream, TRUE, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
+      stream_socket_enable_crypto($this->stream, TRUE, STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT);
     }
 
     @stream_set_timeout($this->stream, $timeout);
