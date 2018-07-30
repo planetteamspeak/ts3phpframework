@@ -38,15 +38,17 @@ class TeamSpeak3_Transport_TCP extends TeamSpeak3_Transport_Abstract
   {
     if($this->stream !== null) return;
 
-    $host = strval($this->config["host"]);
-    $port = strval($this->config["port"]);
+    $host     = strval($this->config["host"]);
+    $port     = strval($this->config["port"]);
+    $timeout  = intval($this->config["timeout"]);
+    $blocking = intval($this->config["blocking"]);
 
     if(empty($this->config["ssh"]))
     {
       $address = "tcp://" . (strstr($host, ":") !== FALSE ? "[" . $host . "]" : $host) . ":" . $port;
       $options = empty($this->config["tls"]) ? array() : array("ssl" => array("allow_self_signed" => TRUE, "verify_peer" => FALSE, "verify_peer_name" => FALSE));
 
-      $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, stream_context_create($options));
+      $this->stream = @stream_socket_client($address, $errno, $errstr, $this->config["timeout"], STREAM_CLIENT_CONNECT, stream_context_create($options));
 
       if($this->stream === FALSE)
       {
@@ -80,8 +82,8 @@ class TeamSpeak3_Transport_TCP extends TeamSpeak3_Transport_Abstract
       }
     }
 
-    @stream_set_timeout($this->stream, (int) $this->config["timeout"]);
-    @stream_set_blocking($this->stream, (int) $this->config["blocking"] ? 1 : 0);
+    @stream_set_timeout($this->stream, $timeout);
+    @stream_set_blocking($this->stream, $blocking ? 1 : 0);
   }
 
   /**
