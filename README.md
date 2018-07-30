@@ -121,7 +121,11 @@ if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 
 #### SSH Connections ([TeamSpeak Server](https://www.teamspeak.com) only)
 
-WIP
+SSH connections can be established using the optional `ssh` parameter:
+
+```php
+$uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10022/?ssh=1";
+```
 
 #### SSL/TLS Connections ([TeaSpeak Server](https://www.teaspeak.de) only)
 
