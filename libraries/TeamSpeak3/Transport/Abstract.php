@@ -43,6 +43,13 @@ abstract class TeamSpeak3_Transport_Abstract
   protected $stream = null;
 
   /**
+   * Stores an optional stream session for the connection.
+   * 
+   * @var session
+   */
+  protected $session = null;
+
+  /**
    * Stores the TeamSpeak3_Adapter_Abstract object using this transport.
    *
    * @var TeamSpeak3_Adapter_Abstract

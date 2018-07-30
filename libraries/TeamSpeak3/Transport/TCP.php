@@ -41,24 +41,47 @@ class TeamSpeak3_Transport_TCP extends TeamSpeak3_Transport_Abstract
     $host = strval($this->config["host"]);
     $port = strval($this->config["port"]);
 
-    $address = "tcp://" . (strstr($host, ":") !== FALSE ? "[" . $host . "]" : $host) . ":" . $port;
-    $options = empty($this->config["tls"]) ? array() : array("ssl" => array("allow_self_signed" => TRUE, "verify_peer" => FALSE, "verify_peer_name" => FALSE));
-    $timeout = (int) $this->config["timeout"];
-
-    $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, stream_context_create($options));
-
-    if($this->stream === FALSE)
+    if(empty($this->config["ssh"]))
     {
-      throw new TeamSpeak3_Transport_Exception(TeamSpeak3_Helper_String::factory($errstr)->toUtf8()->toString(), $errno);
+      $address = "tcp://" . (strstr($host, ":") !== FALSE ? "[" . $host . "]" : $host) . ":" . $port;
+      $options = empty($this->config["tls"]) ? array() : array("ssl" => array("allow_self_signed" => TRUE, "verify_peer" => FALSE, "verify_peer_name" => FALSE));
+
+      $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, stream_context_create($options));
+
+      if($this->stream === FALSE)
+      {
+        throw new TeamSpeak3_Transport_Exception(TeamSpeak3_Helper_String::factory($errstr)->toUtf8()->toString(), $errno);
+      }
+
+      if(!empty($this->config["tls"]))
+      {
+        stream_socket_enable_crypto($this->stream, TRUE, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
+      }
+    }
+    else
+    {
+      $this->session = @ssh2_connect($host, $port);
+
+      if($this->session === FALSE)
+      {
+        throw new TeamSpeak3_Transport_Exception("failed to establish secure shell connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+      }
+
+      if(!@ssh2_auth_password($this->session, $this->config["username"], $this->config["password"]))
+      {
+        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid loginname or password", 0x208);
+      }
+
+      $this->stream = @ssh2_shell($this->session, "raw");
+
+      if($this->stream === FALSE)
+      {
+        throw new TeamSpeak3_Transport_Exception("failed to open a secure shell on server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+      }
     }
 
-    if(!empty($this->config["tls"]))
-    {
-      stream_socket_enable_crypto($this->stream, TRUE, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
-    }
-
-    @stream_set_timeout($this->stream, $timeout);
-    @stream_set_blocking($this->stream, $this->config["blocking"] ? 1 : 0);
+    @stream_set_timeout($this->stream, (int) $this->config["timeout"]);
+    @stream_set_blocking($this->stream, (int) $this->config["blocking"] ? 1 : 0);
   }
 
   /**
@@ -71,6 +94,11 @@ class TeamSpeak3_Transport_TCP extends TeamSpeak3_Transport_Abstract
     if($this->stream === null) return;
 
     $this->stream = null;
+
+    if(is_resource($this->session))
+    {
+      @ssh2_disconnect($this->session);
+    }
 
     TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");
   }

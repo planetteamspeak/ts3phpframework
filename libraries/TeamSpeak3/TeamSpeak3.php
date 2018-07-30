@@ -320,9 +320,15 @@ class TeamSpeak3
     $uri = new TeamSpeak3_Helper_Uri($uri);
 
     $adapter = self::getAdapterName($uri->getScheme());
-    $options = array("host" => $uri->getHost(), "port" => $uri->getPort(), "timeout" => (int) $uri->getQueryVar("timeout", 10), "blocking" => (int) $uri->getQueryVar("blocking", 1), "tls" => (int) $uri->getQueryVar("tls", 0));
+    $options = array("host" => $uri->getHost(), "port" => $uri->getPort(), "timeout" => (int) $uri->getQueryVar("timeout", 10), "blocking" => (int) $uri->getQueryVar("blocking", 1), "tls" => (int) $uri->getQueryVar("tls", 0), "ssh" => (int) $uri->getQueryVar("ssh", 0));
 
     self::loadClass($adapter);
+
+    if($options["ssh"])
+    {
+      $options["username"] = $uri->getUser();
+      $options["password"] = $uri->getPass();
+    }
 
     $object = new $adapter($options);
 
