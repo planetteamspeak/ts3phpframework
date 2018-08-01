@@ -79,8 +79,6 @@ $uri = "serverquery://username:password@127.0.0.1:10011/";
 _**Note:** If a piece of your URI contains [special characters](https://github.com/planetteamspeak/ts3phpframework#encoding-uri-special-characters), you will need to encode that piece using [rawurlencode](http://us2.php.net/manual/en/function.rawurlencode.php):_
 
 ```php
-$uri = "serverquery://" . rawurlencode("username") . ":" . rawurlencode('password') . "@127.0.0.1:10011/";
-// Example
 $uri = "serverquery://" . rawurlencode("test!@#$%^&*()_+") . ":" . rawurlencode('sd5kjKJ2') . "@127.0.0.1:10011/";
 ```
 
