@@ -9,7 +9,7 @@
    ! Important - Take note!
 ===============================================================================
 
-=== Release 1.1.33 - WIP ===
+=== Release 1.1.33 - 03 Aug 2018 ===
  ! upgrading your servers to 3.2.0 (build >= 1525708231) is recommended
  + added TeamSpeak3_Viewer_Json which builds a JSON struct similar to what is
    provided by the Planet TeamSpeak Simple REST API (servernodes) and is fully
