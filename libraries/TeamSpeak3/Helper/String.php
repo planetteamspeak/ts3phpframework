@@ -457,7 +457,17 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
     $pattern[] = "[\xF1-\xF3][\x80-\xBF]{3}";         // planes 4-15
     $pattern[] = "\xF4[\x80-\x8F][\x80-\xBF]{2}";     // plane 16
 
-    return boolval(preg_match("%(?:" . implode("|", $pattern) . ")+%xs", $this->string));
+    $match_result = preg_match("%(?:" . implode("|", $pattern) . ")+%xs", $this->string);
+
+    // boolval is not supported in PHP 5.5 and below.
+    if (!function_exists('boolval')) {
+        function boolval($val) {
+            return (bool) $val;
+        }
+    }
+
+    // phpcs:ignore PHPCompatibility.PHP.NewFunctions.boolvalFound -- Pollyfilled above
+    return boolval($match_result);
   }
 
   /**
