@@ -1919,7 +1919,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
 
     $detail = $this->request("serversnapshotdeploy -mapping " . $data)->toList();
 
-    if(array_key_exists("sid", $detail[0]))
+    if(isset($detail[0]["sid"]))
     {
       TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServercreated", $this->getParent(), $detail[0]["sid"]);
 
