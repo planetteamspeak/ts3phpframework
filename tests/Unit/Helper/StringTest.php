@@ -444,4 +444,14 @@ class StringTest extends TestCase
         $string = new \TeamSpeak3_Helper_String("Hello world!");
         $this->assertEquals("Hello%20world!", $string->spaceToPercent());
     }
+
+    public function testJsonSerialize()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello world!");
+
+        $this->assertJsonStringEqualsJsonString(
+            json_encode(["a" => $string]),
+            json_encode(["a" => "Hello world!"])
+        );
+    }
 }
