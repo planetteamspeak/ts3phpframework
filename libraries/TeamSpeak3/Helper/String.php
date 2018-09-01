@@ -851,13 +851,13 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable, Json
   }
 
   /**
-   *  Specify data which should be serialized to JSON.
+   *  Return UTF-8 encoded string to for serializing to JSON.
    * 
    * @return string
    */
   public function jsonSerialize()
   {
-    return $this->string;
+    return $this->toUtf8()->string;
   }
 
   /**
