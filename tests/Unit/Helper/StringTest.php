@@ -178,15 +178,86 @@ class StringTest extends TestCase
         $string = new \TeamSpeak3_Helper_String(utf8_encode("Äpfel"));
         $this->assertTrue($string->isUtf8());
 
-        $string = new \TeamSpeak3_Helper_String(utf8_decode("Äpfel"));
-        $this->assertNotTrue($string->isUtf8());
+        // Well-formed UTF-8 Byte Sequences
+        // Ref: Unicode (v11.0.0) - §3.9 Unicode Encoding Forms (126, table 3-7)
+        // https://www.unicode.org/versions/Unicode11.0.0/ch03.pdf#page=55
+        $unicodeBoundaries = [
+            // Ignoring first set (ASCII) as isUtf8() does not use it.
+            //[[0x00],[0x7F]],                                // U+0000..U+007F
+            [[0xC2,0x80], [0xDF,0xBF]],                     // U+0080..U+07FF
+            [[0xE0,0xA0,0x80], [0xE0,0xBF,0xBF]],           // U+0800..U+0FFF
+            [[0xE1,0x80,0x80], [0xEC,0xBF,0xBF]],           // U+1000..U+CFFF
+            [[0xED,0x80,0x80], [0xED,0x9F,0xBF]],           // U+D000..U+D7FF
+            [[0xEE,0x80,0x80], [0xEF,0xBF,0xBF]],           // U+E000..U+FFFF
+            [[0xF0,0x90,0x80,0x80], [0xF0,0xEF,0xBF,0xBF]], // U+10000..U+3FFFF
+            [[0xF1,0x80,0x80,0x80], [0xF3,0xBF,0xBF,0xBF]], // U+40000..U+FFFFF
+            [[0xF4,0x80,0x80,0x80], [0xF4,0x8F,0xBF,0xBF]]  // U+100000..U+10FFFF
+        ];
+
+        // Lower character precedes lower unicode boundary. 
+        // Upper character follows upper unicode boundary.
+        $unicodeBoundariesMalformed = [
+            [[0x80],[0xFF]],
+            [[0xC2,0x7F], [0xDF,0xC0]],
+            [[0xE0,0xA0,0x7F], [0xE0,0xBF,0xC0]],
+            [[0xE1,0x80,0x7F], [0xEC,0xBF,0xC0]],
+            [[0xED,0x80,0x7F], [0xED,0x9F,0xC0]],
+            [[0xEE,0x80,0x7F], [0xEF,0xBF,0xC0]],
+            [[0xF0,0x90,0x80,0x7F], [0xF0,0xEF,0xBF,0xC0]],
+            [[0xF1,0x80,0x80,0x7F], [0xF3,0xBF,0xBF,0xC0]],
+            [[0xF4,0x80,0x80,0x7F], [0xF4,0x8F,0xBF,0xC0]]
+        ];
+
+        foreach($unicodeBoundaries as $boundary) {
+            $lowerUtf8MultibyteChar = new \TeamSpeak3_Helper_String(array_reduce(
+                $boundary[0],
+                function($mb_string, $item) {
+                  $mb_string .= chr($item);
+                  return $mb_string;
+                }
+            ));
+            $this->assertTrue($lowerUtf8MultibyteChar->isUtf8());
+            $upperUtf8MultibyteChar = new \TeamSpeak3_Helper_String(array_reduce(
+                $boundary[1],
+                function($mb_string, $item) {
+                  //var_dump($item);
+                  $mb_string .= chr($item);
+                  return $mb_string;
+                }
+            ));
+            $this->assertTrue($upperUtf8MultibyteChar->isUtf8());
+        }
+
+        foreach($unicodeBoundariesMalformed as $boundary) {
+            $lowerUtf8MultibyteChar = new \TeamSpeak3_Helper_String(array_reduce(
+                $boundary[0],
+                function($mb_string, $item) {
+                  $mb_string .= chr($item);
+                  return $mb_string;
+                }
+            ));
+            $this->assertNotTrue($lowerUtf8MultibyteChar->isUtf8());
+            $upperUtf8MultibyteChar = new \TeamSpeak3_Helper_String(array_reduce(
+                $boundary[1],
+                function($mb_string, $item) {
+                  //var_dump($item);
+                  $mb_string .= chr($item);
+                  return $mb_string;
+                }
+            ));
+            $this->assertNotTrue($upperUtf8MultibyteChar->isUtf8());
+        }
     }
 
     public function testToUft8()
     {
         $notUtf8 = utf8_decode("Äpfel");
-        $string  = new \TeamSpeak3_Helper_String($notUtf8);
-        $this->assertEquals(utf8_encode($notUtf8), $string->toUtf8());
+        $stringNotUtf8  = new \TeamSpeak3_Helper_String($notUtf8);
+        $this->assertEquals(utf8_encode($notUtf8), $stringNotUtf8->toUtf8()->toString());
+
+        $notUtf8 = utf8_decode("¶");
+        $stringNotUtf8  = new \TeamSpeak3_Helper_String($notUtf8);
+        $this->assertEquals(utf8_encode($notUtf8), $stringNotUtf8->toUtf8()->toString());
     }
 
     public function testToBase64()
@@ -443,5 +514,15 @@ class StringTest extends TestCase
     {
         $string = new \TeamSpeak3_Helper_String("Hello world!");
         $this->assertEquals("Hello%20world!", $string->spaceToPercent());
+    }
+
+    public function testJsonSerialize()
+    {
+        $string = new \TeamSpeak3_Helper_String("Hello world!");
+
+        $this->assertJsonStringEqualsJsonString(
+            json_encode(["a" => $string]),
+            json_encode(["a" => "Hello world!"])
+        );
     }
 }
