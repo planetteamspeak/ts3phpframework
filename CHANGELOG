@@ -10,7 +10,7 @@
 ===============================================================================
 
 === Release 1.1.33 - WIP ===
- ! upgrading your servers to 3.4.0 (build >= 1536102612) is recommended
+ ! upgrading your servers to 3.4.0 (build >= 1536102612) is mandatory
  - fixed "Undefined index" error in TeamSpeak3_Node_Host::snapshotDeploy()
  - fixed invalid conversion of UTC log timestamps
  - virtual servers will now be de-selected before attempting to delete them so
