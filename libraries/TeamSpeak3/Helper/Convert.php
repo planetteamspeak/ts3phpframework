@@ -267,7 +267,7 @@ class TeamSpeak3_Helper_Convert
     }
     else
     {
-      $array["timestamp"] = strtotime(trim($parts[0]));
+      $array["timestamp"] = strtotime(trim($parts[0]) . " UTC");
       $array["level"]     = self::logLevel(trim($parts[1]));
       $array["channel"]   = trim($parts[2]);
       $array["server_id"] = trim($parts[3]);
