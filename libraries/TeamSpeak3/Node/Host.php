@@ -332,9 +332,13 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
    */
   public function serverDelete($sid)
   {
-    $this->serverListReset();
+    if($sid == $this->serverSelectedId())
+    {
+      $this->serverDeselect();
+    }
 
     $this->execute("serverdelete", array("sid" => $sid));
+    $this->serverListReset();
 
     TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServerdeleted", $this, $sid);
   }
@@ -345,17 +349,17 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
    * @param  integer $sid
    * @return void
    */
-  public function serverDelete($sid)
+  public function serverStart($sid)
   {
     if($sid == $this->serverSelectedId())
     {
       $this->serverDeselect();
     }
 
-    $this->execute("serverdelete", array("sid" => $sid));
+    $this->execute("serverstart", array("sid" => $sid));
     $this->serverListReset();
 
-    TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServerdeleted", $this, $sid);
+    TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServerstarted", $this, $sid);
   }
 
   /**
