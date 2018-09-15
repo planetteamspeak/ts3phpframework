@@ -130,6 +130,7 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
    *
    * @param  integer $sid
    * @param  boolean $virtual
+   * @todo   remove additional clientupdate call (breaks compatibility with server versions <= 3.4.0)
    * @return void
    */
   public function serverSelect($sid, $virtual = null)
@@ -139,14 +140,21 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     $virtual = ($virtual !== null) ? $virtual : $this->start_offline_virtual;
     $getargs = func_get_args();
 
-    $this->execute("use", array("sid" => $sid, $virtual ? "-virtual" : null));
-
     if($sid != 0 && $this->predefined_query_name !== null)
     {
-      $this->execute("clientupdate", array("client_nickname" => (string) $this->predefined_query_name));
+      $this->execute("use", array("sid" => $sid, "client_nickname" => (string) $this->predefined_query_name, $virtual ? "-virtual" : null));
+    }
+    else
+    {
+      $this->execute("use", array("sid" => $sid, $virtual ? "-virtual" : null));
     }
 
     $this->whoamiReset();
+
+    if($sid != 0 && $this->predefined_query_name !== null && $this->whoamiGet("client_nickname") != $this->predefined_query_name)
+    {
+      $this->execute("clientupdate", array("client_nickname" => (string) $this->predefined_query_name));
+    }
 
     $this->setStorage("_server_use", array(__FUNCTION__, $getargs));
 
@@ -170,6 +178,7 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
    *
    * @param  integer $port
    * @param  boolean $virtual
+   * @todo   remove additional clientupdate call (breaks compatibility with server versions <= 3.4.0)
    * @return void
    */
   public function serverSelectByPort($port, $virtual = null)
@@ -179,14 +188,21 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     $virtual = ($virtual !== null) ? $virtual : $this->start_offline_virtual;
     $getargs = func_get_args();
 
-    $this->execute("use", array("port" => $port, $virtual ? "-virtual" : null));
-
     if($port != 0 && $this->predefined_query_name !== null)
     {
-      $this->execute("clientupdate", array("client_nickname" => (string) $this->predefined_query_name));
+      $this->execute("use", array("port" => $port, "client_nickname" => (string) $this->predefined_query_name, $virtual ? "-virtual" : null));
+    }
+    else
+    {
+      $this->execute("use", array("port" => $port, $virtual ? "-virtual" : null));
     }
 
     $this->whoamiReset();
+
+    if($port != 0 && $this->predefined_query_name !== null && $this->whoamiGet("client_nickname") != $this->predefined_query_name)
+    {
+      $this->execute("clientupdate", array("client_nickname" => (string) $this->predefined_query_name));
+    }
 
     $this->setStorage("_server_use", array(__FUNCTION__, $getargs));
 
