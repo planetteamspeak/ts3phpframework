@@ -918,8 +918,8 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
   }
 
   /**
-   * Bans the client specified with ID $clid from the server. Please note that this will create two separate
-   * ban rules for the targeted clients IP address and his unique identifier.
+   * Bans the client specified with ID $clid from the server. Please note that this will create three separate
+   * ban rules for the targeted clients IP address, the unique identifier and the myTeamSpeak ID (if available).
    *
    * @param  integer $clid
    * @param  integer $timeseconds
