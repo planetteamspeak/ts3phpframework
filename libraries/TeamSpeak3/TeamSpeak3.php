@@ -287,6 +287,8 @@ class TeamSpeak3
    * === Supported Options ===
    *   - timeout
    *   - blocking
+   *   - tls (TeaSpeak only)
+   *   - ssh (TeamSpeak only)
    *   - nickname
    *   - no_query_clients
    *   - use_offline_as_virtual
@@ -302,6 +304,9 @@ class TeamSpeak3
    *
    * === URI Examples ===
    *   - serverquery://127.0.0.1:10011/
+   *   - serverquery://127.0.0.1:10022/?ssh=1 (TeamSpeak ONLY)
+   *   - serverquery://127.0.0.1:10011/?tls=1 (TeaSpeak ONLY)
+   *   - serverquery://127.0.0.1:10022/?ssh=1&server_port=9987
    *   - serverquery://127.0.0.1:10011/?server_port=9987&channel_id=1
    *   - serverquery://127.0.0.1:10011/?server_port=9987&channel_id=1#no_query_clients
    *   - serverquery://127.0.0.1:10011/?server_port=9987&client_name=ScP
