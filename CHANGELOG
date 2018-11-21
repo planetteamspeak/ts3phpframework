@@ -14,6 +14,8 @@
  * property client_nickname will now be set before selecting a virtual server
  - fixed "Undefined index" error in TeamSpeak3_Node_Host::snapshotDeploy()
  - fixed invalid conversion of UTC log timestamps
+ - fixed a bug where channels with a client limit of 0 returned an invalid icon
+   when your ServerQuery client had insufficient subscribe power
  - virtual servers will now be de-selected before attempting to delete them so
    TeamSpeak3_Node_Server::delete() should actually work now
 
