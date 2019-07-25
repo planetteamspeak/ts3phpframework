@@ -546,7 +546,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
    */
   public function getIcon()
   {
-    if($this["channel_maxclients"] != -1 && $this["channel_maxclients"] <= $this["total_clients"])
+    if(!$this["channel_maxclients"] || ($this["channel_maxclients"] != -1 && $this["channel_maxclients"] <= $this["total_clients"]))
     {
       return "channel_full";
     }
