@@ -849,6 +849,61 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
   }
 
   /**
+   * Returns the number of ServerQuery logins on the selected virtual server.
+   *
+   * @return integer
+   */
+  public function queryCountLogin($pattern = null)
+  {
+    return current($this->execute("queryloginlist -count", array("duration" => 1, "pattern" => $pattern))->toList("count"));
+  }
+
+  /**
+   * Returns a list of ServerQuery logins on the selected virtual server. By default, the server spits out 25 entries
+   * at once.
+   *
+   * @param  integer $offset
+   * @param  integer $limit
+   * @return array
+   */
+  public function queryListLogin($offset = null, $limit = null, $pattern = null)
+  {
+    return $this->execute("queryloginlist -count", array("start" => $offset, "duration" => $limit, "pattern" => $pattern))->toAssocArray("cldbid");
+  }
+
+  /**
+   * Creates a new ServerQuery login, or enables ServerQuery logins for an existing client. When no virtual server is
+   * selected, the command will create global ServerQuery login. Otherwise a ServerQuery login will be added for an
+   * existing client (cldbid must be specified).
+   *
+   * @param  string  $username
+   * @param  integer $cldbid
+   * @return array
+   */
+  public function queryLoginCreate($username, $cldbid = 0)
+  {
+    if($this->serverSelectedId())
+    {
+      return $this->execute("queryloginadd", array("client_login_name" => $username, "cldbid" => $cldbid))->toList();
+    }
+    else
+    {
+      return $this->execute("queryloginadd", array("client_login_name" => $username))->toList();
+    }
+  }
+
+  /**
+   * Deletes an existing ServerQuery login.
+   *
+   * @param  integer $cldbid
+   * @return void
+   */
+  public function queryLoginDelete($cldbid)
+  {
+    $this->execute("querylogindel", array("cldbid" => $cldbid));
+  }
+
+  /**
    * Returns information about your current ServerQuery connection.
    *
    * @return array
