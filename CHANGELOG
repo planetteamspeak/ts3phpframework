@@ -10,8 +10,12 @@
 ===============================================================================
 
 === Release 1.1.34 - WIP ===
- ! upgrading your servers to 3.4.0 (build >= 1536564584) is mandatory
+ ! upgrading your servers to 3.10.0 (build >= 1564054246) is mandatory
+ + added optional -continueonerror argument to some commands
+ + added pagination support for banlist commands
+ + added management support for ServerQuery logins
  * property client_nickname will now be set before selecting a virtual server
+ * adjusted permfind handling in TeamSpeak3_Node_Server::permRemoveAny()
  - fixed "Undefined index" error in TeamSpeak3_Node_Host::snapshotDeploy()
  - fixed invalid conversion of UTC log timestamps
  - fixed a bug where channels with a client limit of 0 returned an invalid icon
