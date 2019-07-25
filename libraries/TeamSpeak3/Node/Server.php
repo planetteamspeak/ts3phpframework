@@ -1008,7 +1008,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
       $permident = (is_numeric(current($permid))) ? "permid" : "permsid";
     }
 
-    $this->execute("clientaddperm", array("cldbid" => $cldbid, $permident => $permid, "permvalue" => $permvalue, "permskip" => $permskip));
+    $this->execute("clientaddperm -continueonerror", array("cldbid" => $cldbid, $permident => $permid, "permvalue" => $permvalue, "permskip" => $permskip));
   }
 
   /**
@@ -1629,19 +1629,19 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
       		break;
 
         case TeamSpeak3::PERM_TYPE_CLIENT:
-          $this->clientPermRemove($assignment["id2"], $assignment["p"]);
+          $this->clientPermRemove($assignment["id1"], $assignment["p"]);
           break;
 
         case TeamSpeak3::PERM_TYPE_CHANNEL:
-          $this->channelPermRemove($assignment["id2"], $assignment["p"]);
+          $this->channelPermRemove($assignment["id1"], $assignment["p"]);
           break;
 
         case TeamSpeak3::PERM_TYPE_CHANNELGROUP:
-          $this->channelGroupPermRemove($assignment["id1"], $assignment["p"]);
+          $this->channelGroupPermRemove($assignment["id2"], $assignment["p"]);
           break;
 
         case TeamSpeak3::PERM_TYPE_CHANNELCLIENT:
-          $this->channelClientPermRemove($assignment["id2"], $assignment["id1"], $assignment["p"]);
+          $this->channelClientPermRemove($assignment["id1"], $assignment["id2"], $assignment["p"]);
           break;
 
       	default:
@@ -2138,9 +2138,19 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    *
    * @return array
    */
-  public function banList()
+  public function banList($offset = null, $limit = null)
   {
-    return $this->request("banlist")->toAssocArray("banid");
+    return $this->execute("banlist -count", array("start" => $offset, "duration" => $limit))->toAssocArray("banid");
+  }
+
+  /**
+   * Returns the number of bans on the selected virtual server.
+   *
+   * @return integer
+   */
+  public function banCount()
+  {
+    return current($this->execute("banlist -count", array("duration" => 1))->toList("count"));
   }
 
   /**
