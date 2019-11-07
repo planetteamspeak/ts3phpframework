@@ -1772,7 +1772,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
         $name = $this->iconGetName("virtualserver_icon_id");
     }
     
-    $download = $this->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("virtualserver_icon_id"));
+    $download = $this->transferInitDownload(rand(0x0000, 0xFFFF), 0, $name);
     $transfer = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== FALSE ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
     return $transfer->download($download["ftkey"], $download["size"]);
