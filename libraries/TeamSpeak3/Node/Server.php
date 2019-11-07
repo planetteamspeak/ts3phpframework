@@ -1760,10 +1760,18 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
    *
    * @return TeamSpeak3_Helper_String
    */
-  public function iconDownload()
+  public function iconDownload($iconname = null)
   {
-    if($this->iconIsLocal("virtualserver_icon_id") || $this["virtualserver_icon_id"] == 0) return;
-
+    if($iconname) 
+    {
+        $name = new \TeamSpeak3_Helper_String("/" . $iconName);
+    } 
+    else
+    {
+        if($this->iconIsLocal("virtualserver_icon_id") || $this["virtualserver_icon_id"] == 0) return;
+        $name = $this->iconGetName("virtualserver_icon_id");
+    }
+    
     $download = $this->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("virtualserver_icon_id"));
     $transfer = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== FALSE ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
