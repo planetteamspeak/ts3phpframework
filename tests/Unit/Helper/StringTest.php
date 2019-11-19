@@ -1,65 +1,66 @@
 <?php
-use PHPUnit\Framework\TestCase;
 
-require_once('libraries/TeamSpeak3/Helper/String.php');
+use PHPUnit\Framework\TestCase;
+use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
+use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 class StringTest extends TestCase
 {
     public function testReplace()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $string->replace("world", "word");
 
-        $this->assertEquals("Hello word!", (string) $string);
+        $this->assertEquals("Hello word!", (string)$string);
 
 
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $string->replace("hello", "Hey", false);
 
-        $this->assertEquals("Hey world!", (string) $string);
+        $this->assertEquals("Hey world!", (string)$string);
     }
 
     public function testStartsWith()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertTrue($string->startsWith("Hello"));
         $this->assertFalse($string->startsWith("world"));
     }
 
     public function testEndsWith()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertTrue($string->endsWith("!"));
         $this->assertFalse($string->endsWith("."));
     }
 
     public function testFindFirst()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals(2, $string->findFirst("l"));
     }
 
     public function testFindLast()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals(9, $string->findLast("l"));
     }
 
     public function testToLower()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals("hello world!", $string->toLower());
     }
 
     public function testToUpper()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals("HELLO WORLD!", $string->toUpper());
     }
 
     public function testContains()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertTrue($string->contains(""));
         $this->assertTrue($string->contains("[a-z]{5}", true));
         $this->assertTrue($string->contains("world"));
@@ -68,15 +69,15 @@ class StringTest extends TestCase
 
     public function testSubstr()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals("ello", $string->substr(1, 4));
         $this->assertEquals("world", $string->substr(-6, 5));
     }
 
     public function testSplit()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
-        $array  = $string->split('l', 3);
+        $string = new StringHelper("Hello world!");
+        $array = $string->split('l', 3);
         $this->assertCount(3, $array);
         $this->assertEquals('He', $array[0]);
         $this->assertEmpty($array[1]);
@@ -85,36 +86,36 @@ class StringTest extends TestCase
     public function testIsInt()
     {
         $tests = [
-            "1"             => true,
-            "+1"            => false,
-            "-1"            => false,
-            "hello"         => false,
-            "1.0"           => false,
-            ".1"            => false,
+            "1" => true,
+            "+1" => false,
+            "-1" => false,
+            "hello" => false,
+            "1.0" => false,
+            ".1" => false,
 
             // From https://goo.gl/C5v9wT
-            "0x539"         => false,
+            "0x539" => false,
             "0b10100111001" => false,
-            "1337e0"        => false,
-            "9.1"           => false,
+            "1337e0" => false,
+            "9.1" => false,
         ];
 
         foreach ($tests as $test => $expected) {
-            $string = new \TeamSpeak3_Helper_String($test);
-            $this->assertSame($string->isInt(), $expected);
+            $string = new StringHelper($test);
+            $this->assertSame($string->isInt(), $expected, "Error by value '$test'");
         }
     }
 
     public function testFactory()
     {
-        $string = \TeamSpeak3_Helper_String::factory("hello world");
+        $string = StringHelper::factory("hello world");
 
         $this->assertEquals("hello world", $string->toString());
     }
 
     public function testArg()
     {
-        $string = new \TeamSpeak3_Helper_String("%h %w");
+        $string = new StringHelper("%h %w");
 
         $string->arg(["w" => "world", "h" => "Hello"]);
 
@@ -126,21 +127,21 @@ class StringTest extends TestCase
 
     public function testAppend()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world");
+        $string = new StringHelper("Hello world");
         $string->append('!');
         $this->assertEquals("Hello world!", $string->toString());
     }
 
     public function testPrepend()
     {
-        $string = new \TeamSpeak3_Helper_String("world!");
+        $string = new StringHelper("world!");
         $string->prepend("Hello ");
         $this->assertEquals("Hello world!", $string->toString());
     }
 
     public function testSection()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
 
         $section = $string->section(' ');
         $this->assertEquals("Hello", $section->toString());
@@ -157,25 +158,25 @@ class StringTest extends TestCase
 
     public function testToCrc32()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals(crc32("Hello world!"), $string->toCrc32());
     }
 
     public function testToMd5()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals(md5("Hello world!"), $string->toMd5());
     }
 
     public function testToSha1()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals(sha1("Hello world!"), $string->toSha1());
     }
 
     public function testIsUtf8()
     {
-        $string = new \TeamSpeak3_Helper_String(utf8_encode("Äpfel"));
+        $string = new StringHelper(utf8_encode("Äpfel"));
         $this->assertTrue($string->isUtf8());
 
         // Well-formed UTF-8 Byte Sequences
@@ -184,65 +185,65 @@ class StringTest extends TestCase
         $unicodeBoundaries = [
             // Ignoring first set (ASCII) as isUtf8() does not use it.
             //[[0x00],[0x7F]],                                // U+0000..U+007F
-            [[0xC2,0x80], [0xDF,0xBF]],                     // U+0080..U+07FF
-            [[0xE0,0xA0,0x80], [0xE0,0xBF,0xBF]],           // U+0800..U+0FFF
-            [[0xE1,0x80,0x80], [0xEC,0xBF,0xBF]],           // U+1000..U+CFFF
-            [[0xED,0x80,0x80], [0xED,0x9F,0xBF]],           // U+D000..U+D7FF
-            [[0xEE,0x80,0x80], [0xEF,0xBF,0xBF]],           // U+E000..U+FFFF
-            [[0xF0,0x90,0x80,0x80], [0xF0,0xEF,0xBF,0xBF]], // U+10000..U+3FFFF
-            [[0xF1,0x80,0x80,0x80], [0xF3,0xBF,0xBF,0xBF]], // U+40000..U+FFFFF
-            [[0xF4,0x80,0x80,0x80], [0xF4,0x8F,0xBF,0xBF]]  // U+100000..U+10FFFF
+            [[0xC2, 0x80], [0xDF, 0xBF]],                     // U+0080..U+07FF
+            [[0xE0, 0xA0, 0x80], [0xE0, 0xBF, 0xBF]],           // U+0800..U+0FFF
+            [[0xE1, 0x80, 0x80], [0xEC, 0xBF, 0xBF]],           // U+1000..U+CFFF
+            [[0xED, 0x80, 0x80], [0xED, 0x9F, 0xBF]],           // U+D000..U+D7FF
+            [[0xEE, 0x80, 0x80], [0xEF, 0xBF, 0xBF]],           // U+E000..U+FFFF
+            [[0xF0, 0x90, 0x80, 0x80], [0xF0, 0xEF, 0xBF, 0xBF]], // U+10000..U+3FFFF
+            [[0xF1, 0x80, 0x80, 0x80], [0xF3, 0xBF, 0xBF, 0xBF]], // U+40000..U+FFFFF
+            [[0xF4, 0x80, 0x80, 0x80], [0xF4, 0x8F, 0xBF, 0xBF]]  // U+100000..U+10FFFF
         ];
 
-        // Lower character precedes lower unicode boundary. 
+        // Lower character precedes lower unicode boundary.
         // Upper character follows upper unicode boundary.
         $unicodeBoundariesMalformed = [
-            [[0x80],[0xFF]],
-            [[0xC2,0x7F], [0xDF,0xC0]],
-            [[0xE0,0xA0,0x7F], [0xE0,0xBF,0xC0]],
-            [[0xE1,0x80,0x7F], [0xEC,0xBF,0xC0]],
-            [[0xED,0x80,0x7F], [0xED,0x9F,0xC0]],
-            [[0xEE,0x80,0x7F], [0xEF,0xBF,0xC0]],
-            [[0xF0,0x90,0x80,0x7F], [0xF0,0xEF,0xBF,0xC0]],
-            [[0xF1,0x80,0x80,0x7F], [0xF3,0xBF,0xBF,0xC0]],
-            [[0xF4,0x80,0x80,0x7F], [0xF4,0x8F,0xBF,0xC0]]
+            [[0x80], [0xFF]],
+            [[0xC2, 0x7F], [0xDF, 0xC0]],
+            [[0xE0, 0xA0, 0x7F], [0xE0, 0xBF, 0xC0]],
+            [[0xE1, 0x80, 0x7F], [0xEC, 0xBF, 0xC0]],
+            [[0xED, 0x80, 0x7F], [0xED, 0x9F, 0xC0]],
+            [[0xEE, 0x80, 0x7F], [0xEF, 0xBF, 0xC0]],
+            [[0xF0, 0x90, 0x80, 0x7F], [0xF0, 0xEF, 0xBF, 0xC0]],
+            [[0xF1, 0x80, 0x80, 0x7F], [0xF3, 0xBF, 0xBF, 0xC0]],
+            [[0xF4, 0x80, 0x80, 0x7F], [0xF4, 0x8F, 0xBF, 0xC0]]
         ];
 
-        foreach($unicodeBoundaries as $boundary) {
-            $lowerUtf8MultibyteChar = new \TeamSpeak3_Helper_String(array_reduce(
+        foreach ($unicodeBoundaries as $boundary) {
+            $lowerUtf8MultibyteChar = new StringHelper(array_reduce(
                 $boundary[0],
-                function($mb_string, $item) {
-                  $mb_string .= chr($item);
-                  return $mb_string;
+                function ($mb_string, $item) {
+                    $mb_string .= chr($item);
+                    return $mb_string;
                 }
             ));
             $this->assertTrue($lowerUtf8MultibyteChar->isUtf8());
-            $upperUtf8MultibyteChar = new \TeamSpeak3_Helper_String(array_reduce(
+            $upperUtf8MultibyteChar = new StringHelper(array_reduce(
                 $boundary[1],
-                function($mb_string, $item) {
-                  //var_dump($item);
-                  $mb_string .= chr($item);
-                  return $mb_string;
+                function ($mb_string, $item) {
+                    //var_dump($item);
+                    $mb_string .= chr($item);
+                    return $mb_string;
                 }
             ));
             $this->assertTrue($upperUtf8MultibyteChar->isUtf8());
         }
 
-        foreach($unicodeBoundariesMalformed as $boundary) {
-            $lowerUtf8MultibyteChar = new \TeamSpeak3_Helper_String(array_reduce(
+        foreach ($unicodeBoundariesMalformed as $boundary) {
+            $lowerUtf8MultibyteChar = new StringHelper(array_reduce(
                 $boundary[0],
-                function($mb_string, $item) {
-                  $mb_string .= chr($item);
-                  return $mb_string;
+                function ($mb_string, $item) {
+                    $mb_string .= chr($item);
+                    return $mb_string;
                 }
             ));
             $this->assertNotTrue($lowerUtf8MultibyteChar->isUtf8());
-            $upperUtf8MultibyteChar = new \TeamSpeak3_Helper_String(array_reduce(
+            $upperUtf8MultibyteChar = new StringHelper(array_reduce(
                 $boundary[1],
-                function($mb_string, $item) {
-                  //var_dump($item);
-                  $mb_string .= chr($item);
-                  return $mb_string;
+                function ($mb_string, $item) {
+                    //var_dump($item);
+                    $mb_string .= chr($item);
+                    return $mb_string;
                 }
             ));
             $this->assertNotTrue($upperUtf8MultibyteChar->isUtf8());
@@ -252,42 +253,42 @@ class StringTest extends TestCase
     public function testToUft8()
     {
         $notUtf8 = utf8_decode("Äpfel");
-        $stringNotUtf8  = new \TeamSpeak3_Helper_String($notUtf8);
+        $stringNotUtf8 = new StringHelper($notUtf8);
         $this->assertEquals(utf8_encode($notUtf8), $stringNotUtf8->toUtf8()->toString());
 
         $notUtf8 = utf8_decode("¶");
-        $stringNotUtf8  = new \TeamSpeak3_Helper_String($notUtf8);
+        $stringNotUtf8 = new StringHelper($notUtf8);
         $this->assertEquals(utf8_encode($notUtf8), $stringNotUtf8->toUtf8()->toString());
     }
 
     public function testToBase64()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals(base64_encode("Hello world!"), $string->toBase64());
     }
 
     public function testFromBase64()
     {
-        $string = \TeamSpeak3_Helper_String::fromBase64(base64_encode("Hello world!"));
+        $string = StringHelper::fromBase64(base64_encode("Hello world!"));
         $this->assertEquals("Hello world!", $string->toString());
     }
 
     public function testToHex()
     {
-        \TeamSpeak3::init();
-        $string = new \TeamSpeak3_Helper_String("Hello");
+        TeamSpeak3::init();
+        $string = new StringHelper("Hello");
         $this->assertEquals("48656C6C6F", $string->toHex());
     }
 
     public function testFromHex()
     {
-        $string = \TeamSpeak3_Helper_String::fromHex("48656C6C6F");
+        $string = StringHelper::fromHex("48656C6C6F");
         $this->assertEquals("Hello", $string->toString());
     }
 
     public function testTransliterate()
     {
-        $utf8_accents = array(
+        $utf8_accents = [
             "à" => "a",
             "ô" => "o",
             "ď" => "d",
@@ -496,7 +497,7 @@ class StringTest extends TestCase
             "Æ" => "Ae",
             "Ĕ" => "E",
             "Œ" => "Oe",
-        );
+        ];
 
         $string = "";
         $result = "";
@@ -506,19 +507,19 @@ class StringTest extends TestCase
             $result .= $v;
         }
 
-        $string = new \TeamSpeak3_Helper_String($string);
+        $string = new StringHelper($string);
         $this->assertEquals($result, $string->transliterate()->toString());
     }
 
     public function testSpaceToPercent()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
         $this->assertEquals("Hello%20world!", $string->spaceToPercent());
     }
 
     public function testJsonSerialize()
     {
-        $string = new \TeamSpeak3_Helper_String("Hello world!");
+        $string = new StringHelper("Hello world!");
 
         $this->assertJsonStringEqualsJsonString(
             json_encode(["a" => $string]),
