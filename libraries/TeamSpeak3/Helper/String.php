@@ -186,7 +186,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable, Json
 
     if($regexp)
     {
-      return (preg_match("/" . $pattern . "/i", $this->string)) ? TRUE : FALSE;
+      return (preg_match("/" . preg_quote($pattern, '/') . "/i", $this->string)) ? TRUE : FALSE;
     }
     else
     {
