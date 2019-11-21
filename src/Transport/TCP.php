@@ -26,6 +26,8 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
  * @class TeamSpeak3_Transport_TCP
@@ -37,8 +39,8 @@ class TCP extends Transport
      * Connects to a remote server.
      *
      * @return void
-     * @throws Exception
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws TransportException
+     * @throws ServerQueryException
      */
     public function connect()
     {
@@ -58,7 +60,7 @@ class TCP extends Transport
             $this->stream = @stream_socket_client($address, $errno, $errstr, $this->config["timeout"], STREAM_CLIENT_CONNECT, stream_context_create($options));
 
             if ($this->stream === false) {
-                throw new Exception(StringHelper::factory($errstr)->toUtf8()->toString(), $errno);
+                throw new TransportException(StringHelper::factory($errstr)->toUtf8()->toString(), $errno);
             }
 
             if (!empty($this->config["tls"])) {
@@ -68,17 +70,17 @@ class TCP extends Transport
             $this->session = @ssh2_connect($host, $port);
 
             if ($this->session === false) {
-                throw new Exception("failed to establish secure shell connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+                throw new TransportException("failed to establish secure shell connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
             }
 
             if (!@ssh2_auth_password($this->session, $this->config["username"], $this->config["password"])) {
-                throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid loginname or password", 0x208);
+                throw new ServerQueryException("invalid loginname or password", 0x208);
             }
 
             $this->stream = @ssh2_shell($this->session, "raw");
 
             if ($this->stream === false) {
-                throw new Exception("failed to open a secure shell on server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+                throw new TransportException("failed to open a secure shell on server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
             }
         }
 
@@ -111,7 +113,8 @@ class TCP extends Transport
      *
      * @param integer $length
      * @return StringHelper
-     * @throws Exception
+     * @throws TransportException
+     * @throws ServerQueryException
      */
     public function read($length = 4096)
     {
@@ -123,7 +126,7 @@ class TCP extends Transport
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
         if ($data === false) {
-            throw new Exception("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
+            throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
         }
 
         return new StringHelper($data);
@@ -134,7 +137,8 @@ class TCP extends Transport
      *
      * @param string $token
      * @return StringHelper
-     * @throws Exception
+     * @throws TransportException
+     * @throws ServerQueryException
      */
     public function readLine($token = "\n")
     {
@@ -153,7 +157,7 @@ class TCP extends Transport
                 if ($line->count()) {
                     $line->append($token);
                 } else {
-                    throw new Exception("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
+                    throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
                 }
             } else {
                 $line->append($data);
@@ -168,7 +172,8 @@ class TCP extends Transport
      *
      * @param string $data
      * @return void
-     * @throws Exception
+     * @throws TransportException
+     * @throws ServerQueryException
      */
     public function send($data)
     {
@@ -185,7 +190,8 @@ class TCP extends Transport
      * @param string $data
      * @param string $separator
      * @return void
-     * @throws Exception
+     * @throws TransportException
+     * @throws ServerQueryException
      */
     public function sendLine($data, $separator = "\n")
     {

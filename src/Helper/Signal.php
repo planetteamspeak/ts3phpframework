@@ -25,6 +25,7 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Handler;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
  * @class TeamSpeak3_Helper_Signal
@@ -80,12 +81,12 @@ class Signal
      * @param mixed $callback
      * @param string
      * @return string
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Exception
+     * @throws HelperException
      */
     public function getCallbackHash($callback)
     {
         if (!is_callable($callback, true, $callable_name)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Exception("invalid callback specified");
+            throw new HelperException("invalid callback specified");
         }
 
         return md5($callable_name);
@@ -97,7 +98,7 @@ class Signal
      * @param string $signal
      * @param mixed $callback
      * @return Signal
-     * @throws Signal\Exception
+     * @throws HelperException
      */
     public function subscribe($signal, $callback)
     {
@@ -120,7 +121,7 @@ class Signal
      * @param string $signal
      * @param mixed $callback
      * @return void
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Exception
+     * @throws HelperException
      */
     public function unsubscribe($signal, $callback = null)
     {

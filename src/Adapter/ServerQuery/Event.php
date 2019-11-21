@@ -24,8 +24,12 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
+use PlanetTeamSpeak\TeamSpeak3Framework\Node\Host;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
@@ -60,18 +64,18 @@ class Event implements \ArrayAccess
      *
      * @param  StringHelper $evt
      * @param  Host     $con
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Exception
+     * @throws AdapterException
      */
     public function __construct(StringHelper $evt, Host $con = null)
     {
         if (!$evt->startsWith(TeamSpeak3::EVENT)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Exception("invalid notification event format");
+            throw new AdapterException("invalid notification event format");
         }
 
         list($type, $data) = $evt->split(TeamSpeak3::SEPARATOR_CELL, 2);
 
         if (empty($data)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Exception("invalid notification event data");
+            throw new AdapterException("invalid notification event data");
         }
 
         $fake = new StringHelper(TeamSpeak3::ERROR . TeamSpeak3::SEPARATOR_CELL . "id" . TeamSpeak3::SEPARATOR_PAIR . 0 . TeamSpeak3::SEPARATOR_CELL . "msg" . TeamSpeak3::SEPARATOR_PAIR . "ok");
@@ -124,25 +128,25 @@ class Event implements \ArrayAccess
     }
 
     /**
+     * @throws ServerQueryException
      * @ignore
-     * @throws Exception
      */
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
-            throw new Exception("invalid parameter", 0x602);
+            throw new ServerQueryException("invalid parameter", 0x602);
         }
 
         return $this->data[$offset];
     }
 
     /**
+     * @throws NodeException
      * @ignore
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Node\Exception
      */
     public function offsetSet($offset, $value)
     {
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Node\Exception("event '" . $this->getType() . "' is read only");
+        throw new NodeException("event '" . $this->getType() . "' is read only");
     }
 
     /**
@@ -154,8 +158,8 @@ class Event implements \ArrayAccess
     }
 
     /**
+     * @throws ServerQueryException
      * @ignore
-     * @throws Exception
      */
     public function __get($offset)
     {
@@ -163,8 +167,8 @@ class Event implements \ArrayAccess
     }
 
     /**
+     * @throws NodeException
      * @ignore
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Node\Exception
      */
     public function __set($offset, $value)
     {

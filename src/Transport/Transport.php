@@ -27,6 +27,7 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 /**
  * @class TeamSpeak3_Transport_Abstract
@@ -51,7 +52,7 @@ abstract class Transport
     /**
      * Stores an optional stream session for the connection.
      *
-     * @var session
+     * @var resource
      */
     protected $session = null;
 
@@ -67,16 +68,16 @@ abstract class Transport
      *
      * @param array $config
      * @return Transport
-     * @throws Exception
+     * @throws TransportException
      */
     public function __construct(array $config)
     {
         if (!array_key_exists("host", $config)) {
-            throw new Exception("config must have a key for 'host' which specifies the server host name");
+            throw new TransportException("config must have a key for 'host' which specifies the server host name");
         }
 
         if (!array_key_exists("port", $config)) {
-            throw new Exception("config must have a key for 'port' which specifies the server port number");
+            throw new TransportException("config must have a key for 'port' which specifies the server port number");
         }
 
         if (!array_key_exists("timeout", $config)) {
@@ -104,6 +105,7 @@ abstract class Transport
      * Reconnects to the remote server.
      *
      * @return void
+     * @throws TransportException
      */
     public function __wakeup()
     {
@@ -128,7 +130,7 @@ abstract class Transport
      * Connects to a remote server.
      *
      * @return void
-     * @throws Exception
+     * @throws TransportException
      */
     abstract public function connect();
 
@@ -144,7 +146,7 @@ abstract class Transport
      *
      * @param integer $length
      * @return StringHelper
-     * @throws Exception
+     * @throws TransportException
      */
     abstract public function read($length = 4096);
 
@@ -223,12 +225,12 @@ abstract class Transport
      * Returns header/meta data from stream pointer.
      *
      * @return array
-     * @throws Exception
+     * @throws TransportException
      */
     public function getMetaData()
     {
         if ($this->stream === null) {
-            throw new Exception("unable to retrieve header/meta data from stream pointer");
+            throw new TransportException("unable to retrieve header/meta data from stream pointer");
         }
 
         return stream_get_meta_data($this->stream);

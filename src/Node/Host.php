@@ -30,6 +30,9 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Crypt;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
  * @class TeamSpeak3_Node_Host
@@ -243,12 +246,12 @@ class Host extends Node
      *
      * @param  integer $sid
      * @return integer
-     * @throws ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function serverGetPortById($sid)
     {
         if (!array_key_exists((string) $sid, $this->serverList())) {
-            throw new ServerQuery\Exception("invalid serverID", 0x400);
+            throw new ServerQueryException("invalid serverID", 0x400);
         }
 
         return $this->serverList[intval((string) $sid)]["virtualserver_port"];
@@ -258,6 +261,7 @@ class Host extends Node
      * Returns the TeamSpeak3_Node_Server object matching the currently selected ID.
      *
      * @return Server
+     * @throws ServerQueryException
      */
     public function serverGetSelected()
     {
@@ -269,7 +273,7 @@ class Host extends Node
      *
      * @param  integer $sid
      * @return Server
-     * @throws ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function serverGetById($sid)
     {
@@ -283,7 +287,7 @@ class Host extends Node
      *
      * @param  integer $port
      * @return Server
-     * @throws ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function serverGetByPort($port)
     {
@@ -296,8 +300,8 @@ class Host extends Node
      * Returns the first TeamSpeak3_Node_Server object matching the given name.
      *
      * @param  string $name
-     * @throws ServerQuery\Exception
      * @return Server
+     * @throws ServerQueryException
      */
     public function serverGetByName($name)
     {
@@ -307,15 +311,15 @@ class Host extends Node
             }
         }
 
-        throw new ServerQuery\Exception("invalid serverID", 0x400);
+        throw new ServerQueryException("invalid serverID", 0x400);
     }
 
     /**
      * Returns the first TeamSpeak3_Node_Server object matching the given unique identifier.
      *
      * @param  string $uid
-     * @throws ServerQuery\Exception
      * @return Server
+     *@throws ServerQueryException
      */
     public function serverGetByUid($uid)
     {
@@ -325,15 +329,16 @@ class Host extends Node
             }
         }
 
-        throw new ServerQuery\Exception("invalid serverID", 0x400);
+        throw new ServerQueryException("invalid serverID", 0x400);
     }
 
     /**
      * Creates a new virtual server using given properties and returns an assoc
      * array containing the new ID and initial admin token.
      *
-     * @param  array $properties
+     * @param array $properties
      * @return array
+     * @throws ServerQueryException
      */
     public function serverCreate(array $properties = [])
     {
@@ -421,7 +426,7 @@ class Host extends Node
      *
      * @param  array $filter
      * @return array|Server[]
-     * @throws ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function serverList(array $filter = [])
     {
@@ -465,6 +470,7 @@ class Host extends Node
      * Returns a list of permissions available on the server instance.
      *
      * @return array
+     * @throws ServerQueryException
      */
     public function permissionList()
     {
@@ -484,7 +490,7 @@ class Host extends Node
 
             if (!$permdata["permname"]->startsWith("i_needed_modify_power_") && !isset($this->permissionList[$grantsid])) {
                 $this->permissionList[$grantsid]["permid"]    = $this->permissionList[$permname]["permgrant"];
-                $this->permissionList[$grantsid]["permname"]  = TeamSpeak3_Helper_String::factory($grantsid);
+                $this->permissionList[$grantsid]["permname"]  = StringHelper::factory($grantsid);
                 $this->permissionList[$grantsid]["permdesc"]  = null;
                 $this->permissionList[$grantsid]["permcatid"] = 0xFF;
                 $this->permissionList[$grantsid]["permgrant"] = $this->permissionList[$permname]["permgrant"];
@@ -527,6 +533,7 @@ class Host extends Node
      * their ID, name and parent.
      *
      * @return array
+     * @throws ServerQueryException
      */
     public function permissionTree()
     {
@@ -580,13 +587,13 @@ class Host extends Node
      * Returns the ID of the permission matching the given name.
      *
      * @param  string $name
-     * @throws ServerQuery\Exception
      * @return integer
+     *@throws ServerQueryException
      */
     public function permissionGetIdByName($name)
     {
         if (!array_key_exists((string) $name, $this->permissionList())) {
-            throw new ServerQuery\Exception("invalid permission ID", 0xA02);
+            throw new ServerQuery\ServerQueryException("invalid permission ID", 0xA02);
         }
 
         return $this->permissionList[(string) $name]["permid"];
@@ -596,8 +603,8 @@ class Host extends Node
      * Returns the name of the permission matching the given ID.
      *
      * @param  integer $permid
-     * @throws ServerQuery\Exception
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
+     * @throws ServerQueryException
      */
     public function permissionGetNameById($permid)
     {
@@ -607,7 +614,7 @@ class Host extends Node
             }
         }
 
-        throw new ServerQuery\Exception("invalid permission ID", 0xA02);
+        throw new ServerQueryException("invalid permission ID", 0xA02);
     }
 
     /**
@@ -618,7 +625,7 @@ class Host extends Node
      *
      * @param  integer $permid
      * @return integer
-     * @throws ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function permissionGetCategoryById($permid)
     {
@@ -657,7 +664,7 @@ class Host extends Node
      *
      * @param  integer $permid
      * @return integer
-     * @throws ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function permissionGetGrantById($permid)
     {
@@ -683,7 +690,7 @@ class Host extends Node
      * @param  integer $permskip
      * @return void
      */
-    public function serverGroupPermAutoAssign($sgtype, $permid, $permvalue, $permnegated = false, $permskip = false)
+    public function serverGroupPermAutoAssign($sgtype, $permid, $permvalue, $permnegated = 0, $permskip = 0)
     {
         if (!is_array($permid)) {
             $permident = (is_numeric($permid)) ? "permid" : "permsid";
@@ -786,9 +793,10 @@ class Host extends Node
     /**
      * Authenticates with the TeamSpeak 3 Server instance using given ServerQuery login credentials.
      *
-     * @param  string $username
-     * @param  string $password
+     * @param string $username
+     * @param string $password
      * @return void
+     * @throws HelperException
      */
     public function login($username, $password)
     {
@@ -947,6 +955,7 @@ class Host extends Node
 
     /**
      * @ignore
+     * @throws ServerQueryException
      */
     protected function fetchNodeList()
     {
@@ -1152,6 +1161,7 @@ class Host extends Node
      * credentials and re-selects a previously selected virtual server.
      *
      * @return void
+     * @throws HelperException
      */
     public function __wakeup()
     {
@@ -1175,7 +1185,7 @@ class Host extends Node
 
             try {
                 call_user_func_array([$this, $func], $args);
-            } catch (Exception $e) {
+            } catch (NodeException $e) {
                 $class = get_class($e);
 
                 throw new $class($e->getMessage(), $e->getCode());

@@ -26,6 +26,8 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Event;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Reply;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
@@ -72,7 +74,7 @@ class ServerQuery extends Adapter
      * Connects the Transport object and performs initial actions on the remote
      * server.
      *
-     * @throws Exception
+     * @throws AdapterException
      * @return void
      */
     protected function syn()
@@ -85,7 +87,7 @@ class ServerQuery extends Adapter
         $rdy = $this->getTransport()->readLine();
 
         if (!$rdy->startsWith(TeamSpeak3::TS3_PROTO_IDENT) && !$rdy->startsWith(TeamSpeak3::TEA_PROTO_IDENT) && !(defined("CUSTOM_PROTO_IDENT") && $rdy->startsWith(CUSTOM_PROTO_IDENT))) {
-            throw new Exception("invalid reply from the server (" . $rdy . ")");
+            throw new AdapterException("invalid reply from the server (" . $rdy . ")");
         }
 
         Signal::getInstance()->emit("serverqueryConnected", $this);
@@ -101,7 +103,7 @@ class ServerQuery extends Adapter
         if ($this->getTransport() instanceof Transport && $this->transport->isConnected()) {
             try {
                 $this->request("quit");
-            } catch (Exception $e) {
+            } catch (AdapterException $e) {
                 return;
             }
         }
@@ -112,7 +114,7 @@ class ServerQuery extends Adapter
      *
      * @param  string  $cmd
      * @param  boolean $throw
-     * @throws Exception
+     * @throws AdapterException
      * @return Reply
      */
     public function request($cmd, $throw = true)
@@ -120,9 +122,9 @@ class ServerQuery extends Adapter
         $query = StringHelper::factory($cmd)->section(TeamSpeak3::SEPARATOR_CELL);
 
         if (strstr($cmd, "\r") || strstr($cmd, "\n")) {
-            throw new Exception("illegal characters in command '" . $query . "'");
+            throw new AdapterException("illegal characters in command '" . $query . "'");
         } elseif (in_array($query, $this->block)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("command not found", 0x100);
+            throw new ServerQueryException("command not found", 0x100);
         }
 
         Signal::getInstance()->emit("serverqueryCommandStarted", $cmd);
@@ -151,13 +153,13 @@ class ServerQuery extends Adapter
     /**
      * Waits for the server to send a notification message and returns the result.
      *
-     * @throws Exception
+     * @throws AdapterException
      * @return Event
      */
     public function wait()
     {
         if ($this->getTransport()->getConfig("blocking")) {
-            throw new Exception("only available in non-blocking mode");
+            throw new AdapterException("only available in non-blocking mode");
         }
 
         do {
@@ -260,7 +262,7 @@ class ServerQuery extends Adapter
     /**
      * Returns the Host object of the current connection.
      *
-     * @return Host
+     * @return Host|null
      */
     public function getHost()
     {

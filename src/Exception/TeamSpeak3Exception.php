@@ -22,7 +22,7 @@
  * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
-namespace PlanetTeamSpeak\TeamSpeak3Framework;
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
@@ -31,7 +31,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
  * @class TeamSpeak3_Exception
  * @brief Enhanced exception class for TeamSpeak3 objects.
  */
-class Exception extends \Exception
+class TeamSpeak3Exception extends \Exception
 {
     /**
      * Stores the original error code.
@@ -59,7 +59,6 @@ class Exception extends \Exception
      *
      * @param  string  $mesg
      * @param  integer $code
-     * @return Exception
      */
     public function __construct($mesg, $code = 0x00)
     {
@@ -99,7 +98,7 @@ class Exception extends \Exception
      * @param  integer $code
      * @param  string  $mesg
      * @return void
-     *@throws Exception
+     *@throws TeamSpeak3Exception
      */
     public static function registerCustomMessage($code, $mesg)
     {
@@ -118,8 +117,8 @@ class Exception extends \Exception
      * Unregisters a custom error message from $code.
      *
      * @param  integer $code
-     * @throws Exception
      * @return void
+     * @throws TeamSpeak3Exception
      */
     public static function unregisterCustomMessage($code)
     {

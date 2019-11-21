@@ -22,12 +22,12 @@
  * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
-namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
 /**
- * @class TeamSpeak3_Helper_Signal_Exception
- * @brief Enhanced exception class for TeamSpeak3_Helper_Signal objects.
+ * @class TeamSpeak3_Adapter_FileTransfer_Exception
+ * @brief Enhanced exception class for TeamSpeak3_Adapter_FileTransfer objects.
  */
-class Exception extends \PlanetTeamSpeak\TeamSpeak3Framework\Helper\Exception
+class FileTransferException extends TeamSpeak3Exception
 {
 }

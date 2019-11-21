@@ -25,6 +25,8 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Host;
@@ -81,10 +83,12 @@ class Reply
     /**
      * Creates a new TeamSpeak3_Adapter_ServerQuery_Reply object.
      *
-     * @param  array   $rpl
-     * @param  string  $cmd
-     * @param  boolean $exp
-     * @param  Host $con
+     * @param array $rpl
+     * @param string $cmd
+     * @param Host $con
+     * @param boolean $exp
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
     public function __construct(array $rpl, $cmd = null, Host $con = null, $exp = true)
     {
@@ -187,7 +191,7 @@ class Reply
      *
      * @param  $ident
      * @return array
-     * @throws Exception
+     * @throws ServerQueryException
      */
     public function toAssocArray($ident)
     {
@@ -198,7 +202,7 @@ class Reply
             if (isset($node[$ident])) {
                 $array[(is_object($node[$ident])) ? $node[$ident]->toString() : $node[$ident]] = $node;
             } else {
-                throw new Exception("invalid parameter", 0x602);
+                throw new ServerQueryException("invalid parameter", 0x602);
             }
         }
 
@@ -224,7 +228,7 @@ class Reply
     /**
      * Returns an array containing stdClass objects.
      *
-     * @return \ArrayObject
+     * @return \ArrayObject|array
      */
     public function toObjectArray()
     {
@@ -274,8 +278,8 @@ class Reply
      * there's an error.
      *
      * @param  string $err
-     * @throws Exception
      * @return void
+     * @throws ServerQueryException
      */
     protected function fetchError($err)
     {
@@ -302,7 +306,7 @@ class Reply
                 $suffix = "";
             }
 
-            throw new Exception($this->getErrorProperty("msg") . $suffix, $this->getErrorProperty("id"), $this->getErrorProperty("return_code"));
+            throw new ServerQueryException($this->getErrorProperty("msg") . $suffix, $this->getErrorProperty("id"), $this->getErrorProperty("return_code"));
         }
     }
 
@@ -311,7 +315,7 @@ class Reply
      *
      * @param  array $rpl
      * @return void
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Exception
+     * @throws AdapterException
      */
     protected function fetchReply($rpl)
     {

@@ -105,7 +105,7 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
     /**
      * Returns the parent object of the current node.
      *
-     * @return Node
+     * @return Node|ServerQuery
      */
     public function getParent()
     {
@@ -348,8 +348,8 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
      *
      * @param  string $name
      * @param  array  $args
-     * @throws Exception
      * @return mixed
+     *@throws NodeException
      */
     public function __call($name, array $args)
     {
@@ -357,7 +357,7 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
             return call_user_func_array([$this->getParent(), $name], $args);
         }
 
-        throw new Exception("node method '" . $name . "()' does not exist");
+        throw new NodeException("node method '" . $name . "()' does not exist");
     }
 
     /**
@@ -546,6 +546,7 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @throws NodeException
      * @ignore
      */
     public function offsetGet($offset)
@@ -555,13 +556,14 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
         }
 
         if (!$this->offsetExists($offset)) {
-            throw new Exception("node '" . get_class($this) . "' has no property named '" . $offset . "'");
+            throw new NodeException("node '" . get_class($this) . "' has no property named '" . $offset . "'");
         }
 
         return $this->nodeInfo[(string) $offset];
     }
 
     /**
+     * @throws NodeException
      * @ignore
      */
     public function offsetSet($offset, $value)
@@ -570,7 +572,7 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
             return $this->modify([(string) $offset => $value]);
         }
 
-        throw new Exception("node '" . get_class($this) . "' is read only");
+        throw new NodeException("node '" . get_class($this) . "' is read only");
     }
 
     /**
@@ -582,6 +584,7 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @throws NodeException
      * @ignore
      */
     public function __get($offset)
@@ -590,6 +593,7 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @throws NodeException
      * @ignore
      */
     public function __set($offset, $value)

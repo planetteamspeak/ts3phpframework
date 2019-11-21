@@ -24,6 +24,11 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\FileTransferException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\SignalException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
@@ -54,7 +59,6 @@ class FileTransfer extends Adapter
     /**
      * The TeamSpeak3_Adapter_FileTransfer destructor.
      *
-     * @return void
      */
     public function __destruct()
     {
@@ -66,14 +70,14 @@ class FileTransfer extends Adapter
     /**
      * Sends a valid file transfer key to the server to initialize the file transfer.
      *
-     * @param  string $ftkey
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer\Exception
+     * @param string $ftkey
      * @return void
+     * @throws FileTransferException
      */
     protected function init($ftkey)
     {
         if (strlen($ftkey) != 32 && strlen($ftkey) != 16) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer\Exception("invalid file transfer key format");
+            throw new FileTransferException("invalid file transfer key format");
         }
 
         $this->getProfiler()->start();
@@ -85,11 +89,11 @@ class FileTransfer extends Adapter
     /**
      * Sends the content of a file to the server.
      *
-     * @param  string  $ftkey
-     * @param  integer $seek
-     * @param  string  $data
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer\Exception
+     * @param string $ftkey
+     * @param integer $seek
+     * @param string $data
      * @return void
+     * @throws FileTransferException
      */
     public function upload($ftkey, $seek, $data)
     {
@@ -101,11 +105,11 @@ class FileTransfer extends Adapter
 
         Signal::getInstance()->emit("filetransferUploadStarted", $ftkey, $seek, $size);
 
-        for (;$seek < $size;) {
-            $rest = $size-$seek;
+        for (; $seek < $size;) {
+            $rest = $size - $seek;
             $pack = $rest < $pack ? $rest : $pack;
             $buff = substr($data, $seek, $pack);
-            $seek = $seek+$pack;
+            $seek = $seek + $pack;
 
             $this->getTransport()->send($buff);
 
@@ -117,50 +121,52 @@ class FileTransfer extends Adapter
         Signal::getInstance()->emit("filetransferUploadFinished", $ftkey, $seek, $size);
 
         if ($seek < $size) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer\Exception("incomplete file upload (" . $seek . " of " . $size . " bytes)");
+            throw new FileTransferException("incomplete file upload (" . $seek . " of " . $size . " bytes)");
         }
     }
 
     /**
      * Returns the content of a downloaded file as a TeamSpeak3_Helper_String object.
      *
-     * @param  string  $ftkey
-     * @param  integer $size
-     * @param  boolean $passthru
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer\Exception
-     * @return StringHelper
+     * @param string $ftkey
+     * @param integer $size
+     * @param boolean $passthru
+     * @return StringHelper|void
+     * @throws FileTransferException
+     * @throws TransportException
      */
     public function download($ftkey, $size, $passthru = false)
     {
         $this->init($ftkey);
 
         if ($passthru) {
-            return $this->passthru($size);
+            $this->passthru($size);
+            return;
         }
 
         $buff = new StringHelper("");
         $size = intval($size);
         $pack = 4096;
 
-        StringHelper::getInstance()->emit("filetransferDownloadStarted", $ftkey, count($buff), $size);
+        Signal::getInstance()->emit("filetransferDownloadStarted", $ftkey, count($buff), $size);
 
-        for ($seek = 0;$seek < $size;) {
-            $rest = $size-$seek;
+        for ($seek = 0; $seek < $size;) {
+            $rest = $size - $seek;
             $pack = $rest < $pack ? $rest : $pack;
             $data = $this->getTransport()->read($rest < $pack ? $rest : $pack);
-            $seek = $seek+$pack;
+            $seek = $seek + $pack;
 
             $buff->append($data);
 
-            StringHelper::getInstance()->emit("filetransferDownloadProgress", $ftkey, count($buff), $size);
+            Signal::getInstance()->emit("filetransferDownloadProgress", $ftkey, count($buff), $size);
         }
 
         $this->getProfiler()->stop();
 
-        StringHelper::getInstance()->emit("filetransferDownloadFinished", $ftkey, count($buff), $size);
+        Signal::getInstance()->emit("filetransferDownloadFinished", $ftkey, count($buff), $size);
 
         if (strlen($buff) != $size) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer\Exception("incomplete file download (" . count($buff) . " of " . $size . " bytes)");
+            throw new FileTransferException("incomplete file download (" . count($buff) . " of " . $size . " bytes)");
         }
 
         return $buff;
@@ -170,16 +176,16 @@ class FileTransfer extends Adapter
      * Outputs all remaining data on a TeamSpeak 3 file transfer stream using PHP's fpassthru()
      * function.
      *
-     * @param  integer $size
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer\Exception
+     * @param integer $size
      * @return void
+     * @throws FileTransferException
      */
     protected function passthru($size)
     {
         $buff_size = fpassthru($this->getTransport()->getStream());
 
         if ($buff_size != $size) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer\Exception("incomplete file download (" . intval($buff_size) . " of " . $size . " bytes)");
+            throw new FileTransferException("incomplete file download (" . intval($buff_size) . " of " . $size . " bytes)");
         }
     }
 }

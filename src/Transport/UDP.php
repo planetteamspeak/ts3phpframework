@@ -26,6 +26,7 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 /**
  * @class TeamSpeak3_Transport_UDP
@@ -37,7 +38,7 @@ class UDP extends Transport
      * Connects to a remote server.
      *
      * @return void
-     * @throws Exception
+     * @throws TransportException
      */
     public function connect()
     {
@@ -54,7 +55,7 @@ class UDP extends Transport
         $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout);
 
         if ($this->stream === false) {
-            throw new Exception(StringHelper::factory($errstr)->toUtf8()->toString(), $errno);
+            throw new TransportException(StringHelper::factory($errstr)->toUtf8()->toString(), $errno);
         }
 
         @stream_set_timeout($this->stream, $timeout);
@@ -82,7 +83,7 @@ class UDP extends Transport
      *
      * @param integer $length
      * @return StringHelper
-     * @throws Exception
+     * @throws TransportException
      */
     public function read($length = 4096)
     {
@@ -94,7 +95,7 @@ class UDP extends Transport
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
         if ($data === false) {
-            throw new Exception("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
+            throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
         }
 
         return new StringHelper($data);
@@ -105,7 +106,7 @@ class UDP extends Transport
      *
      * @param string $data
      * @return void
-     * @throws Exception
+     * @throws TransportException
      */
     public function send($data)
     {

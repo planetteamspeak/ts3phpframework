@@ -48,29 +48,29 @@ class ConvertTest extends TestCase
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes(
-        (1024**3 - (5*(1024**2)) - 1024*117-774)
-    );
+            (1024**3 - (5*(1024**2)) - 1024*117-774)
+        );
         $this->assertEquals('1018.88 MB', $output);
         $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes(
-        (1024**3 - (5*(1024**2)) - 1024*117-773)
-    );
+            (1024**3 - (5*(1024**2)) - 1024*117-773)
+        );
         $this->assertEquals('1.00 GB', $output);
         $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes(
-        (1024**4 - (5*(1024**3)) - (1024**2)*117-1024*773 - 118)
-    );
+            (1024**4 - (5*(1024**3)) - (1024**2)*117-1024*773 - 118)
+        );
         $this->assertEquals('1018.88 GB', $output);
         $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes(
-        (1024**4 - (5*(1024**3)) - (1024**2)*117-1024*773 - 117)
-    );
+            (1024**4 - (5*(1024**3)) - (1024**2)*117-1024*773 - 117)
+        );
         $this->assertEquals('1.00 TB', $output);
         $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
 
@@ -116,21 +116,21 @@ class ConvertTest extends TestCase
         $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
 
         $output = Convert::seconds(
-        (23*(60**2)) + (59*60) + 59
-    );
+            (23*(60**2)) + (59*60) + 59
+        );
         $this->assertEquals('0D 23:59:59', $output);
         $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
 
         $output = Convert::seconds(
-        (23*(60**2)) + (59*60) + 60
-    );
+            (23*(60**2)) + (59*60) + 60
+        );
         $this->assertEquals('1D 00:00:00', $output);
         $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
 
 
         $output = Convert::seconds(
-        (47*(60**2)) + (59*60) + 59
-    );
+            (47*(60**2)) + (59*60) + 59
+        );
         $this->assertEquals('1D 23:59:59', $output);
         $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
 
@@ -175,44 +175,44 @@ class ConvertTest extends TestCase
         foreach ($mock_data as $entry) {
             $entryParsed = Convert::logEntry($entry);
             $this->assertFalse(
-          $entryParsed['malformed'],
-          'Log entry appears malformed, dumping: '.print_r($entryParsed, true)
-      );
+                $entryParsed['malformed'],
+                'Log entry appears malformed, dumping: '.print_r($entryParsed, true)
+            );
         }
     }
 
     public function testConvertToPassword()
     {
         $this->assertEquals(
-        'W6ph5Mm5Pz8GgiULbPgzG37mj9g=',
-        Convert::password('password')
-    );
+            'W6ph5Mm5Pz8GgiULbPgzG37mj9g=',
+            Convert::password('password')
+        );
     }
 
     public function testConvertVersionToClientFormat()
     {
         $this->assertEquals(
-        '3.0.13.6 (2016-11-08 08:48:33)',
-        Convert::version('3.0.13.6 [Build: 1478594913]')
-    );
+            '3.0.13.6 (2016-11-08 08:48:33)',
+            Convert::version('3.0.13.6 [Build: 1478594913]')
+        );
     }
 
     public function testConvertVersionShortToClientFormat()
     {
         $this->assertEquals(
-        '3.0.13.6',
-        Convert::versionShort('3.0.13.6 [Build: 1478594913]')
-    );
+            '3.0.13.6',
+            Convert::versionShort('3.0.13.6 [Build: 1478594913]')
+        );
     }
 
     public function testDetectImageMimeType()
     {
         // Test image binary base64 encoded is 1px by 1px GIF
         $this->assertEquals(
-        'image/gif',
-        Convert::imageMimeType(
-          base64_decode('R0lGODdhAQABAIAAAPxqbAAAACwAAAAAAQABAAACAkQBADs=')
-      )
-    );
+            'image/gif',
+            Convert::imageMimeType(
+            base64_decode('R0lGODdhAQABAIAAAPxqbAAAACwAAAAAAQABAAACAkQBADs=')
+        )
+        );
     }
 }

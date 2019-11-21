@@ -27,7 +27,7 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Viewer;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Convert;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel;
-use PlanetTeamSpeak\TeamSpeak3Framework\Node\Channelgroup;
+use PlanetTeamSpeak\TeamSpeak3Framework\Node\ChannelGroup;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Client;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Node;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Server;
@@ -301,7 +301,7 @@ class Html implements ViewerInterface
             return "ID: " . $this->currObj->getId() . " | Codec: " . Convert::codec($this->currObj["channel_codec"]) . " | Quality: " . $this->currObj["channel_codec_quality"];
         } elseif ($this->currObj instanceof Client) {
             return "ID: " . $this->currObj->getId() . " | Version: " . Convert::versionShort($this->currObj["client_version"]) . " | Platform: " . $this->currObj["client_platform"];
-        } elseif ($this->currObj instanceof Servergroup || $this->currObj instanceof Channelgroup) {
+        } elseif ($this->currObj instanceof Servergroup || $this->currObj instanceof ChannelGroup) {
             return "ID: " . $this->currObj->getId() . " | Type: " . Convert::groupType($this->currObj["type"]) . " (" . ($this->currObj["savedb"] ? "Permanent" : "Temporary") . ")";
         }
     }

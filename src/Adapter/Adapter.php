@@ -24,6 +24,7 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler\Timer;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport;
@@ -52,7 +53,7 @@ abstract class Adapter
      * The TeamSpeak3_Adapter_Abstract constructor.
      *
      * @param  array $options
-     * @throws Exception
+     * @throws AdapterException
      */
     public function __construct(array $options)
     {
@@ -74,7 +75,7 @@ abstract class Adapter
      * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
      * server.
      *
-     * @throws Exception
+     * @throws AdapterException
      * @return void
      */
     abstract protected function syn();
@@ -93,7 +94,7 @@ abstract class Adapter
      * Reconnects to the remote server.
      *
      * @return void
-     * @throws Exception
+     * @throws AdapterException
      */
     public function __wakeup()
     {
@@ -126,13 +127,13 @@ abstract class Adapter
      *
      * @param  array  $options
      * @param  string $transport
-     * @throws Exception
+     * @throws AdapterException
      * @return void
      */
     protected function initTransport($options, $transport = "TeamSpeak3_Transport_TCP")
     {
         if (!is_array($options)) {
-            throw new Exception("transport parameters must provided in an array");
+            throw new AdapterException("transport parameters must provided in an array");
         }
 
         $this->transport = new $transport($options);

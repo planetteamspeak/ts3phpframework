@@ -25,6 +25,7 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
  * @class TeamSpeak3_Helper_String
@@ -514,14 +515,14 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
      *
      * @param string $hex
      * @return self
-     * @throws Exception
+     * @throws HelperException
      */
     public static function fromHex($hex)
     {
         $string = "";
 
         if (strlen($hex) % 2 == 1) {
-            throw new Exception("given parameter '" . $hex . "' is not a valid hexadecimal number");
+            throw new HelperException("given parameter '" . $hex . "' is not a valid hexadecimal number");
         }
 
         foreach (str_split($hex, 2) as $chunk) {
@@ -795,19 +796,19 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
      * @param string $function
      * @param array $args
      * @return self
-     * @throws Exception
+     * @throws HelperException
      */
     public function __call($function, $args)
     {
         if (!function_exists($function)) {
-            throw new Exception("cannot call undefined function '" . $function . "' on this object");
+            throw new HelperException("cannot call undefined function '" . $function . "' on this object");
         }
 
         if (count($args)) {
             if (($key = array_search($this, $args, true)) !== false) {
                 $args[$key] = $this->string;
             } else {
-                throw new Exception("cannot call undefined function '" . $function . "' without the " . __CLASS__ . " object parameter");
+                throw new HelperException("cannot call undefined function '" . $function . "' without the " . __CLASS__ . " object parameter");
             }
 
             $return = call_user_func_array($function, $args);
@@ -878,6 +879,7 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
 
     /**
      * @ignore
+     * @throws HelperException
      */
     public function current()
     {

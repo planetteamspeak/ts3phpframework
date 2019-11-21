@@ -22,12 +22,12 @@
  * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
-namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
 /**
  * @class TeamSpeak3_Adapter_Exception
  * @brief Enhanced exception class for TeamSpeak3_Adapter_Abstract objects.
  */
-class Exception extends \PlanetTeamSpeak\TeamSpeak3Framework\Exception
+class AdapterException extends TeamSpeak3Exception
 {
 }

@@ -24,6 +24,8 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
+
 /**
  * @class TeamSpeak3_Helper_Uri
  * @brief Helper class for URI handling.
@@ -97,7 +99,7 @@ class Uri
      * The TeamSpeak3_Helper_Uri constructor.
      *
      * @param StringHelper $uri
-     * @throws Exception
+     * @throws HelperException
      */
     public function __construct($uri)
     {
@@ -107,7 +109,7 @@ class Uri
         $uriString = isset($uri[1]) ? $uri[1] : "";
 
         if (!ctype_alnum($this->scheme)) {
-            throw new Exception("invalid URI scheme '" . $this->scheme . "' supplied");
+            throw new HelperException("invalid URI scheme '" . $this->scheme . "' supplied");
         }
 
         /* grammar rules for validation */
@@ -125,7 +127,7 @@ class Uri
         }
 
         if (!$this->isValid()) {
-            throw new Exception("invalid URI supplied");
+            throw new HelperException("invalid URI supplied");
         }
     }
 
@@ -133,14 +135,14 @@ class Uri
      * Parses the scheme-specific portion of the URI and place its parts into instance variables.
      *
      * @return void
-     * @throws Exception
+     * @throws HelperException
      */
     protected function parseUri($uriString = '')
     {
         $status = @preg_match("~^((//)([^/?#]*))([^?#]*)(\?([^#]*))?(#(.*))?$~", $uriString, $matches);
 
         if ($status === false) {
-            throw new Exception("URI scheme-specific decomposition failed");
+            throw new HelperException("URI scheme-specific decomposition failed");
         }
 
         if (!$status) {
@@ -154,7 +156,7 @@ class Uri
         $status = @preg_match("~^(([^:@]*)(:([^@]*))?@)?((?(?=[[])[[][^]]+[]]|[^:]+))(:(.*))?$~", (isset($matches[3])) ? $matches[3] : "", $matches);
 
         if ($status === false) {
-            throw new Exception("URI scheme-specific authority decomposition failed");
+            throw new HelperException("URI scheme-specific authority decomposition failed");
         }
 
         if (!$status) {
@@ -171,6 +173,7 @@ class Uri
      * Validate the current URI from the instance variables.
      *
      * @return boolean
+     * @throws HelperException
      */
     public function isValid()
     {
@@ -187,7 +190,7 @@ class Uri
     {
         try {
             $uri = new self(strval($uri));
-        } catch (Exception $e) {
+        } catch (HelperException $e) {
             return false;
         }
 
@@ -220,7 +223,7 @@ class Uri
      *
      * @param string $username
      * @return boolean
-     * @throws Exception
+     * @throws HelperException
      */
     public function checkUser($username = null)
     {
@@ -236,7 +239,7 @@ class Uri
         $status = @preg_match($pattern, $username);
 
         if ($status === false) {
-            throw new Exception("URI username validation failed");
+            throw new HelperException("URI username validation failed");
         }
 
         return ($status == 1);
@@ -268,7 +271,7 @@ class Uri
      *
      * @param StringHelper $password
      * @return boolean
-     * @throws Exception
+     * @throws HelperException
      */
     public function checkPass($password = null)
     {
@@ -284,7 +287,7 @@ class Uri
         $status = @preg_match($pattern, $password);
 
         if ($status === false) {
-            throw new Exception("URI password validation failed");
+            throw new HelperException("URI password validation failed");
         }
 
         return ($status == 1);
@@ -394,7 +397,7 @@ class Uri
      *
      * @param string $path
      * @return boolean
-     * @throws Exception
+     * @throws HelperException
      */
     public function checkPath($path = null)
     {
@@ -410,7 +413,7 @@ class Uri
         $status = @preg_match($pattern, $path);
 
         if ($status === false) {
-            throw new Exception("URI path validation failed");
+            throw new HelperException("URI path validation failed");
         }
 
         return ($status == 1);
@@ -442,7 +445,7 @@ class Uri
      *
      * @param string $query
      * @return boolean
-     * @throws Exception
+     * @throws HelperException
      */
     public function checkQuery($query = null)
     {
@@ -458,7 +461,7 @@ class Uri
         $status = @preg_match($pattern, $query);
 
         if ($status === false) {
-            throw new Exception("URI query string validation failed");
+            throw new HelperException("URI query string validation failed");
         }
 
         return ($status == 1);
@@ -542,7 +545,7 @@ class Uri
      *
      * @param string $fragment
      * @return boolean
-     * @throws Exception
+     * @throws HelperException
      */
     public function checkFragment($fragment = null)
     {
@@ -558,7 +561,7 @@ class Uri
         $status = @preg_match($pattern, $fragment);
 
         if ($status === false) {
-            throw new Exception("URI fragment validation failed");
+            throw new HelperException("URI fragment validation failed");
         }
 
         return ($status == 1);

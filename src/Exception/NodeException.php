@@ -22,12 +22,12 @@
  * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
-namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
 /**
- * @class TeamSpeak3_Helper_Profiler_Exception
- * @brief Enhanced exception class for TeamSpeak3_Helper_Profiler objects.
+ * @class NodeException
+ * @brief Enhanced exception class for TeamSpeak3_Node_Abstract objects.
  */
-class Exception extends \PlanetTeamSpeak\TeamSpeak3Framework\Helper\Exception
+class NodeException extends TeamSpeak3Exception
 {
 }

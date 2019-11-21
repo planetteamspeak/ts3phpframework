@@ -22,12 +22,12 @@
  * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
-namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
 /**
  * @class TeamSpeak3_Transport_Exception
  * @brief Enhanced exception class for TeamSpeak3_Transport_Abstract objects.
  */
-class Exception extends \PlanetTeamSpeak\TeamSpeak3Framework\Exception
+class TransportException extends TeamSpeak3Exception
 {
 }

@@ -25,9 +25,12 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Reply;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
  * @class TeamSpeak3_Node_Server
@@ -61,7 +64,7 @@ class Server extends Node
      * @param Host $host
      * @param array $info
      * @param string $index
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function __construct(Host $host, array $info, $index = "virtualserver_id")
     {
@@ -69,7 +72,7 @@ class Server extends Node
         $this->nodeInfo = $info;
 
         if (!array_key_exists($index, $this->nodeInfo)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid serverID", 0x400);
+            throw new ServerQueryException("invalid serverID", 0x400);
         }
 
         $this->nodeId = $this->nodeInfo[$index];
@@ -129,7 +132,7 @@ class Server extends Node
      * Returns the TeamSpeak3_Node_Channel object representing the default channel.
      *
      * @return Channel
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function channelGetDefault()
     {
@@ -139,7 +142,7 @@ class Server extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid channelID", 0x300);
+        throw new ServerQueryException("invalid channelID", 0x300);
     }
 
     /**
@@ -212,7 +215,7 @@ class Server extends Node
      * @param integer $order
      * @param integer $maxclients
      * @return integer
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function channelSpacerCreate(
         $ident,
@@ -251,7 +254,7 @@ class Server extends Node
                 break;
 
             default:
-                throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("missing required parameter", 0x606);
+                throw new ServerQueryException("missing required parameter", 0x606);
                 break;
         }
 
@@ -289,14 +292,14 @@ class Server extends Node
      *
      * @param integer $cid
      * @return integer
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function channelSpacerGetType($cid)
     {
         $channel = $this->channelGetById($cid);
 
         if (!$this->channelIsSpacer($channel)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid channel flags", 0x307);
+            throw new ServerQueryException("invalid channel flags", 0x307);
         }
 
         switch ($channel["channel_name"]->section("]", 1)) {
@@ -325,14 +328,14 @@ class Server extends Node
      *
      * @param integer $cid
      * @return integer
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function channelSpacerGetAlign($cid)
     {
         $channel = $this->channelGetById($cid);
 
         if (!$this->channelIsSpacer($channel) || !preg_match("/\[(.*)spacer.*\]/", $channel, $matches) || !isset($matches[1])) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid channel flags", 0x307);
+            throw new ServerQueryException("invalid channel flags", 0x307);
         }
 
         switch ($matches[1]) {
@@ -590,12 +593,12 @@ class Server extends Node
      *
      * @param integer $cid
      * @return Channel
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function channelGetById($cid)
     {
         if (!array_key_exists((string)$cid, $this->channelList())) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid channelID", 0x300);
+            throw new ServerQueryException("invalid channelID", 0x300);
         }
 
         return $this->channelList[intval((string)$cid)];
@@ -606,7 +609,7 @@ class Server extends Node
      *
      * @param string $name
      * @return Channel
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function channelGetByName($name)
     {
@@ -616,7 +619,7 @@ class Server extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid channelID", 0x300);
+        throw new ServerQueryException("invalid channelID", 0x300);
     }
 
     /**
@@ -739,12 +742,12 @@ class Server extends Node
      *
      * @param integer $clid
      * @return Client
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function clientGetById($clid)
     {
         if (!array_key_exists((string)$clid, $this->clientList())) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid clientID", 0x200);
+            throw new ServerQueryException("invalid clientID", 0x200);
         }
 
         return $this->clientList[intval((string)$clid)];
@@ -755,7 +758,7 @@ class Server extends Node
      *
      * @param string $name
      * @return Client
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function clientGetByName($name)
     {
@@ -765,7 +768,7 @@ class Server extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid clientID", 0x200);
+        throw new ServerQueryException("invalid clientID", 0x200);
     }
 
     /**
@@ -773,7 +776,7 @@ class Server extends Node
      *
      * @param string $uid
      * @return Client
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function clientGetByUid($uid)
     {
@@ -783,7 +786,7 @@ class Server extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid clientID", 0x200);
+        throw new ServerQueryException("invalid clientID", 0x200);
     }
 
     /**
@@ -791,7 +794,7 @@ class Server extends Node
      *
      * @param integer $dbid
      * @return Client
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function clientGetByDbid($dbid)
     {
@@ -801,7 +804,7 @@ class Server extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid clientID", 0x200);
+        throw new ServerQueryException("invalid clientID", 0x200);
     }
 
     /**
@@ -1121,12 +1124,12 @@ class Server extends Node
      *
      * @param integer $sgid
      * @return Servergroup
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function serverGroupGetById($sgid)
     {
         if (!array_key_exists((string)$sgid, $this->serverGroupList())) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid groupID", 0xA00);
+            throw new ServerQueryException("invalid groupID", 0xA00);
         }
 
         return $this->sgroupList[intval((string)$sgid)];
@@ -1138,7 +1141,7 @@ class Server extends Node
      * @param string $name
      * @param integer $type
      * @return Servergroup
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function serverGroupGetByName($name, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
     {
@@ -1148,7 +1151,7 @@ class Server extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid groupID", 0xA00);
+        throw new ServerQueryException("invalid groupID", 0xA00);
     }
 
     /**
@@ -1175,7 +1178,7 @@ class Server extends Node
      * @param integer $permskip
      * @return void
      */
-    public function serverGroupPermAssign($sgid, $permid, $permvalue, $permnegated = false, $permskip = false)
+    public function serverGroupPermAssign($sgid, $permid, $permvalue, $permnegated = 0, $permskip = 0)
     {
         if (!is_array($permid)) {
             $permident = (is_numeric($permid)) ? "permid" : "permsid";
@@ -1253,6 +1256,7 @@ class Server extends Node
      *
      * @param integer $type
      * @return array
+     * @throws ServerQueryException
      */
     public function serverGroupGetProfiles($type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
     {
@@ -1289,7 +1293,7 @@ class Server extends Node
             try {
                 $perms = $this->serverGroupPermList($sgid, true);
                 $grant = isset($perms["i_permission_modify_power"]) ? $perms["i_permission_modify_power"]["permvalue"] : null;
-            } catch (\PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception $e) {
+            } catch (ServerQueryException $e) {
                 /* ERROR_database_empty_result */
                 if ($e->getCode() != 0x501) {
                     throw $e;
@@ -1325,7 +1329,7 @@ class Server extends Node
      * @param integer $mode
      * @param integer $type
      * @return Servergroup
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function serverGroupIdentify(
         $mode = TeamSpeak3::GROUP_IDENTIFIY_STRONGEST,
@@ -1342,7 +1346,8 @@ class Server extends Node
      * Returns a list of channel groups available.
      *
      * @param array $filter
-     * @return array|Channelgroup[]
+     * @return array|ChannelGroup[]
+     * @throws ServerQueryException
      */
     public function channelGroupList(array $filter = [])
     {
@@ -1350,7 +1355,7 @@ class Server extends Node
             $this->cgroupList = $this->request("channelgrouplist")->toAssocArray("cgid");
 
             foreach ($this->cgroupList as $cgid => $group) {
-                $this->cgroupList[$cgid] = new Channelgroup($this, $group);
+                $this->cgroupList[$cgid] = new ChannelGroup($this, $group);
             }
 
             uasort($this->cgroupList, [__CLASS__, "sortGroupList"]);
@@ -1441,13 +1446,13 @@ class Server extends Node
      * Returns the TeamSpeak3_Node_Channelgroup object matching the given ID.
      *
      * @param integer $cgid
-     * @return Channelgroup
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @return ChannelGroup
+     * @throws ServerQueryException
      */
     public function channelGroupGetById($cgid)
     {
         if (!array_key_exists((string)$cgid, $this->channelGroupList())) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid groupID", 0xA00);
+            throw new ServerQueryException("invalid groupID", 0xA00);
         }
 
         return $this->cgroupList[intval((string)$cgid)];
@@ -1458,8 +1463,8 @@ class Server extends Node
      *
      * @param string $name
      * @param integer $type
-     * @return Channelgroup
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @return ChannelGroup
+     * @throws ServerQueryException
      */
     public function channelGroupGetByName($name, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
     {
@@ -1469,7 +1474,7 @@ class Server extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid groupID", 0xA00);
+        throw new ServerQueryException("invalid groupID", 0xA00);
     }
 
     /**
@@ -1529,12 +1534,12 @@ class Server extends Node
      * parameters are optional so you're free to choose the most suitable combination for your
      * requirements.
      *
-     * @param integer $cgid
-     * @param integer $cid
-     * @param integer $cldbid
+     * @param integer|null $cgid
+     * @param integer|null $cid
+     * @param integer|null $cldbid
      * @param boolean $resolve
      * @return array
-     * @throw \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function channelGroupClientList($cgid = null, $cid = null, $cldbid = null, $resolve = false)
     {
@@ -1545,7 +1550,7 @@ class Server extends Node
         try {
             $result = $this->execute("channelgroupclientlist", ["cgid" => $cgid, "cid" => $cid, "cldbid" => $cldbid])
                            ->toArray();
-        } catch (\PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception $e) {
+        } catch (ServerQueryException $e) {
             /* ERROR_database_empty_result */
             if ($e->getCode() != 0x501) {
                 throw $e;
@@ -1584,7 +1589,7 @@ class Server extends Node
      *
      * @param integer $permid
      * @return integer
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function permRemoveAny($permid)
     {
@@ -1613,7 +1618,7 @@ class Server extends Node
                     break;
 
                 default:
-                    throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("convert error", 0x604);
+                    throw new ServerQueryException("convert error", 0x604);
             }
         }
 
@@ -1631,7 +1636,7 @@ class Server extends Node
      * @param boolean $overwrite
      * @param boolean $resume
      * @return array
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function transferInitUpload(
         $clientftfid,
@@ -1646,7 +1651,7 @@ class Server extends Node
                        ->toList();
 
         if (array_key_exists("status", $upload) && $upload["status"] != 0x00) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception($upload["msg"], $upload["status"]);
+            throw new ServerQueryException($upload["msg"], $upload["status"]);
         }
 
         $upload["cid"] = $cid;
@@ -1674,7 +1679,7 @@ class Server extends Node
      * @param string $cpw
      * @param integer $seekpos
      * @return array
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function transferInitDownload($clientftfid, $cid, $name, $cpw = "", $seekpos = 0)
     {
@@ -1682,7 +1687,7 @@ class Server extends Node
                          ->toList();
 
         if (array_key_exists("status", $download) && $download["status"] != 0x00) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception($download["msg"], $download["status"]);
+            throw new ServerQueryException($download["msg"], $download["status"]);
         }
 
         $download["cid"] = $cid;
@@ -1727,7 +1732,8 @@ class Server extends Node
     /**
      * Downloads and returns the servers icon file content.
      *
-     * @return StringHelper
+     * @return StringHelper|void
+     * @throws ServerQueryException
      */
     public function iconDownload()
     {
@@ -1746,6 +1752,7 @@ class Server extends Node
      *
      * @param string $data
      * @return integer
+     * @throws ServerQueryException
      */
     public function iconUpload($data)
     {
@@ -1839,7 +1846,7 @@ class Server extends Node
     /**
      * Creates and returns snapshot data for the selected virtual server.
      *
-     * @param string $mode
+     * @param int $mode
      * @return string
      */
     public function snapshotCreate($mode = TeamSpeak3::SNAPSHOT_STRING)
@@ -1866,8 +1873,9 @@ class Server extends Node
      * the data will be used to create a new virtual server from scratch.
      *
      * @param string $data
-     * @param string $mode
+     * @param int $mode
      * @return array
+     * @throws HelperException
      */
     public function snapshotDeploy($data, $mode = TeamSpeak3::SNAPSHOT_STRING)
     {
@@ -1942,6 +1950,8 @@ class Server extends Node
      *
      * @param boolean $resolve
      * @return array
+     * @throws NodeException
+     * @throws ServerQueryException
      */
     public function privilegeKeyList($resolve = false)
     {
@@ -1953,7 +1963,7 @@ class Server extends Node
 
                 try {
                     $tokens[$token]["token_id1"] = $this->$func($array["token_id1"])->name;
-                } catch (Exception $e) {
+                } catch (NodeException $e) {
                     /* ERROR_channel_invalid_id */
                     if ($e->getCode() != 0xA00) {
                         throw $e;
@@ -1964,7 +1974,7 @@ class Server extends Node
                     if ($array["token_type"]) {
                         $tokens[$token]["token_id2"] = $this->channelGetById($array["token_id2"])->getPathway();
                     }
-                } catch (Exception $e) {
+                } catch (NodeException $e) {
                     /* ERROR_permission_invalid_group_id */
                     if ($e->getCode() != 0x300) {
                         throw $e;
@@ -1999,12 +2009,12 @@ class Server extends Node
      * @param integer $id2
      * @param string $description
      * @param string $customset
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function privilegeKeyCreate(
-        $type = TeamSpeak3::TOKEN_SERVERGROUP,
         $id1,
         $id2 = 0,
+        $type = TeamSpeak3::TOKEN_SERVERGROUP,
         $description = null,
         $customset = null
     ) {
@@ -2231,7 +2241,7 @@ class Server extends Node
 
                     $passwords[$password]["tcname"] = $channel->toString();
                     $passwords[$password]["tcpath"] = $channel->getPathway();
-                } catch (Exception $e) {
+                } catch (NodeException $e) {
                     /* ERROR_channel_invalid_id */
                     if ($e->getCode() != 0xA00) {
                         throw $e;
@@ -2420,7 +2430,7 @@ class Server extends Node
      * @param Client $a
      * @param Client $b
      * @return integer
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException
      */
     protected static function sortClientList(Client $a, Client $b)
     {
@@ -2428,14 +2438,14 @@ class Server extends Node
             return 0;
 
             /* workaround for PHP bug #50688 */
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid parameter", 0x602);
+            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException("invalid parameter", 0x602);
         }
 
         if (!$a instanceof Client) {
             return 0;
 
             /* workaround for PHP bug #50688 */
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("convert error", 0x604);
+            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException("convert error", 0x604);
         }
 
         if ($a->getProperty("client_talk_power", 0) != $b->getProperty("client_talk_power", 0)) {
@@ -2455,7 +2465,7 @@ class Server extends Node
      * @param Node $a
      * @param Node $b
      * @return integer
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException
      */
     protected static function sortGroupList(Node $a, Node $b)
     {
@@ -2463,14 +2473,14 @@ class Server extends Node
             return 0;
 
             /* workaround for PHP bug #50688 */
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid parameter", 0x602);
+            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException("invalid parameter", 0x602);
         }
 
-        if (!$a instanceof Servergroup && !$a instanceof Channelgroup) {
+        if (!$a instanceof Servergroup && !$a instanceof ChannelGroup) {
             return 0;
 
             /* workaround for PHP bug #50688 */
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("convert error", 0x604);
+            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException("convert error", 0x604);
         }
 
         if ($a->getProperty("sortid", 0) != $b->getProperty("sortid", 0) && $a->getProperty("sortid", 0) != 0 && $b->getProperty("sortid", 0) != 0) {
@@ -2486,14 +2496,14 @@ class Server extends Node
      * @param array $a
      * @param array $b
      * @return integer
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException
      */
     protected static function sortFileList(array $a, array $b)
     {
         if (!array_key_exists("src", $a) || !array_key_exists("src", $b) || !array_key_exists("type", $a) || !array_key_exists("type", $b)) {
             return 0;
 
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid parameter", 0x602);
+            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException("invalid parameter", 0x602);
         }
 
         if ($a["type"] != $b["type"]) {

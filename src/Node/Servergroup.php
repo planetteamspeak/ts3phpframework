@@ -26,12 +26,14 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
  * @class TeamSpeak3_Node_Servergroup
  * @brief Class describing a TeamSpeak 3 server group and all it's parameters.
  */
-class Servergroup extends Node
+class Servergroup extends Group
 {
     /**
      * The TeamSpeak3_Node_Servergroup constructor.
@@ -39,7 +41,7 @@ class Servergroup extends Node
      * @param Server $server
      * @param array $info
      * @param string $index
-     * @throws Exception
+     * @throws NodeException
      */
     public function __construct(Server $server, array $info, $index = "sgid")
     {
@@ -47,7 +49,7 @@ class Servergroup extends Node
         $this->nodeInfo = $info;
 
         if (!array_key_exists($index, $this->nodeInfo)) {
-            throw new Exception("invalid groupID", 0xA00);
+            throw new NodeException("invalid groupID", 0xA00);
         }
 
         $this->nodeId = $this->nodeInfo[$index];
@@ -110,7 +112,7 @@ class Servergroup extends Node
      * @param integer $permskip
      * @return void
      */
-    public function permAssign($permid, $permvalue, $permnegated = false, $permskip = false)
+    public function permAssign($permid, $permvalue, $permnegated = 0, $permskip = 0)
     {
         $this->getParent()->serverGroupPermAssign($this->getId(), $permid, $permvalue, $permnegated, $permskip);
     }
@@ -200,45 +202,7 @@ class Servergroup extends Node
     public function privilegeKeyCreate($description = null, $customset = null)
     {
         return $this->getParent()
-                    ->privilegeKeyCreate(TeamSpeak3::TOKEN_SERVERGROUP, $this->getId(), 0, $description, $customset);
-    }
-
-    /**
-     * Sends a text message to all clients residing in the server group on the virtual server.
-     *
-     * @param string $msg
-     * @return void
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
-     */
-    public function message($msg)
-    {
-        foreach ($this as $client) {
-            try {
-                $this->execute("sendtextmessage", ["msg" => $msg, "target" => $client, "targetmode" => TeamSpeak3::TEXTMSG_CLIENT]);
-            } catch (\PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception $e) {
-                /* ERROR_client_invalid_id */
-                if ($e->getCode() != 0x0200) {
-                    throw $e;
-                }
-            }
-        }
-    }
-
-    /**
-     * Downloads and returns the server groups icon file content.
-     *
-     * @return StringHelper
-     */
-    public function iconDownload()
-    {
-        if ($this->iconIsLocal("iconid") || $this["iconid"] == 0) {
-            return;
-        }
-
-        $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("iconid"));
-        $transfer = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== false ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
-
-        return $transfer->download($download["ftkey"], $download["size"]);
+                    ->privilegeKeyCreate($this->getId(), TeamSpeak3::TOKEN_SERVERGROUP, 0, $description, $customset);
     }
 
     /**
@@ -273,25 +237,5 @@ class Servergroup extends Node
     public function getIcon()
     {
         return "group_server";
-    }
-
-    /**
-     * Returns a symbol representing the node.
-     *
-     * @return string
-     */
-    public function getSymbol()
-    {
-        return "%";
-    }
-
-    /**
-     * Returns a string representation of this node.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this["name"];
     }
 }

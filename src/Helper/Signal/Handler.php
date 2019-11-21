@@ -24,6 +24,8 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\SignalException;
+
 /**
  * @class TeamSpeak3_Helper_Signal_Handler
  * @brief Helper class providing handler functions for signals.
@@ -49,14 +51,14 @@ class Handler
      *
      * @param  string $signal
      * @param  mixed  $callback
-     * @throws Exception
+     * @throws SignalException
      */
     public function __construct($signal, $callback)
     {
         $this->signal = (string) $signal;
 
         if (!is_callable($callback)) {
-            throw new Exception("invalid callback specified for signal '" . $signal . "'");
+            throw new SignalException("invalid callback specified for signal '" . $signal . "'");
         }
 
         $this->callback = $callback;

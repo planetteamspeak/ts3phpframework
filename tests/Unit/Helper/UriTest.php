@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Uri;
-use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Exception as HandlerException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 
 class UriTest extends TestCase
@@ -53,7 +53,7 @@ class UriTest extends TestCase
 
     public function testConstructEmptyURI()
     {
-        $this->expectException(HandlerException::class);
+        $this->expectException(HelperException::class);
         $this->expectExceptionMessage('invalid URI scheme');
 
         // Uri should throw exception on non-alphanumeric in <scheme> of URI
@@ -62,15 +62,15 @@ class UriTest extends TestCase
 
     public function testConstructInvalidScheme()
     {
-        $this->expectException(HandlerException::class);
+        $this->expectException(HelperException::class);
         $this->expectExceptionMessage('invalid URI scheme');
 
         // Uri should throw exception on non-alphanumeric in <scheme> of URI
         $uri = new Uri(str_replace(
-        'serverquery',
-        'server&&&&query', // non-alphanumeric
+            'serverquery',
+            'server&&&&query', // non-alphanumeric
       $this->mock['test_uri'][0]
-    ));
+        ));
     }
 
     public function testParseURI()
@@ -240,9 +240,9 @@ class UriTest extends TestCase
     {
         $this->assertEquals('serverquery', $uri->getScheme());
         $this->assertInstanceOf(
-        StringHelper::class,
-        $uri->getScheme()
-    );
+            StringHelper::class,
+            $uri->getScheme()
+        );
     }
 
     /**
@@ -254,9 +254,9 @@ class UriTest extends TestCase
     {
         $this->assertEquals('username', $uri->getUser());
         $this->assertInstanceOf(
-        StringHelper::class,
-        $uri->getUser()
-    );
+            StringHelper::class,
+            $uri->getUser()
+        );
     }
 
     /**
@@ -268,9 +268,9 @@ class UriTest extends TestCase
     {
         $this->assertEquals('password', $uri->getPass());
         $this->assertInstanceOf(
-        StringHelper::class,
-        $uri->getPass()
-    );
+            StringHelper::class,
+            $uri->getPass()
+        );
     }
 
     /**
@@ -282,9 +282,9 @@ class UriTest extends TestCase
     {
         $this->assertEquals('127.0.0.1', $uri->getHost());
         $this->assertInstanceOf(
-        StringHelper::class,
-        $uri->getHost()
-    );
+            StringHelper::class,
+            $uri->getHost()
+        );
     }
 
     /**
@@ -296,9 +296,9 @@ class UriTest extends TestCase
     {
         $this->assertEquals(10011, $uri->getPort());
         $this->assertInternalType(
-        PHPUnit_IsType::TYPE_INT,
-        $uri->getPort()
-    );
+            PHPUnit_IsType::TYPE_INT,
+            $uri->getPort()
+        );
     }
 
     /**
@@ -311,9 +311,9 @@ class UriTest extends TestCase
         // NOTE: getPath() is never used in framework, add tests for consistency.
         $this->assertEquals('/', $uri->getPath());
         $this->assertInstanceOf(
-        StringHelper::class,
-        $uri->getPath()
-    );
+            StringHelper::class,
+            $uri->getPath()
+        );
     }
 
     /**
@@ -325,13 +325,13 @@ class UriTest extends TestCase
     {
         // NOTE: getPath() is never used in framework, add tests for consistency.
         $this->assertEquals(
-        ['server_port' => '9987', 'blocking' => '0'],
-        $uri->getQuery()
-    );
+            ['server_port' => '9987', 'blocking' => '0'],
+            $uri->getQuery()
+        );
         $this->assertInternalType(
-        PHPUnit_IsType::TYPE_ARRAY,
-        $uri->getQuery()
-    );
+            PHPUnit_IsType::TYPE_ARRAY,
+            $uri->getQuery()
+        );
     }
 
     /**
@@ -343,9 +343,9 @@ class UriTest extends TestCase
     {
         $this->assertEquals('no_query_clients', $uri->getFragment());
         $this->assertInstanceOf(
-        StringHelper::class,
-        $uri->getFragment()
-    );
+            StringHelper::class,
+            $uri->getFragment()
+        );
     }
 
     // @todo: Implement remaining get* tests

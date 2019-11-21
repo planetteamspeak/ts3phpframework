@@ -24,6 +24,8 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
+
 /**
  * @todo: Replace this class with native encryption
  *
@@ -57,6 +59,7 @@ class Crypt
      * The TeamSpeak3_Helper_Crypt constructor.
      *
      * @param string $secret
+     * @throws HelperException
      */
     public function __construct($secret)
     {
@@ -148,16 +151,16 @@ class Crypt
     /**
      * Sets the secret key using the specified pasphrase.
      *
-     * @param StringHelper $passphrase
+     * @param string $passphrase
      * @return void
-     * @throws Exception
+     * @throws HelperException
      */
     protected function setSecretKey($passphrase)
     {
         $length = strlen($passphrase);
 
         if (strlen($passphrase) < 1 || strlen($passphrase) > 56) {
-            throw new Exception("secret passphrase must contain at least one but less than 56 characters");
+            throw new HelperException("secret passphrase must contain at least one but less than 56 characters");
         }
 
         $k = 0;

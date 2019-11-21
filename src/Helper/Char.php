@@ -24,6 +24,8 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
+
 /**
  * @class TeamSpeak3_Helper_Char
  * @brief Helper class for char handling.
@@ -40,13 +42,13 @@ class Char
     /**
      * The TeamSpeak3_Helper_Char constructor.
      *
-     * @param string $var
-     * @throws Exception
+     * @param string $char
+     * @throws HelperException
      */
     public function __construct($char)
     {
         if (strlen($char) != 1) {
-            throw new Exception("char parameter may not contain more or less than one character");
+            throw new HelperException("char parameter may not contain more or less than one character");
         }
 
         $this->char = strval($char);
@@ -146,7 +148,7 @@ class Char
      * Returns the uppercase equivalent if the character is lowercase.
      *
      * @return Char
-     * @throws Exception
+     * @throws HelperException
      */
     public function toUpper()
     {
@@ -157,7 +159,7 @@ class Char
      * Returns the lowercase equivalent if the character is uppercase.
      *
      * @return Char
-     * @throws Exception
+     * @throws HelperException
      */
     public function toLower()
     {
@@ -213,12 +215,12 @@ class Char
      *
      * @param string $hex
      * @return Char
-     * @throws Exception
+     * @throws HelperException
      */
     public static function fromHex($hex)
     {
         if (strlen($hex) != 2) {
-            throw new Exception("given parameter '" . $hex . "' is not a valid hexadecimal number");
+            throw new HelperException("given parameter '" . $hex . "' is not a valid hexadecimal number");
         }
 
         return new self(chr(hexdec($hex)));

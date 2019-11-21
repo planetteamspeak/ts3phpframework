@@ -216,23 +216,23 @@ class CharTest extends TestCase
         // Arbitrary value: first lowercase letter from English alphabet
         // (hex) "\x61": (ASCII) 'a'
         $this->assertEquals(
-        static::calculateUTF8Ordinal("\x61"),
-        Char::fromHex("61")->toUnicode()
-    );
+            static::calculateUTF8Ordinal("\x61"),
+            Char::fromHex("61")->toUnicode()
+        );
 
         // Lower bound: first available character
         // (hex) "\x00": (ASCII) 'NUL' (non-printable control character)
         $this->assertEquals(
-        static::calculateUTF8Ordinal("\x00"),
-        Char::fromHex("00")->toUnicode()
-    );
+            static::calculateUTF8Ordinal("\x00"),
+            Char::fromHex("00")->toUnicode()
+        );
 
         // Upper bound: last available character
         // (hex) "\x7F": (ASCII) 'DEL'
         $this->assertEquals(
-        static::calculateUTF8Ordinal("\x7F"),
-        Char::fromHex("7F")->toUnicode()
-    );
+            static::calculateUTF8Ordinal("\x7F"),
+            Char::fromHex("7F")->toUnicode()
+        );
     }
 
     // @ToDo: Enable tests after updating TeamSpeak3_Helper_Char Unicode Support

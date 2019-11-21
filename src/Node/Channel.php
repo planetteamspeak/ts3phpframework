@@ -26,6 +26,7 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
  * @class TeamSpeak3_Node_Channel
@@ -39,7 +40,7 @@ class Channel extends Node
      * @param  Server $server
      * @param  array  $info
      * @param  string $index
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function __construct(Server $server, array $info, $index = "cid")
     {
@@ -47,7 +48,7 @@ class Channel extends Node
         $this->nodeInfo = $info;
 
         if (!array_key_exists($index, $this->nodeInfo)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid channelID", 0x300);
+            throw new ServerQueryException("invalid channelID", 0x300);
         }
 
         $this->nodeId = $this->nodeInfo[$index];
@@ -76,13 +77,13 @@ class Channel extends Node
      * Returns the TeamSpeak3_Node_Channel object matching the given ID.
      *
      * @param  integer $cid
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
      * @return Channel
+     *@throws ServerQueryException
      */
     public function subChannelGetById($cid)
     {
         if (!array_key_exists((int) $cid, $this->subChannelList())) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid channelID", 0x300);
+            throw new ServerQueryException("invalid channelID", 0x300);
         }
 
         return $this->channelList[(int) $cid];
@@ -92,8 +93,8 @@ class Channel extends Node
      * Returns the TeamSpeak3_Node_Channel object matching the given name.
      *
      * @param  integer $name
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
      * @return Channel
+     *@throws ServerQueryException
      */
     public function subChannelGetByName($name)
     {
@@ -103,7 +104,7 @@ class Channel extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid channelID", 0x300);
+        throw new ServerQueryException("invalid channelID", 0x300);
     }
 
     /**
@@ -129,13 +130,13 @@ class Channel extends Node
      * Returns the TeamSpeak3_Node_Client object matching the given ID.
      *
      * @param  integer $clid
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
      * @return Client
+     *@throws ServerQueryException
      */
     public function clientGetById($clid)
     {
         if (!array_key_exists($clid, $this->clientList())) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid clientID", 0x200);
+            throw new ServerQueryException("invalid clientID", 0x200);
         }
 
         return $this->clientList[intval($clid)];
@@ -145,8 +146,8 @@ class Channel extends Node
      * Returns the TeamSpeak3_Node_Client object matching the given name.
      *
      * @param  integer $name
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
      * @return Client
+     *@throws ServerQueryException
      */
     public function clientGetByName($name)
     {
@@ -156,7 +157,7 @@ class Channel extends Node
             }
         }
 
-        throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid clientID", 0x200);
+        throw new ServerQueryException("invalid clientID", 0x200);
     }
 
     /**
@@ -390,7 +391,7 @@ class Channel extends Node
     /**
      * Downloads and returns the channels icon file content.
      *
-     * @return StringHelper
+     * @return StringHelper|void
      */
     public function iconDownload()
     {

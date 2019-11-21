@@ -22,13 +22,13 @@
  * @copyright Copyright (c) Planet TeamSpeak. All rights reserved.
  */
 
-namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
 /**
  * @class TeamSpeak3_Adapter_ServerQuery_Exception
  * @brief Enhanced exception class for TeamSpeak3_Adapter_ServerQuery objects.
  */
-class Exception extends \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Exception
+class ServerQueryException extends AdapterException
 {
     /**
      * Stores the optional return code for ServerQuery errors.
@@ -43,7 +43,6 @@ class Exception extends \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Exception
      * @param  string  $mesg
      * @param  integer $code
      * @param  string  $return_code
-     * @return TeamSpeak3_Adapter_ServerQuery_Exception
      */
     public function __construct($mesg, $code = 0x00, $return_code = null)
     {

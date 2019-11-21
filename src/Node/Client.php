@@ -24,6 +24,7 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
@@ -39,8 +40,7 @@ class Client extends Node
      * @param  Server $server
      * @param  array  $info
      * @param  string $index
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
-     * @return Client
+     *@throws ServerQueryException
      */
     public function __construct(Server $server, array $info, $index = "clid")
     {
@@ -48,7 +48,7 @@ class Client extends Node
         $this->nodeInfo = $info;
 
         if (!array_key_exists($index, $this->nodeInfo)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid clientID", 0x200);
+            throw new ServerQueryException("invalid clientID", 0x200);
         }
 
         $this->nodeId = $this->nodeInfo[$index];
@@ -374,16 +374,16 @@ class Client extends Node
      */
     public function memberOf()
     {
-        $cgroups = [$this->getParent()->channelGroupGetById($this["client_channel_group_id"])];
-        $sgroups = [];
+        $channelGroups = [$this->getParent()->channelGroupGetById($this["client_channel_group_id"])];
+        $serverGroups = [];
 
         foreach (explode(",", $this["client_servergroups"]) as $sgid) {
-            $sgroups[] = $this->getParent()->serverGroupGetById($sgid);
+            $serverGroups[] = $this->getParent()->serverGroupGetById($sgid);
         }
 
-        uasort($sgroups, [__CLASS__, "sortGroupList"]);
+        uasort($serverGroups, [__CLASS__, "sortGroupList"]);
 
-        return array_merge($cgroups, $sgroups);
+        return array_merge($channelGroups, $serverGroups);
     }
 
     /**

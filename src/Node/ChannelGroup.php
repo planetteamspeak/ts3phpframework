@@ -26,12 +26,13 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
  * @class TeamSpeak3_Node_Channelgroup
  * @brief Class describing a TeamSpeak 3 channel group and all it's parameters.
  */
-class Channelgroup extends Node
+class ChannelGroup extends Group
 {
     /**
      * The TeamSpeak3_Node_Channelgroup constructor.
@@ -39,7 +40,7 @@ class Channelgroup extends Node
      * @param  Server $server
      * @param  array  $info
      * @param  string $index
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
+     * @throws ServerQueryException
      */
     public function __construct(Server $server, array $info, $index = "cgid")
     {
@@ -47,7 +48,7 @@ class Channelgroup extends Node
         $this->nodeInfo = $info;
 
         if (!array_key_exists($index, $this->nodeInfo)) {
-            throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception("invalid groupID", 0xA00);
+            throw new ServerQueryException("invalid groupID", 0xA00);
         }
 
         $this->nodeId = $this->nodeInfo[$index];
@@ -174,49 +175,11 @@ class Channelgroup extends Node
      * @param  integer $cid
      * @param  string  $description
      * @param  string  $customset
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function privilegeKeyCreate($cid, $description = null, $customset = null)
     {
-        return $this->getParent()->privilegeKeyCreate(TeamSpeak3::TOKEN_CHANNELGROUP, $this->getId(), $cid, $description, $customset);
-    }
-
-    /**
-     * Sends a text message to all clients residing in the channel group on the virtual server.
-     *
-     * @param  string $msg
-     * @return void
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception
-     */
-    public function message($msg)
-    {
-        foreach ($this as $client) {
-            try {
-                $this->execute("sendtextmessage", ["msg" => $msg, "target" => $client, "targetmode" => TeamSpeak3::TEXTMSG_CLIENT]);
-            } catch (\PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Exception $e) {
-                /* ERROR_client_invalid_id */
-                if ($e->getCode() != 0x0200) {
-                    throw $e;
-                }
-            }
-        }
-    }
-
-    /**
-     * Downloads and returns the channel groups icon file content.
-     *
-     * @return StringHelper
-     */
-    public function iconDownload()
-    {
-        if ($this->iconIsLocal("iconid") || $this["iconid"] == 0) {
-            return;
-        }
-
-        $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("iconid"));
-        $transfer = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== false ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
-
-        return $transfer->download($download["ftkey"], $download["size"]);
+        return $this->getParent()->privilegeKeyCreate($this->getId(), TeamSpeak3::TOKEN_CHANNELGROUP, $cid, $description, $customset);
     }
 
     /**
@@ -251,25 +214,5 @@ class Channelgroup extends Node
     public function getIcon()
     {
         return "group_channel";
-    }
-
-    /**
-     * Returns a symbol representing the node.
-     *
-     * @return string
-     */
-    public function getSymbol()
-    {
-        return "%";
-    }
-
-    /**
-     * Returns a string representation of this node.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string) $this["name"];
     }
 }
