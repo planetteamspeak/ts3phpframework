@@ -1764,7 +1764,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
   {
     if($iconname) 
     {
-        $name = new \TeamSpeak3_Helper_String("/" . $iconName);
+        $name = new \TeamSpeak3_Helper_String("/" . $iconname);
     } 
     else
     {
