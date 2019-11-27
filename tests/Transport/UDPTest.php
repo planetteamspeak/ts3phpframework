@@ -1,21 +1,21 @@
 <?php
 
-namespace Tests\Unit\Transport;
+namespace Tests\Transport;
 
 use \PHPUnit\Framework\TestCase;
 use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
-use PlanetTeamSpeak\TeamSpeak3Framework\Transport\TCP;
+use PlanetTeamSpeak\TeamSpeak3Framework\Transport\UDP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
-class TCPTest extends TestCase
+class UDPTest extends TestCase
 {
     public function testConstructorNoException()
     {
-        $adapter = new TCP(
+        $adapter = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
-        $this->assertInstanceOf(TCP::class, $adapter);
+        $this->assertInstanceOf(UDP::class, $adapter);
 
         $this->assertArrayHasKey('host', $adapter->getConfig());
         $this->assertEquals('test', $adapter->getConfig('host'));
@@ -41,7 +41,7 @@ class TCPTest extends TestCase
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage("config must have a key for 'host'");
 
-        $adapter = new TCP(['port' => 12345]);
+        $adapter = new UDP(['port' => 12345]);
     }
 
     public function testConstructorExceptionNoPort()
@@ -49,12 +49,12 @@ class TCPTest extends TestCase
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage("config must have a key for 'port'");
 
-        $adapter = new TCP(['host' => 'test']);
+        $adapter = new UDP(['host' => 'test']);
     }
 
     public function testGetConfig()
     {
-        $adapter = new TCP(
+        $adapter = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
 
@@ -70,7 +70,7 @@ class TCPTest extends TestCase
 
     public function testSetGetAdapter()
     {
-        $transport = new TCP(
+        $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
         // Mocking adaptor since `stream_socket_client()` depends on running server
@@ -82,35 +82,49 @@ class TCPTest extends TestCase
 
     public function testGetStream()
     {
-        $transport = new TCP(
+        $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
         $this->assertNull($transport->getStream());
     }
 
+    public function testConnect()
+    {
+        $transport = new UDP(
+            ['host' => '127.0.0.1', 'port' => 12345]
+        );
+        $this->assertNull($transport->connect());
+        $this->assertInternalType(
+            PHPUnit_IsType::TYPE_RESOURCE,
+            $transport->getStream()
+        );
+    }
+
     public function testConnectBadHost()
     {
-        $transport = new TCP(
+        $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage('getaddrinfo failed');
-        $transport->connect();
+        $this->assertNull($transport->connect());
     }
 
-    public function testConnectHostRefuseConnection()
+    public function testDisconnect()
     {
-        $transport = new TCP(
+        $transport = new UDP(
             ['host' => '127.0.0.1', 'port' => 12345]
         );
-        $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('Connection refused');
         $transport->connect();
+        $this->assertInternalType(
+            PHPUnit_IsType::TYPE_RESOURCE,
+            $transport->getStream()
+        );
     }
 
     public function testDisconnectNoConnection()
     {
-        $transport = new TCP(
+        $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
         $this->assertNull($transport->disconnect());
@@ -118,7 +132,7 @@ class TCPTest extends TestCase
 
     public function testReadNoConnection()
     {
-        $transport = new TCP(
+        $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
         $this->expectException(TransportException::class);
@@ -126,33 +140,13 @@ class TCPTest extends TestCase
         $transport->read();
     }
 
-    public function testReadLineNoConnection()
-    {
-        $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
-        );
-        $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo failed');
-        $transport->readLine();
-    }
-
     public function testSendNoConnection()
     {
-        $transport = new TCP(
+        $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage('getaddrinfo failed');
-        $transport->send('testsend');
-    }
-
-    public function testSendLineNoConnection()
-    {
-        $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
-        );
-        $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo failed');
-        $transport->sendLine('test.sendLine');
+        $transport->send('test.send');
     }
 }

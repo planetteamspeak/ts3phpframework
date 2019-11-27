@@ -24,19 +24,18 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
-use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
- * @class TeamSpeak3_Node_Servergroup
+ * @class ServerGroup
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Node
  * @brief Class describing a TeamSpeak 3 server group and all it's parameters.
  */
-class Servergroup extends Group
+class ServerGroup extends Group
 {
     /**
-     * The TeamSpeak3_Node_Servergroup constructor.
+     * The ServerGroup constructor.
      *
      * @param Server $server
      * @param array $info

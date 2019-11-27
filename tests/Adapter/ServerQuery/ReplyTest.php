@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Adapter\ServerQuery;
+namespace Tests\Adapter\ServerQuery;
 
 use \PHPUnit\Framework\TestCase;
 use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;

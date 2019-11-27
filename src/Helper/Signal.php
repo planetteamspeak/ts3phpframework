@@ -24,6 +24,7 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\SignalException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Handler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
@@ -86,7 +87,7 @@ class Signal
     public function getCallbackHash($callback)
     {
         if (!is_callable($callback, true, $callable_name)) {
-            throw new HelperException("invalid callback specified");
+            throw new SignalException("invalid callback specified");
         }
 
         return md5($callable_name);

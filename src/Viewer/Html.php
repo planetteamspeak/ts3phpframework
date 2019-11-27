@@ -31,7 +31,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Node\ChannelGroup;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Client;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Node;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Server;
-use PlanetTeamSpeak\TeamSpeak3Framework\Node\Servergroup;
+use PlanetTeamSpeak\TeamSpeak3Framework\Node\ServerGroup;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
@@ -301,7 +301,7 @@ class Html implements ViewerInterface
             return "ID: " . $this->currObj->getId() . " | Codec: " . Convert::codec($this->currObj["channel_codec"]) . " | Quality: " . $this->currObj["channel_codec_quality"];
         } elseif ($this->currObj instanceof Client) {
             return "ID: " . $this->currObj->getId() . " | Version: " . Convert::versionShort($this->currObj["client_version"]) . " | Platform: " . $this->currObj["client_platform"];
-        } elseif ($this->currObj instanceof Servergroup || $this->currObj instanceof ChannelGroup) {
+        } elseif ($this->currObj instanceof ServerGroup || $this->currObj instanceof ChannelGroup) {
             return "ID: " . $this->currObj->getId() . " | Type: " . Convert::groupType($this->currObj["type"]) . " (" . ($this->currObj["savedb"] ? "Permanent" : "Temporary") . ")";
         }
     }
@@ -519,7 +519,7 @@ class Html implements ViewerInterface
                 continue;
             }
 
-            $type = ($group instanceof Servergroup) ? "Server Group" : "Channel Group";
+            $type = ($group instanceof ServerGroup) ? "Server Group" : "Channel Group";
 
             if (!$group->iconIsLocal("iconid") && $this->ftclient) {
                 if (!isset($this->cacheIcon[$group["iconid"]])) {

@@ -1,7 +1,10 @@
 <?php
 
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Helper;
+
 use PHPUnit\Framework\TestCase;
 use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\SignalException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Handler;

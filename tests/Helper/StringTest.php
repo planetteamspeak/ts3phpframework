@@ -1,5 +1,7 @@
 <?php
 
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Helper;
+
 use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;

@@ -27,6 +27,7 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler\Timer;
+use PlanetTeamSpeak\TeamSpeak3Framework\Transport\TCP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport;
 
 /**
@@ -130,7 +131,7 @@ abstract class Adapter
      * @throws AdapterException
      * @return void
      */
-    protected function initTransport($options, $transport = "TeamSpeak3_Transport_TCP")
+    protected function initTransport($options, $transport = TCP::class)
     {
         if (!is_array($options)) {
             throw new AdapterException("transport parameters must provided in an array");

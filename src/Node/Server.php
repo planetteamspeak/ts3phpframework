@@ -1024,7 +1024,7 @@ class Server extends Node
      * Returns a list of server groups available.
      *
      * @param array $filter
-     * @return array|Servergroup[]
+     * @return array|ServerGroup[]
      */
     public function serverGroupList(array $filter = [])
     {
@@ -1032,7 +1032,7 @@ class Server extends Node
             $this->sgroupList = $this->request("servergrouplist")->toAssocArray("sgid");
 
             foreach ($this->sgroupList as $sgid => $group) {
-                $this->sgroupList[$sgid] = new Servergroup($this, $group);
+                $this->sgroupList[$sgid] = new ServerGroup($this, $group);
             }
 
             uasort($this->sgroupList, [__CLASS__, "sortGroupList"]);
@@ -1123,7 +1123,7 @@ class Server extends Node
      * Returns the TeamSpeak3_Node_Servergroup object matching the given ID.
      *
      * @param integer $sgid
-     * @return Servergroup
+     * @return ServerGroup
      * @throws ServerQueryException
      */
     public function serverGroupGetById($sgid)
@@ -1140,7 +1140,7 @@ class Server extends Node
      *
      * @param string $name
      * @param integer $type
-     * @return Servergroup
+     * @return ServerGroup
      * @throws ServerQueryException
      */
     public function serverGroupGetByName($name, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
@@ -1328,7 +1328,7 @@ class Server extends Node
      *
      * @param integer $mode
      * @param integer $type
-     * @return Servergroup
+     * @return ServerGroup
      * @throws ServerQueryException
      */
     public function serverGroupIdentify(
@@ -2476,7 +2476,7 @@ class Server extends Node
             throw new \PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\ServerQueryException("invalid parameter", 0x602);
         }
 
-        if (!$a instanceof Servergroup && !$a instanceof ChannelGroup) {
+        if (!$a instanceof ServerGroup && !$a instanceof ChannelGroup) {
             return 0;
 
             /* workaround for PHP bug #50688 */

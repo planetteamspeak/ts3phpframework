@@ -30,7 +30,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Node\ChannelGroup;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Client;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Node;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Server;
-use PlanetTeamSpeak\TeamSpeak3Framework\Node\Servergroup;
+use PlanetTeamSpeak\TeamSpeak3Framework\Node\ServerGroup;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
@@ -173,7 +173,7 @@ class Json implements ViewerInterface
             return "channel";
         } elseif ($this->currObj instanceof Client) {
             return "client";
-        } elseif ($this->currObj instanceof Servergroup || $this->currObj instanceof ChannelGroup) {
+        } elseif ($this->currObj instanceof ServerGroup || $this->currObj instanceof ChannelGroup) {
             return "group";
         }
 
@@ -402,7 +402,7 @@ class Json implements ViewerInterface
                 $props->memberof[$num]->flags += $group->type == 2                             ? 4  : 0;
                 $props->memberof[$num]->flags += $group->type == 0                             ? 8  : 0;
                 $props->memberof[$num]->flags += $group->savedb                                ? 16 : 0;
-                $props->memberof[$num]->flags += $group instanceof Servergroup ? 32 : 0;
+                $props->memberof[$num]->flags += $group instanceof ServerGroup ? 32 : 0;
             }
 
             $props->flags += $this->currObj->client_away                                                                                                                             ? 1   : 0;
@@ -413,7 +413,7 @@ class Json implements ViewerInterface
             $props->flags += $this->currObj->channelGetById($this->currObj->cid)->channel_needed_talk_power > $this->currObj->client_talk_power && !$this->currObj->client_is_talker ? 32  : 0;
             $props->flags += $this->currObj->client_input_muted || !$this->currObj->client_input_hardware                                                                            ? 64  : 0;
             $props->flags += $this->currObj->client_output_muted || !$this->currObj->client_output_hardware                                                                          ? 128 : 0;
-        } elseif ($this->currObj instanceof Servergroup || $this->currObj instanceof ChannelGroup) {
+        } elseif ($this->currObj instanceof ServerGroup || $this->currObj instanceof ChannelGroup) {
             $props->id     = $this->currObj->getId();
             $props->icon   = $this->currObj->iconid < 0 ? pow(2, 32)-($this->currObj->iconid*-1) : $this->currObj->iconid;
             $props->order  = $this->currObj->sortid;
@@ -425,7 +425,7 @@ class Json implements ViewerInterface
             $props->flags += $this->currObj->type == 2                             ? 4  : 0;
             $props->flags += $this->currObj->type == 0                             ? 8  : 0;
             $props->flags += $this->currObj->savedb                                ? 16 : 0;
-            $props->flags += $this->currObj instanceof Servergroup ? 32 : 0;
+            $props->flags += $this->currObj instanceof ServerGroup ? 32 : 0;
         }
 
         return $props;
