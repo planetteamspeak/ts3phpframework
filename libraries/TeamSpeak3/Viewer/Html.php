@@ -337,7 +337,7 @@ class TeamSpeak3_Viewer_Html implements TeamSpeak3_Viewer_Interface
 
       if($this->currObj->spacerGetAlign() == TeamSpeak3::SPACER_ALIGN_REPEAT)
       {
-        $string->resize(30, $string);
+        if($string->count()) $string->resize(30, $string);
       }
 
       return htmlspecialchars($string);
