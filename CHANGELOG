@@ -9,7 +9,7 @@
    ! Important - Take note!
 ===============================================================================
 
-=== Release 1.1.34 - WIP ===
+=== Release 1.1.34 - 04 Mar 2020 ===
  ! upgrading your servers to 3.10.0 (build >= 1564054246) is mandatory
  + added optional -continueonerror argument to some commands
  + added optional -keepfiles argument to serversnapshotdeploy command
