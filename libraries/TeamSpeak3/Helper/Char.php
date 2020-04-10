@@ -179,7 +179,7 @@ class TeamSpeak3_Helper_Char
    */
   public function toUnicode()
   {
-    $h = ord($this->char{0});
+    $h = ord($this->char[0]);
 
     if($h <= 0x7F)
     {
@@ -191,15 +191,15 @@ class TeamSpeak3_Helper_Char
     }
     else if($h <= 0xDF)
     {
-      return ($h & 0x1F) << 6 | (ord($this->char{1}) & 0x3F);
+      return ($h & 0x1F) << 6 | (ord($this->char[1]) & 0x3F);
     }
     else if($h <= 0xEF)
     {
-      return ($h & 0x0F) << 12 | (ord($this->char{1}) & 0x3F) << 6 | (ord($this->char{2}) & 0x3F);
+      return ($h & 0x0F) << 12 | (ord($this->char[1]) & 0x3F) << 6 | (ord($this->char[2]) & 0x3F);
     }
     else if($h <= 0xF4)
     {
-      return ($h & 0x0F) << 18 | (ord($this->char{1}) & 0x3F) << 12 | (ord($this->char{2}) & 0x3F) << 6 | (ord($this->char{3}) & 0x3F);
+      return ($h & 0x0F) << 18 | (ord($this->char[1]) & 0x3F) << 12 | (ord($this->char[2]) & 0x3F) << 6 | (ord($this->char[3]) & 0x3F);
     }
     else
     {

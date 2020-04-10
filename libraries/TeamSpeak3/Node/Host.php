@@ -539,7 +539,7 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
       $permtree[$val]["permcatid"]      = $val;
       $permtree[$val]["permcathex"]     = "0x" . dechex($val);
       $permtree[$val]["permcatname"]    = TeamSpeak3_Helper_String::factory(TeamSpeak3_Helper_Convert::permissionCategory($val));
-      $permtree[$val]["permcatparent"]  = $permtree[$val]["permcathex"]{3} == 0 ? 0 : hexdec($permtree[$val]["permcathex"]{2} . 0);
+      $permtree[$val]["permcatparent"]  = $permtree[$val]["permcathex"][3] == 0 ? 0 : hexdec($permtree[$val]["permcathex"][2] . 0);
       $permtree[$val]["permcatchilren"] = 0;
       $permtree[$val]["permcatcount"]   = 0;
 
