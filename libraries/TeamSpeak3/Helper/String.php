@@ -921,7 +921,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable, Json
    */
   public function offsetGet($offset)
   {
-    return ($this->offsetExists($offset)) ? new TeamSpeak3_Helper_Char($this->string{$offset}) : null;
+    return ($this->offsetExists($offset)) ? new TeamSpeak3_Helper_Char($this->string[$offset]) : null;
   }
 
   /**
@@ -931,7 +931,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable, Json
   {
     if(!$this->offsetExists($offset)) return;
 
-    $this->string{$offset} = strval($value);
+    $this->string[$offset] = strval($value);
   }
 
   /**
