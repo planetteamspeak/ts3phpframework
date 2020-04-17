@@ -897,7 +897,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable, Json
    */
   public function current()
   {
-    return new TeamSpeak3_Helper_Char($this->string{$this->position});
+    return new TeamSpeak3_Helper_Char($this->string[$this->position]);
   }
 
   /**
