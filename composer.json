@@ -16,6 +16,9 @@
     "issues": "https://github.com/planetteamspeak/ts3phpframework/issues",
     "docs": "https://docs.planetteamspeak.com/ts3/php/framework"
   },
+  "config": {
+    "sort-packages": true
+  },
   "require": {
     "php": ">=5.6",
     "ext-json": "*",
@@ -35,13 +38,19 @@
   },
   "autoload": {
     "psr-4": {
-      "PlanetTeamSpeak\\TeamSpeak3Framework\\": "src/",
+      "PlanetTeamSpeak\\TeamSpeak3Framework\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
       "PlanetTeamSpeak\\TeamSpeak3Framework\\Tests\\": "tests/"
     }
   },
   "scripts": {
-    "compatibility": "./vendor/bin/phpcs -ps --basepath=. --standard=PHPCompatibility --runtime-set testVersion 5.2- src",
-    "test": "./vendor/bin/phpunit --no-coverage ./tests",
-    "coverage": "./vendor/bin/phpunit"
+    "compatibility": "\"vendor/bin/phpcs\" -ps --basepath=. --standard=PHPCompatibility --runtime-set testVersion 5.2- src",
+    "tests": [
+      "\"vendor/bin/phpunit\" --no-coverage"
+    ],
+    "coverage": "\"vendor/bin/phpunit\""
   }
 }

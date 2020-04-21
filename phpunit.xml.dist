@@ -8,7 +8,6 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="false"
 >
   <testsuites>
     <testsuite name="Teamspeak 3 PHP Framework Test Suite">
@@ -18,7 +17,7 @@
 
   <logging>
     <log type="coverage-clover" target="build/logs/clover.xml"/>
-    <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
+    <log type="junit" target="build/logs/junit.xml"/>
   </logging>
 
   <filter>

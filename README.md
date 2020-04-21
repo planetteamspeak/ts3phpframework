@@ -1,5 +1,7 @@
 # TeamSpeak 3 PHP Framework
 
+[![Build Status](https://travis-ci.org/planetteamspeak/ts3phpframework.svg?branch=master)](https://travis-ci.org/planetteamspeak/ts3phpframework)
+
 Initially released in January 2010, the TS3 PHP Framework is a powerful, open source, object-oriented framework implemented in PHP 5 and licensed under the GNU General Public License. It’s based on simplicity and a rigorously tested agile codebase. Extend the functionality of your servers with scripts or create powerful web applications to manage all features of your TeamSpeak 3 Server instances.
 
 Tested. Thoroughly. Enterprise-ready and built with agile methods, the TS3 PHP Framework has been unit-tested from the start to ensure that all code remains stable and easy for you to extend, re-test with your extensions, and further maintain.
@@ -28,7 +30,7 @@ Speed up new development and reduce maintenance costs by using this nifty piece 
 
 **Requirements**
 
-* PHP - Developed on PHP 7.x, with 7.2.x targeted for testing.
+* PHP - Developed on PHP 7.x, with 7.4.x targeted for testing.
 * TeamSpeak Server - v3.4.0 (build >= 1536564584) or higher.
 
 **Often used with...**
@@ -54,7 +56,7 @@ composer require planetteamspeak/ts3-php-framework:dev-master
 
 ### Tests
 
-To run all tests use `php vendor/bin/phpunit`.
+To run all tests use `composer run tests`.
 
 ### Useful Links
 
@@ -248,6 +250,10 @@ For further information please visit the documentation (see [Useful Links](#usef
 Setup a local test instance of TeamSpeak3 (amd64, Alpine Linux):
 ```
 docker run --name teamspeak_server -p 9987:9987/udp -p 10011:10011 -p 30033:30033 -e TS3SERVER_LICENSE=accept teamspeak:latest
+```
+Or simply start the predefined docker container `docker-compose.yml`:
+```
+docker-compose up
 ```
 _Add `-d` flag to run in background. Options / Examples: [Docs @ Docker](https://docs.docker.com/samples/library/teamspeak/) | [Hub @ Docker](https://hub.docker.com/_/teamspeak/)_
 
