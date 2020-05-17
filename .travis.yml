@@ -36,8 +36,10 @@ cache:
     - $HOME/.php-cs-fixer
 
 before_script:
-  - sudo apt-get install -y -qq libssh2-1-dev libssh2-php
-  - pecl install -f ssh2-beta < .noninteractive
+  - sudo apt-get install -y php-pear
+  - sudo pear channel-discover phpseclib.sourceforge.net
+  - sudo pear remote-list -c phpseclib
+  - sudo pear install phpseclib/Net_SSH2
   - mkdir -p "$HOME/.php-cs-fixer"
   - cp phpunit.xml.dist phpunit.xml
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
