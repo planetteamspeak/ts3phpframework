@@ -23,7 +23,7 @@
     "php": ">=5.6",
     "ext-json": "*",
     "ext-ctype": "*",
-    "phpseclib/phpseclib": "*",
+    "phpseclib/phpseclib": "^1.0",
     "ext-openssl": "*"
   },
   "require-dev": {
