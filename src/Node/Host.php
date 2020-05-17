@@ -543,7 +543,7 @@ class Host extends Node
             $permtree[$val]["permcatid"]      = $val;
             $permtree[$val]["permcathex"]     = "0x" . dechex($val);
             $permtree[$val]["permcatname"]    = StringHelper::factory(Convert::permissionCategory($val));
-            $permtree[$val]["permcatparent"]  = $permtree[$val]["permcathex"]{3} == 0 ? 0 : hexdec($permtree[$val]["permcathex"]{2} . 0);
+            $permtree[$val]["permcatparent"]  = $permtree[$val]["permcathex"][3] == 0 ? 0 : hexdec($permtree[$val]["permcathex"][2] . 0);
             $permtree[$val]["permcatchilren"] = 0;
             $permtree[$val]["permcatcount"]   = 0;
 
