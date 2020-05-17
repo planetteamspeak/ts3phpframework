@@ -36,10 +36,6 @@ cache:
     - $HOME/.php-cs-fixer
 
 before_script:
-  - sudo apt-get install -y php-pear
-  - sudo pear channel-discover phpseclib.sourceforge.net
-  - sudo pear remote-list -c phpseclib
-  - sudo pear install phpseclib/Net_SSH2
   - mkdir -p "$HOME/.php-cs-fixer"
   - cp phpunit.xml.dist phpunit.xml
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -53,6 +49,10 @@ script:
   - if [[ $COVERAGE == yes ]] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 
 before_install:
+  - sudo apt-get install -y php-pear
+  - sudo pear channel-discover phpseclib.sourceforge.net
+  - sudo pear remote-list -c phpseclib
+  - sudo pear install phpseclib/Net_SSH2
   - docker run -d --name="teamspeak_server" -p "9987:9987/udp" -p 10011:10011 -p 30033:30033 teamspeak:latest
   - docker ps -a
   - docker logs teamspeak_server
