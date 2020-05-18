@@ -883,7 +883,7 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
      */
     public function current()
     {
-        return new Char($this->string{$this->position});
+        return new Char($this->string[$this->position]);
     }
 
     /**
@@ -907,7 +907,7 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
      */
     public function offsetGet($offset)
     {
-        return ($this->offsetExists($offset)) ? new Char($this->string{$offset}) : null;
+        return ($this->offsetExists($offset)) ? new Char($this->string[$offset]) : null;
     }
 
     /**
@@ -919,7 +919,7 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
             return;
         }
 
-        $this->string{$offset} = strval($value);
+        $this->string[$offset] = strval($value);
     }
 
     /**

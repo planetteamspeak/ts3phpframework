@@ -171,7 +171,7 @@ class Crypt
         for ($i = 0; $i < 18; $i++) {
             $data = 0;
             for ($j = 4; $j > 0; $j--) {
-                $data = $data << 8 | ord($passphrase{$k});
+                $data = $data << 8 | ord($passphrase[$k]);
                 $k = ($k + 1) % $length;
             }
             $this->p[$i] ^= $data;
