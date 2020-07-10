@@ -458,6 +458,16 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
   }
 
   /**
+   * Returns the number of WebQuery API keys known by the virtual server.
+   *
+   * @return integer
+   */
+  public function apiKeyCount()
+  {
+    return current($this->execute("apikeylist -count", array("duration" => 1))->toList("count"));
+  }
+
+  /**
    * Returns a list of WebQuery API keys known by the virtual server. By default, the server spits out 25 entries
    * at once. When no $cldbid is specified, API keys for the invoker are returned. In addition, using '*' as $cldbid
    * will return all known API keys.
