@@ -214,8 +214,8 @@ When you use a MVC based software like Symfony, CakePHP, Laravel or something si
 ```php
 <?php
 
-use TeamSpeak3;
-use TeamSpeak3_Exception;
+use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3_Exception;
 
 class TeamspeakController extends Controller
 {

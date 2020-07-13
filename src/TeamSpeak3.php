@@ -24,13 +24,15 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework;
 
-use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter;
-use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
-use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
-use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Uri;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Host;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Node;
+use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Uri;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Server;
+use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter;
+use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
+use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
+use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 
 /**
  * @class TeamSpeak3
@@ -406,6 +408,32 @@ class TeamSpeak3
         }
 
         return $object;
+    }
+
+    /**
+     * Returns the name of an adapter class by $name.
+     *
+     * @param string $name
+     * @param string $namespace
+     * @return string
+     * @throws AdapterException
+     */
+    protected static function getAdapterName($name, $namespace = "TeamSpeak3_Adapter_")
+    {
+        $path = self::getFilePath($namespace);
+        $scan = scandir($path);
+        
+        foreach($scan as $node)
+        {
+            $file = StringHelper::factory($node)->toLower();
+            
+            if($file->startsWith($name) && $file->endsWith(".php"))
+            {
+                return $namespace . str_replace(".php", "", $node);
+            }
+        }
+
+        throw new AdapterException("adapter '" . $name . "' does not exist");          
     }
 
     /**
