@@ -386,7 +386,7 @@ class TeamSpeak3_Viewer_Json implements TeamSpeak3_Viewer_Interface
     elseif($this->currObj instanceof TeamSpeak3_Node_Channel)
     {
       $props->id       = $this->currObj->getId();
-      $props->icon     = $this->currObj->isSpacer() ? 0 : $this->currObj->channel_icon_id < 0 ? pow(2, 32)-($this->currObj->channel_icon_id*-1) : $this->currObj->channel_icon_id;
+      $props->icon     = ($this->currObj->isSpacer() ? 0 : $this->currObj->channel_icon_id < 0) ? pow(2, 32)-($this->currObj->channel_icon_id*-1) : $this->currObj->channel_icon_id;
       $props->path     = trim($this->currObj->getPathway());
       $props->topic    = strlen($this->currObj->channel_topic) ? trim($this->currObj->channel_topic) : null;
       $props->codec    = $this->currObj->channel_codec;
