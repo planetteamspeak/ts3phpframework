@@ -114,7 +114,7 @@ class ServerQuery extends Adapter
      *
      * @param  string  $cmd
      * @param  boolean $throw
-     * @throws AdapterException
+     * @throws AdapterException|ServerQueryException
      * @return Reply
      */
     public function request($cmd, $throw = true)

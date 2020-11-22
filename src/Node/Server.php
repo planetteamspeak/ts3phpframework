@@ -33,7 +33,9 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
- * @class TeamSpeak3_Node_Server
+ * Class Server
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Node
+ * @class Server
  * @brief Class describing a TeamSpeak 3 virtual server and all it's parameters.
  */
 class Server extends Node
@@ -59,7 +61,7 @@ class Server extends Node
     protected $cgroupList = null;
 
     /**
-     * The TeamSpeak3_Node_Server constructor.
+     * Server constructor.
      *
      * @param Host $host
      * @param array $info
@@ -93,7 +95,7 @@ class Server extends Node
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Channel objects.
+     * Returns an array filled with PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel objects.
      *
      * @param array $filter
      * @return array|Channel[]
@@ -125,7 +127,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object representing the default channel.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel object representing the default channel.
      *
      * @return Channel
      * @throws ServerQueryException
@@ -187,7 +189,7 @@ class Server extends Node
     }
 
     /**
-     * Returns TRUE if the given TeamSpeak3_Node_Channel object is a spacer.
+     * Returns TRUE if the given PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel object is a spacer.
      *
      * @param Channel $channel
      * @return boolean
@@ -569,7 +571,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object matching the given ID.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel object matching the given ID.
      *
      * @param integer $cid
      * @return Channel
@@ -584,7 +586,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object matching the given name.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel object matching the given name.
      *
      * @param string $name
      * @return Channel
@@ -601,7 +603,7 @@ class Server extends Node
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Client objects.
+     * Returns an array filled with PlanetTeamSpeak\TeamSpeak3Framework\Node\Client objects.
      *
      * @param array $filter
      * @return array|Client[]
@@ -708,7 +710,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given ID.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Client object matching the given ID.
      *
      * @param integer $clid
      * @return Client
@@ -723,7 +725,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given name.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Client object matching the given name.
      *
      * @param string $name
      * @return Client
@@ -740,7 +742,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given unique identifier.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Client object matching the given unique identifier.
      *
      * @param string $uid
      * @return Client
@@ -757,7 +759,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given database ID.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Client object matching the given database ID.
      *
      * @param integer $dbid
      * @return Client
@@ -1068,7 +1070,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Servergroup object matching the given ID.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Servergroup object matching the given ID.
      *
      * @param integer $sgid
      * @return ServerGroup
@@ -1083,7 +1085,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Servergroup object matching the given name.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Servergroup object matching the given name.
      *
      * @param string $name
      * @param integer $type
@@ -1379,7 +1381,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channelgroup object matching the given ID.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Channelgroup object matching the given ID.
      *
      * @param integer $cgid
      * @return ChannelGroup
@@ -1394,7 +1396,7 @@ class Server extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channelgroup object matching the given name.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Channelgroup object matching the given name.
      *
      * @param string $name
      * @param integer $type
@@ -2276,7 +2278,7 @@ class Server extends Node
      * will be auto-generated.
      *
      * @param string $username
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function selfUpdateLogin($username) {
         $password = $this->execute("clientsetserverquerylogin", ["client_login_name" => $username])->toList();

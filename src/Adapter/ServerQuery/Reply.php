@@ -24,7 +24,6 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 
-use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
@@ -33,7 +32,9 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Node\Host;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
- * @class TeamSpeak3_Adapter_ServerQuery_Reply
+ * Class Reply
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery
+ * @class Reply
  * @brief Provides methods to analyze and format a ServerQuery reply.
  */
 class Reply
@@ -53,7 +54,7 @@ class Reply
     protected $rpl = null;
 
     /**
-     * Stores connected TeamSpeak3_Node_Host object.
+     * Stores connected PlanetTeamSpeak\TeamSpeak3Framework\Node\Host object.
      *
      * @var Host
      */
@@ -81,7 +82,7 @@ class Reply
     protected $exp = true;
 
     /**
-     * Creates a new TeamSpeak3_Adapter_ServerQuery_Reply object.
+     * Creates a new PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Reply object.
      *
      * @param array $rpl
      * @param string $cmd
@@ -101,7 +102,7 @@ class Reply
     }
 
     /**
-     * Returns the reply as an TeamSpeak3_Helper_String object.
+     * Returns the reply as an PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper object.
      *
      * @return StringHelper
      */
@@ -274,14 +275,14 @@ class Reply
     }
 
     /**
-     * Parses a ServerQuery error and throws a TeamSpeak3_Adapter_ServerQuery_Exception object if
+     * Parses a ServerQuery error and throws a PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException object if
      * there's an error.
      *
-     * @param  string $err
+     * @param  StringHelper $err
      * @return void
      * @throws ServerQueryException
      */
-    protected function fetchError($err)
+    protected function fetchError(StringHelper $err)
     {
         $cells = $err->section(TeamSpeak3::SEPARATOR_CELL, 1, 3);
 
@@ -311,7 +312,7 @@ class Reply
     }
 
     /**
-     * Parses a ServerQuery reply and creates a TeamSpeak3_Helper_String object.
+     * Parses a ServerQuery reply and creates a PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper object.
      *
      * @param  array $rpl
      * @return void
