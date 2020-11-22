@@ -1213,6 +1213,18 @@ class Host extends Node
     }
 
     /**
+     * Returns the number of WebQuery API keys known by the virtual server.
+     *
+     * @return integer
+     * @throws AdapterException
+     * @throws ServerQueryException
+     */
+    public function apiKeyCount()
+    {
+        return current($this->execute("apikeylist -count", array("duration" => 1))->toList("count"));
+    }
+
+    /**
      * Returns a string representation of this node.
      *
      * @return string
