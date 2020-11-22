@@ -78,7 +78,7 @@ class TeamSpeak3
     /**
      * TeamSpeak 3 PHP Framework version.
      */
-    const LIB_VERSION = "1.1.34";
+    const LIB_VERSION = "1.1.35";
 
     /*@
      * TeamSpeak 3 protocol separators.
@@ -87,6 +87,13 @@ class TeamSpeak3
   const SEPARATOR_LIST = "|";  //!< protocol list separator
   const SEPARATOR_CELL = " ";  //!< protocol cell separator
   const SEPARATOR_PAIR = "=";  //!< protocol pair separator
+
+  /*@
+   * TeamSpeak 3 API key scopes.
+   */
+  const APIKEY_MANAGE = "manage";  //!< allow access to administrative calls
+  const APIKEY_WRITE  = "write";   //!< allow access to read and write calls
+  const APIKEY_READ   = "read";    //!< allow access to read-only calls
 
   /*@
    * TeamSpeak 3 log levels.
@@ -348,7 +355,7 @@ class TeamSpeak3
 
         $object = new $adapter($options);
 
-        if ($object instanceof ServerQuery) {
+        try {if ($object instanceof ServerQuery) {
             $node = $object->getHost();
 
             if ($uri->hasUser() && $uri->hasPass()) {
@@ -405,7 +412,11 @@ class TeamSpeak3
             }
 
             return $node;
-        }
+        }}
+    catch (Exception $e) {
+      $object->__destruct();
+      throw $e;
+    }
 
         return $object;
     }
@@ -422,18 +433,18 @@ class TeamSpeak3
     {
         $path = self::getFilePath($namespace);
         $scan = scandir($path);
-        
+
         foreach($scan as $node)
         {
             $file = StringHelper::factory($node)->toLower();
-            
+
             if($file->startsWith($name) && $file->endsWith(".php"))
             {
                 return $namespace . str_replace(".php", "", $node);
             }
         }
 
-        throw new AdapterException("adapter '" . $name . "' does not exist");          
+        throw new AdapterException("adapter '" . $name . "' does not exist");
     }
 
     /**
