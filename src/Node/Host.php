@@ -470,6 +470,61 @@ class Host extends Node
     }
 
     /**
+     * Returns the number of WebQuery API keys known by the virtual server.
+     *
+     * @return integer
+     */
+    public function apiKeyCount()
+    {
+        return current($this->execute("apikeylist -count", ["duration" => 1])->toList("count"));
+    }
+
+    /**
+     * Returns a list of WebQuery API keys known by the virtual server. By default, the server spits out 25 entries
+     * at once. When no $cldbid is specified, API keys for the invoker are returned. In addition, using '*' as $cldbid
+     * will return all known API keys.
+     *
+     * @param  integer $offset
+     * @param  integer $limit
+     * @param  mixed   $cldbid
+     * @return array
+     */
+    public function apiKeyList($offset = null, $limit = null, $cldbid = null)
+    {
+        return $this->execute("apikeylist -count", ["start" => $offset, "duration" => $limit, "cldbid" => $cldbid])->toAssocArray("id");
+    }
+
+    /**
+     * Creates a new WebQuery API key and returns an assoc array containing its details. Use $lifetime to specify the API
+     * key lifetime in days. Setting $lifetime to 0 means the key will be valid forever. $cldbid defaults to the invoker
+     * database ID.
+     *
+     * @param  string  $scope
+     * @param  integer $lifetime
+     * @param  integer $cldbid
+     * @return array
+     */
+    public function apiKeyCreate($scope = TeamSpeak3::APIKEY_READ, $lifetime = 14, $cldbid = null)
+    {
+        $detail = $this->execute("apikeyadd", ["scope" => $scope, "lifetime" => $lifetime, "cldbid" => $cldbid])->toList();
+
+        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyApikeycreated", $this, $detail["apikey"]);
+
+        return $detail;
+    }
+
+    /**
+     * Deletes an API key specified by $id.
+     *
+     * @param  integer $id
+     * @return void
+     */
+    public function apiKeyDelete($id)
+    {
+        $this->execute("apikeydel", ["id" => $id]);
+    }
+
+    /**
      * Returns a list of permissions available on the server instance.
      *
      * @return array
@@ -1210,18 +1265,6 @@ class Host extends Node
                 throw new $class($e->getMessage(), $e->getCode());
             }
         }
-    }
-
-    /**
-     * Returns the number of WebQuery API keys known by the virtual server.
-     *
-     * @return integer
-     * @throws AdapterException
-     * @throws ServerQueryException
-     */
-    public function apiKeyCount()
-    {
-        return current($this->execute("apikeylist -count", array("duration" => 1))->toList("count"));
     }
 
     /**
