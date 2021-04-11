@@ -27,7 +27,9 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
- * @class TeamSpeak3_Helper_Uri
+ * Class Uri
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper
+ * @class Uri
  * @brief Helper class for URI handling.
  */
 class Uri
@@ -96,9 +98,9 @@ class Uri
     protected $regex = [];
 
     /**
-     * The TeamSpeak3_Helper_Uri constructor.
+     * Uri constructor.
      *
-     * @param StringHelper $uri
+     * @param string $uri
      * @throws HelperException
      */
     public function __construct($uri)
@@ -185,6 +187,7 @@ class Uri
      *
      * @param StringHelper $uri
      * @return boolean
+     * @throws HelperException
      */
     public static function check($uri)
     {
@@ -194,7 +197,7 @@ class Uri
             return false;
         }
 
-        return $uri->valid();
+        return $uri->isValid();
     }
 
     /**
@@ -316,12 +319,10 @@ class Uri
 
     /**
      * Returns TRUE if the host is valid.
+     * todo: Implement check for host URI segment
      *
      * @param string $host
-     *
      * @return boolean
-     * @todo: Implement check for host URI segment
-     *
      */
     public function checkHost($host = null)
     {
@@ -355,12 +356,10 @@ class Uri
 
     /**
      * Returns TRUE if the port is valid.
+     * todo: Implement check for port URI segment
      *
      * @param integer $port
-     *
      * @return boolean
-     * @todo: Implement check for port URI segment
-     *
      */
     public function checkPort($port = null)
     {

@@ -31,7 +31,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Transport\TCP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport;
 
 /**
- * @class TeamSpeak3_Adapter_Abstract
+ * @class PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter
  * @brief Provides low-level methods for concrete adapters to communicate with a TeamSpeak 3 Server.
  */
 abstract class Adapter
@@ -44,14 +44,14 @@ abstract class Adapter
     protected $options = null;
 
     /**
-     * Stores an TeamSpeak3_Transport_Abstract object.
+     * Stores an PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport object.
      *
      * @var Transport
      */
     protected $transport = null;
 
     /**
-     * The TeamSpeak3_Adapter_Abstract constructor.
+     * The PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter constructor.
      *
      * @param  array $options
      * @throws AdapterException
@@ -66,14 +66,14 @@ abstract class Adapter
     }
 
     /**
-     * The TeamSpeak3_Adapter_Abstract destructor.
+     * The PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter destructor.
      *
      * @return void
      */
     abstract public function __destruct();
 
     /**
-     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
+     * Connects the PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport object and performs initial actions on the remote
      * server.
      *
      * @throws AdapterException
@@ -141,7 +141,7 @@ abstract class Adapter
     }
 
     /**
-     * Returns the hostname or IPv4 address the underlying TeamSpeak3_Transport_Abstract object
+     * Returns the hostname or IPv4 address the underlying PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport object
      * is connected to.
      *
      * @return string
@@ -152,7 +152,7 @@ abstract class Adapter
     }
 
     /**
-     * Returns the port number of the server the underlying TeamSpeak3_Transport_Abstract object
+     * Returns the port number of the server the underlying PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport object
      * is connected to.
      *
      * @return string

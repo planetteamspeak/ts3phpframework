@@ -24,6 +24,7 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 
+use ArrayAccess;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
@@ -31,12 +32,13 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Host;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
-
 /**
- * @class TeamSpeak3_Adapter_ServerQuery_Event
+ * Class Event
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery
+ * @class Event
  * @brief Provides methods to analyze and format a ServerQuery event.
  */
-class Event implements \ArrayAccess
+class Event implements ArrayAccess
 {
     /**
      * Stores the event type.
@@ -60,7 +62,7 @@ class Event implements \ArrayAccess
     protected $mesg = null;
 
     /**
-     * Creates a new TeamSpeak3_Adapter_ServerQuery_Event object.
+     * Creates a new PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Event object.
      *
      * @param  StringHelper $evt
      * @param  Host     $con

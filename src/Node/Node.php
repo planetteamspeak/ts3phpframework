@@ -26,12 +26,16 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Reply;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Convert;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Viewer\ViewerInterface;
 
 /**
- * @class TeamSpeak3_Node_Abstract
+ * Class Node
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Node
+ * @class Abstract
  * @brief Abstract class describing a TeamSpeak 3 node and all it's parameters.
  */
 abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
@@ -72,6 +76,7 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
      * @param  string  $cmd
      * @param  boolean $throw
      * @return Reply
+     * @throws AdapterException|ServerQueryException
      */
     public function request($cmd, $throw = true)
     {
@@ -93,9 +98,11 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
     /**
      * Prepares and executes a ServerQuery command and returns the result.
      *
-     * @param  string $cmd
-     * @param  array  $params
+     * @param $cmd
+     * @param array $params
      * @return Reply
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
     public function execute($cmd, array $params = [])
     {

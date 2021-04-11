@@ -27,7 +27,9 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\SignalException;
 
 /**
- * @class TeamSpeak3_Helper_Signal_Handler
+ * Class Handler
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal
+ * @class Handler
  * @brief Helper class providing handler functions for signals.
  */
 class Handler
@@ -47,7 +49,7 @@ class Handler
     protected $callback = null;
 
     /**
-     * The TeamSpeak3_Helper_Signal_Handler constructor.
+     * Handler constructor.
      *
      * @param  string $signal
      * @param  mixed  $callback

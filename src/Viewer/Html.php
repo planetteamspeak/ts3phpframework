@@ -35,8 +35,9 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Node\ServerGroup;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
- * @class Html
+ * Class Html
  * @package PlanetTeamSpeak\TeamSpeak3Framework\Viewer
+ * @class Html
  * @brief Renders nodes used in HTML-based TeamSpeak 3 viewers.
  */
 class Html implements ViewerInterface
@@ -49,14 +50,14 @@ class Html implements ViewerInterface
     protected $pattern = "<table id='%0' class='%1' summary='%2'><tr class='%3'><td class='%4'>%5</td><td class='%6' title='%7'>%8 %9</td><td class='%10'>%11%12</td></tr></table>\n";
 
     /**
-     * The TeamSpeak3_Node_Abstract object which is currently processed.
+     * The PlanetTeamSpeak\TeamSpeak3Framework\Node\Node object which is currently processed.
      *
      * @var Node
      */
     protected $currObj = null;
 
     /**
-     * An array filled with siblings for the TeamSpeak3_Node_Abstract object which is currently
+     * An array filled with siblings for the PlanetTeamSpeak\TeamSpeak3Framework\Node\Node object which is currently
      * processed.
      *
      * @var array
@@ -64,7 +65,7 @@ class Html implements ViewerInterface
     protected $currSib = null;
 
     /**
-     * An internal counter indicating the number of fetched TeamSpeak3_Node_Abstract objects.
+     * An internal counter indicating the number of fetched PlanetTeamSpeak\TeamSpeak3Framework\Node\Node objects.
      *
      * @var integer
      */
@@ -106,7 +107,7 @@ class Html implements ViewerInterface
     protected $remoteIcons = [];
 
     /**
-     * The TeamSpeak3_Viewer_Html constructor.
+     * Html constructor.
      *
      * @param  string $iconpath
      * @param  string $flagpath

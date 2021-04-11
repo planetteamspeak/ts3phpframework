@@ -25,8 +25,10 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
 /**
- * @class TeamSpeak3_Helper_Exception
- * @brief Enhanced exception class for TeamSpeak3_Helper_* objects.
+ * Class HelperException
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Exception
+ * @class HelperException
+ * @brief Enhanced exception class for PlanetTeamSpeak\TeamSpeak3Framework\Helper\* objects.
  */
 class HelperException extends TeamSpeak3Exception
 {

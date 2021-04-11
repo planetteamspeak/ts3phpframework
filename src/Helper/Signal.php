@@ -29,13 +29,15 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Handler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
- * @class TeamSpeak3_Helper_Signal
+ * Class Signal
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper
+ * @class Signal
  * @brief Helper class for signal slots.
  */
 class Signal
 {
     /**
-     * Stores the TeamSpeak3_Helper_Signal object.
+     * Stores the PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal object.
      *
      * @var Signal
      */
@@ -193,7 +195,7 @@ class Signal
     }
 
     /**
-     * Returns a singleton instance of TeamSpeak3_Helper_Signal.
+     * Returns a singleton instance of PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal.
      *
      * @return Signal
      */

@@ -24,14 +24,20 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
+use ArrayAccess;
+use Countable;
+use Iterator;
+use JsonSerializable;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
- * @class TeamSpeak3_Helper_String
+ * Class StringHelper
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper
+ * @class StringHelper
  * @brief Helper class for string handling.
  */
-class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializable
+class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
 {
     /**
      * Stores the original string.
@@ -68,10 +74,10 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
     }
 
     /**
-     * Replaces every occurrence of the string $search with the string $replace.
+     * Replaces every occurrence of the string or array $search with the string or array $replace.
      *
-     * @param string $search
-     * @param string $replace
+     * @param string|array $search
+     * @param string|array $replace
      * @param boolean $caseSensitivity
      * @return self
      */
@@ -186,7 +192,6 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
 
         if ($regexp) {
             return boolval(preg_match(sprintf("/%s/i", $pattern), $this->string));
-            return (preg_match("/" . preg_quote($pattern, '/') . "/i", $this->string)) ? true : false;
         } else {
             return (stristr($this->string, $pattern) !== false) ? true : false;
         }
@@ -385,12 +390,12 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
      */
     public function isInt()
     {
-        return (is_numeric($this->string) &&
+        return is_numeric($this->string) &&
             !$this->contains(".") &&
             !$this->contains("x") &&
             !$this->contains("e") &&
             !$this->contains("+") &&
-            !$this->contains("-")) ? true : false;
+            !$this->contains("-");
     }
 
     /**
@@ -484,7 +489,7 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
     }
 
     /**
-     * Decodes the string with MIME base64 and returns the result as an TeamSpeak3_Helper_String
+     * Decodes the string with MIME base64 and returns the result as an PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper
      *
      * @param string $base64
      * @return self
@@ -511,7 +516,7 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
     }
 
     /**
-     * Returns the TeamSpeak3_Helper_String based on a given hex value.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper based on a given hex value.
      *
      * @param string $hex
      * @return self
@@ -791,7 +796,7 @@ class StringHelper implements \ArrayAccess, \Iterator, \Countable, \JsonSerializ
     }
 
     /**
-     * Magical function that allows you to call PHP's built-in string functions on the TeamSpeak3_Helper_String object.
+     * Magical function that allows you to call PHP's built-in string functions on the PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper object.
      *
      * @param string $function
      * @param array $args

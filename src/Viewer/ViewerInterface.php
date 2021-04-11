@@ -27,7 +27,7 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Viewer;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Node;
 
 /**
- * @class TeamSpeak3_Viewer_Interface
+ * @class PlanetTeamSpeak\TeamSpeak3Framework\Viewer\ViewerInterface
  * @brief Interface class describing a TeamSpeak 3 viewer.
  */
 interface ViewerInterface

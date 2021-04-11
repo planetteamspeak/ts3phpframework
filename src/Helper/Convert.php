@@ -27,7 +27,9 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
- * @class TeamSpeak3_Helper_Convert
+ * Class Convert
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper
+ * @class Convert
  * @brief Helper class for data conversion.
  */
 class Convert

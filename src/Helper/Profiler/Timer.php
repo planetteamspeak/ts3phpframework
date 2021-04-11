@@ -25,7 +25,9 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 
 /**
- * @class TeamSpeak3_Helper_Profiler_Timer
+ * Class Timer
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler
+ * @class Timer
  * @brief Helper class providing profiler timers.
  */
 class Timer
@@ -59,7 +61,7 @@ class Timer
     protected $data = [];
 
     /**
-     * The TeamSpeak3_Helper_Profiler_Timer constructor.
+     * Timer constructor.
      *
      * @param  string $name
      */

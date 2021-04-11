@@ -29,18 +29,20 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
- * @class TeamSpeak3_Node_Client
+ * Class Client
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Node
+ * @class Client
  * @brief Class describing a TeamSpeak 3 client and all it's parameters.
  */
 class Client extends Node
 {
     /**
-     * The TeamSpeak3_Node_Client constructor.
+     * Client constructor.
      *
      * @param  Server $server
      * @param  array  $info
      * @param  string $index
-     *@throws ServerQueryException
+     * @throws ServerQueryException
      */
     public function __construct(Server $server, array $info, $index = "clid")
     {
@@ -305,7 +307,7 @@ class Client extends Node
     /**
      * Downloads and returns the clients avatar file content.
      *
-     * @return StringHelper
+     * @return StringHelper|void
      */
     public function avatarDownload()
     {
@@ -323,6 +325,7 @@ class Client extends Node
      * Returns a list of client connections using the same identity as this client.
      *
      * @return array
+     * @throws ServerQueryException
      */
     public function getClones()
     {
