@@ -25,8 +25,10 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
 /**
- * @class TeamSpeak3_Adapter_ServerQuery_Exception
- * @brief Enhanced exception class for TeamSpeak3_Adapter_ServerQuery objects.
+ * Class ServerQueryException
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Exception
+ * @class ServerQueryException
+ * @brief Enhanced exception class for PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery objects.
  */
 class ServerQueryException extends AdapterException
 {
@@ -38,7 +40,7 @@ class ServerQueryException extends AdapterException
     protected $return_code = null;
 
     /**
-     * The TeamSpeak3_Adapter_ServerQuery_Exception constructor.
+     * The PlanetTeamSpeak\TeamSpeak3Framework\ServerQuery\Exception constructor.
      *
      * @param  string  $mesg
      * @param  integer $code

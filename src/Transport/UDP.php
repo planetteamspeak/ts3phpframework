@@ -29,7 +29,9 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 /**
- * @class TeamSpeak3_Transport_UDP
+ * Class UDP
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Transport
+ * @class UDP
  * @brief Class for connecting to a remote server through UDP.
  */
 class UDP extends Transport

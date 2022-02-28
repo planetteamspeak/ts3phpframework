@@ -27,7 +27,9 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler\Timer;
 
 /**
- * @class TeamSpeak3_Helper_Profiler
+ * Class Profiler
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper
+ * @class Profiler
  * @brief Helper class for profiler handling.
  */
 class Profiler

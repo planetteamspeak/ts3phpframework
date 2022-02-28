@@ -29,13 +29,15 @@ use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
- * @class TeamSpeak3_Node_Channel
+ * Class Channel
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Node
+ * @class Channel
  * @brief Class describing a TeamSpeak 3 channel and all it's parameters.
  */
 class Channel extends Node
 {
     /**
-     * The TeamSpeak3_Node_Channel constructor.
+     * Channel constructor.
      *
      * @param  Server $server
      * @param  array  $info
@@ -55,7 +57,7 @@ class Channel extends Node
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Channel objects.
+     * Returns an array filled with PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel objects.
      *
      * @param  array $filter
      * @return array|Channel[]
@@ -74,7 +76,7 @@ class Channel extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object matching the given ID.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel object matching the given ID.
      *
      * @param  integer $cid
      * @return Channel
@@ -90,7 +92,7 @@ class Channel extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object matching the given name.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel object matching the given name.
      *
      * @param  integer $name
      * @return Channel
@@ -108,7 +110,7 @@ class Channel extends Node
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Client objects.
+     * Returns an array filled with PlanetTeamSpeak\TeamSpeak3Framework\Node\Client objects.
      *
      * @param  array $filter
      * @return array | Client[]
@@ -127,7 +129,7 @@ class Channel extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given ID.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Client object matching the given ID.
      *
      * @param  integer $clid
      * @return Client
@@ -143,7 +145,7 @@ class Channel extends Node
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given name.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Client object matching the given name.
      *
      * @param  integer $name
      * @return Client

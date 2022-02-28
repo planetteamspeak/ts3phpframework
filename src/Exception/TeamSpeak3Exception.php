@@ -24,14 +24,17 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Exception;
 
+use Exception;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 
 /**
- * @class TeamSpeak3_Exception
+ * Class TeamSpeak3Exception
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Exception
+ * @class TeamSpeak3Exception
  * @brief Enhanced exception class for TeamSpeak3 objects.
  */
-class TeamSpeak3Exception extends \Exception
+class TeamSpeak3Exception extends Exception
 {
     /**
      * Stores the original error code.
@@ -55,7 +58,7 @@ class TeamSpeak3Exception extends \Exception
     protected static $messages = [];
 
     /**
-     * The TeamSpeak3_Exception constructor.
+     * The TeamSpeak3Exception constructor.
      *
      * @param  string  $mesg
      * @param  integer $code

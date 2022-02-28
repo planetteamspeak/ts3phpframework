@@ -34,27 +34,29 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Node\ServerGroup;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
- * @class TeamSpeak3_Viewer_Json
+ * Class Json
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Viewer
+ * @class PlanetTeamSpeak\TeamSpeak3Framework\Viewer\Json
  * @brief Generates a JSON struct used in JS-based TeamSpeak 3 viewers.
  */
 class Json implements ViewerInterface
 {
     /**
-     * Stores an array of data parsed from TeamSpeak3_Node_Abstract objects.
+     * Stores an array of data parsed from PlanetTeamSpeak\TeamSpeak3Framework\Node\Node objects.
      *
      * @var array
      */
     protected $data = null;
 
     /**
-     * The TeamSpeak3_Node_Abstract object which is currently processed.
+     * The PlanetTeamSpeak\TeamSpeak3Framework\Node\Node object which is currently processed.
      *
      * @var Node
      */
     protected $currObj = null;
 
     /**
-     * An array filled with siblings for the TeamSpeak3_Node_Abstract object which is currently
+     * An array filled with siblings for the PlanetTeamSpeak\TeamSpeak3Framework\Node\Node object which is currently
      * processed.
      *
      * @var array
@@ -62,7 +64,7 @@ class Json implements ViewerInterface
     protected $currSib = null;
 
     /**
-     * An internal counter indicating the depth of the TeamSpeak3_Node_Abstract object previously
+     * An internal counter indicating the depth of the PlanetTeamSpeak\TeamSpeak3Framework\Node\Node object previously
      * processed.
      *
      * @var integer
@@ -70,7 +72,7 @@ class Json implements ViewerInterface
     protected $lastLvl = 0;
 
     /**
-     * The TeamSpeak3_Viewer_Json constructor.
+     * The Json constructor.
      *
      * @param  array $data
      * @return Json
@@ -343,10 +345,10 @@ class Json implements ViewerInterface
             $props->flags    = 0;
         } elseif ($this->currObj instanceof Server) {
             $props->id       = $this->currObj->getId();
-            $props->icon     = $this->currObj->virtualserver_icon_id < 0 ? pow(2, 32)-($this->currObj->virtualserver_icon_id*-1) : $this->currObj->virtualserver_icon_id;
+            $props->icon     = ($this->currObj->virtualserver_icon_id < 0) ? pow(2, 32)-($this->currObj->virtualserver_icon_id*-1) : $this->currObj->virtualserver_icon_id;
             $props->welcmsg  = strlen($this->currObj->virtualserver_welcomemessage) ? trim($this->currObj->virtualserver_welcomemessage) : null;
             $props->hostmsg  = strlen($this->currObj->virtualserver_hostmessage) ? trim($this->currObj->virtualserver_hostmessage) : null;
-            $props->version  = TeamSpeak3_Helper_Convert::versionShort($this->currObj->virtualserver_version)->toString();
+            $props->version  = Convert::versionShort($this->currObj->virtualserver_version)->toString();
             $props->platform = $this->currObj->virtualserver_platform->toString();
             $props->country  = null;
             $props->users    = $this->currObj->clientCount();

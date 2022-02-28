@@ -27,9 +27,11 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
- * @todo: Replace this class with native encryption
+ * Class Crypt
+ * todo: Replace this class with native encryption
  *
- * @class TeamSpeak3_Helper_Crypt
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper
+ * @class Crypt
  * @brief Helper class for data encryption.
  */
 class Crypt
@@ -56,7 +58,7 @@ class Crypt
     protected $s = [];
 
     /**
-     * The TeamSpeak3_Helper_Crypt constructor.
+     * Crypt constructor.
      *
      * @param string $secret
      * @throws HelperException
@@ -164,7 +166,6 @@ class Crypt
         }
 
         $k = 0;
-        $data = 0;
         $datal = 0;
         $datar = 0;
 

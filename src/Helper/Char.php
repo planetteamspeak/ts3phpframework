@@ -27,7 +27,9 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
- * @class TeamSpeak3_Helper_Char
+ * Class Char
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Helper
+ * @class Char
  * @brief Helper class for char handling.
  */
 class Char
@@ -40,7 +42,7 @@ class Char
     protected $char = null;
 
     /**
-     * The TeamSpeak3_Helper_Char constructor.
+     * Char constructor.
      *
      * @param string $char
      * @throws HelperException
@@ -203,7 +205,7 @@ class Char
     /**
      * Returns the hexadecimal value of the char.
      *
-     * @return StringHelper
+     * @return string
      */
     public function toHex()
     {
@@ -211,7 +213,7 @@ class Char
     }
 
     /**
-     * Returns the TeamSpeak3_Helper_Char based on a given hex value.
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Helper\Char based on a given hex value.
      *
      * @param string $hex
      * @return Char

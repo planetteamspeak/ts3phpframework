@@ -29,13 +29,15 @@ use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
- * @class TeamSpeak3_Node_Channelgroup
+ * Class ChannelGroup
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Node
+ * @class ChannelGroup
  * @brief Class describing a TeamSpeak 3 channel group and all it's parameters.
  */
 class ChannelGroup extends Group
 {
     /**
-     * The TeamSpeak3_Node_Channelgroup constructor.
+     * ChannelGroup constructor.
      *
      * @param  Server $server
      * @param  array  $info

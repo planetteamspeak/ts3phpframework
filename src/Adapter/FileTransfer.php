@@ -26,8 +26,6 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\FileTransferException;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\SignalException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
@@ -35,16 +33,16 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport;
 
 /**
- * @class TeamSpeak3_Adapter_FileTransfer
+ * Class FileTransfer
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Adapter
+ * @class FileTransfer
  * @brief Provides low-level methods for file transfer communication with a TeamSpeak 3 Server.
  */
 class FileTransfer extends Adapter
 {
     /**
-     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
-     * server.
-     *
-     * @return void
+     * Connects the PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport object and performs initial actions on the remote server.
+     * @throws AdapterException
      */
     public function syn()
     {
@@ -57,8 +55,7 @@ class FileTransfer extends Adapter
     }
 
     /**
-     * The TeamSpeak3_Adapter_FileTransfer destructor.
-     *
+     * FileTransfer destructor.
      */
     public function __destruct()
     {
@@ -126,7 +123,7 @@ class FileTransfer extends Adapter
     }
 
     /**
-     * Returns the content of a downloaded file as a TeamSpeak3_Helper_String object.
+     * Returns the content of a downloaded file as a PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper object.
      *
      * @param string $ftkey
      * @param integer $size

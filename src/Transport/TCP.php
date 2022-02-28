@@ -30,7 +30,9 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
- * @class TeamSpeak3_Transport_TCP
+ * Class TCP
+ * @package PlanetTeamSpeak\TeamSpeak3Framework\Transport
+ * @class TCP
  * @brief Class for connecting to a remote server through TCP.
  */
 class TCP extends Transport

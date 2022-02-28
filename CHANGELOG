@@ -9,6 +9,12 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Release 1.1.35 - WIP ===
+ ! upgrading your servers to 3.12.1 (build >= 1585305527) is mandatory
+ + added TeamSpeak3_Node_Host::apiKeyList()
+ + added TeamSpeak3_Node_Host::apiKeyCreate()
+ + added TeamSpeak3_Node_Host::apiKeyDelete()
+
 === Release 1.1.34 - 04 Mar 2020 ===
  ! upgrading your servers to 3.10.0 (build >= 1564054246) is mandatory
  + added optional -continueonerror argument to some commands
