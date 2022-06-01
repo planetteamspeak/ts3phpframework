@@ -355,14 +355,18 @@ class Json implements ViewerInterface
             $props->slots    = $this->currObj->virtualserver_maxclients;
             $props->flags    = 0;
 
-            $props->flags += $this->currObj->virtualserver_status == "online"   ? 1  : 0;
+            $props->flags += $this->currObj->virtualserver_status === "online"  ? 1  : 0;
             $props->flags += $this->currObj->virtualserver_flag_password        ? 2  : 0;
             $props->flags += $this->currObj->virtualserver_autostart            ? 4  : 0;
             $props->flags += $this->currObj->virtualserver_weblist_enabled      ? 8  : 0;
             $props->flags += $this->currObj->virtualserver_ask_for_privilegekey ? 16 : 0;
         } elseif ($this->currObj instanceof Channel) {
             $props->id       = $this->currObj->getId();
-            $props->icon     = $this->currObj->isSpacer() ? 0 : $this->currObj->channel_icon_id < 0 ? pow(2, 32)-($this->currObj->channel_icon_id*-1) : $this->currObj->channel_icon_id;
+            $props->icon     = 0;
+            if (!$this->currObj->isSpacer()) {
+                $props->icon = $this->currObj->channel_icon_id < 0 ? (2 ** 32) -($this->currObj->channel_icon_id*-1) : $this->currObj->channel_icon_id;
+            }
+
             $props->path     = trim($this->currObj->getPathway());
             $props->topic    = strlen($this->currObj->channel_topic) ? trim($this->currObj->channel_topic) : null;
             $props->codec    = $this->currObj->channel_codec;
