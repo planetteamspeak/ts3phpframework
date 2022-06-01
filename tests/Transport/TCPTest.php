@@ -81,11 +81,12 @@ class TCPTest extends TestCase
 
     public function testConnectBadHost()
     {
+        $host = 'test';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo for test failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->connect();
     }
 
@@ -109,41 +110,45 @@ class TCPTest extends TestCase
 
     public function testReadNoConnection()
     {
+        $host = 'test';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo for test failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->read();
     }
 
     public function testReadLineNoConnection()
     {
+        $host = 'test';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo for test failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->readLine();
     }
 
     public function testSendNoConnection()
     {
+        $host = 'test';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo for test failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->send('testsend');
     }
 
     public function testSendLineNoConnection()
     {
+        $host = 'abc';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo for test failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->sendLine('test.sendLine');
     }
 }

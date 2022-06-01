@@ -90,11 +90,12 @@ class UDPTest extends TestCase
 
     public function testConnectBadHost()
     {
+        $host = 'test';
         $transport = new UDP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo for test failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $this->assertNull($transport->connect());
     }
 
@@ -117,21 +118,23 @@ class UDPTest extends TestCase
 
     public function testReadNoConnection()
     {
+        $host = 'test';
         $transport = new UDP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo for test failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->read();
     }
 
     public function testSendNoConnection()
     {
+        $host = 'test';
         $transport = new UDP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo for test failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->send('test.send');
     }
 }
