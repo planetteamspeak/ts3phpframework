@@ -12,77 +12,77 @@ class ConvertTest extends TestCase
     {
         $output = Convert::bytes(0);
         $this->assertEquals('0 B', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::bytes(1);
         $this->assertEquals('1 B', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::bytes(1018);
         $this->assertEquals('1018 B', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::bytes(1019);
         $this->assertEquals('1.00 KB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::bytes(1024);
         $this->assertEquals('1.00 KB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::bytes(1029);
         $this->assertEquals('1.00 KB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::bytes(1030);
         $this->assertEquals('1.01 KB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes((1024**2 - (5*1024) - 118));
         $this->assertEquals('1018.88 KB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes((1024**2 - (5*1024) - 117));
         $this->assertEquals('1.00 MB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes(
             (1024**3 - (5*(1024**2)) - 1024*117-774)
         );
         $this->assertEquals('1018.88 MB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes(
             (1024**3 - (5*(1024**2)) - 1024*117-773)
         );
         $this->assertEquals('1.00 GB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes(
             (1024**4 - (5*(1024**3)) - (1024**2)*117-1024*773 - 118)
         );
         $this->assertEquals('1018.88 GB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         // Note: Strange offset is due to ::bytes() rounding imprecision
         $output = Convert::bytes(
             (1024**4 - (5*(1024**3)) - (1024**2)*117-1024*773 - 117)
         );
         $this->assertEquals('1.00 TB', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::bytes(-1);
         $this->assertEquals('-1 B', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::bytes(-1023);
         $this->assertEquals('-1023 B', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         // @todo: Enable once ::bytes() can handle negatives values >= 1024
     //$output = Convert::bytes(-1024);
@@ -94,47 +94,47 @@ class ConvertTest extends TestCase
     {
         $output = Convert::seconds(0);
         $this->assertEquals('0D 00:00:00', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::seconds(1);
         $this->assertEquals('0D 00:00:01', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::seconds(59);
         $this->assertEquals('0D 00:00:59', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::seconds(60);
         $this->assertEquals('0D 00:01:00', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
 
         $output = Convert::seconds((59*60) + 59);
         $this->assertEquals('0D 00:59:59', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::seconds((59*60) + 60);
         $this->assertEquals('0D 01:00:00', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::seconds(
             (23*(60**2)) + (59*60) + 59
         );
         $this->assertEquals('0D 23:59:59', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         $output = Convert::seconds(
             (23*(60**2)) + (59*60) + 60
         );
         $this->assertEquals('1D 00:00:00', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
 
         $output = Convert::seconds(
             (47*(60**2)) + (59*60) + 59
         );
         $this->assertEquals('1D 23:59:59', $output);
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $this->assertIsString($output);
 
         // @todo: Enable after ::seconds() can handle negative integers
     //$output = Convert::seconds(-1);
