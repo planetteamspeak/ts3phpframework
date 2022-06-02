@@ -137,7 +137,12 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
      */
     public function iconIsLocal($key)
     {
-        return ($this[$key] > 0 && $this[$key] < 1000) ? true : false;
+        $iconid = $this[$key];
+        if (!is_int($iconid)) {
+            $iconid = $iconid->toInt();
+        }
+
+        return ($iconid > 0 && $iconid < 1000) ? true : false;
     }
 
     /**
@@ -148,7 +153,12 @@ abstract class Node implements \RecursiveIterator, \ArrayAccess, \Countable
      */
     public function iconGetName($key)
     {
-        $iconid = ($this[$key] < 0) ? (pow(2, 32))-($this[$key]*-1) : $this[$key];
+        $iconid = $this[$key];
+        if (!is_int($iconid)) {
+            $iconid = $iconid->toInt();
+        }
+
+        $iconid = ($iconid < 0) ? (pow(2, 32))-($iconid*-1) : $iconid;
 
         return new StringHelper("/icon_" . $iconid);
     }
