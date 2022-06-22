@@ -30,7 +30,7 @@ Speed up new development and reduce maintenance costs by using this nifty piece 
 
 **Requirements**
 
-* PHP - Developed on PHP 7.x, with 7.4.x targeted for testing.
+* PHP - Developed on PHP 8.x, with 8.0.x targeted for testing.
 * TeamSpeak Server - v3.4.0 (build >= 1536564584) or higher.
 
 **Often used with...**
