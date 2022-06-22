@@ -1671,8 +1671,12 @@ class Server extends Node
             $name = new StringHelper("/" . $iconname);
         }
         else {
+            $iconid = $this['virtualserver_icon_id'];
+            if (!is_int($iconid)) {
+                $iconid = $iconid->toInt();
+            }
 
-            if ($this->iconIsLocal("virtualserver_icon_id") || $this["virtualserver_icon_id"] == 0)
+            if ($this->iconIsLocal("virtualserver_icon_id") || $iconid == 0)
                 return;
             $name = $this->iconGetName("virtualserver_icon_id");
         }

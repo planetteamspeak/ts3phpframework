@@ -353,7 +353,9 @@ class TeamSpeak3
             $options["password"] = $uri->getPass();
         }
 
-        $object = new $adapter($options);
+        $adapterClass = "PlanetTeamSpeak\\TeamSpeak3Framework\\" . $adapter;
+
+        $object = new $adapterClass($options);
 
         try {if ($object instanceof ServerQuery) {
             $node = $object->getHost();
@@ -429,10 +431,10 @@ class TeamSpeak3
      * @return string
      * @throws AdapterException
      */
-    protected static function getAdapterName($name, $namespace = "TeamSpeak3_Adapter_")
+    protected static function getAdapterName($name, $namespace = "Adapter_")
     {
         $path = self::getFilePath($namespace);
-        $scan = scandir($path);
+        $scan = scandir(__DIR__ . DIRECTORY_SEPARATOR . $path);
 
         foreach($scan as $node)
         {
@@ -440,7 +442,7 @@ class TeamSpeak3
 
             if($file->startsWith($name) && $file->endsWith(".php"))
             {
-                return $namespace . str_replace(".php", "", $node);
+                return $path . str_replace(".php", "", $node);
             }
         }
 
@@ -467,7 +469,7 @@ class TeamSpeak3
             throw new \Exception("illegal characters in classname '" . $class . "'");
         }
 
-        $file = self::getFilePath($class) . ".php";
+        $file = __DIR__ . DIRECTORY_SEPARATOR . self::getFilePath($class) . ".php";
 
         if (!file_exists($file) || !is_readable($file)) {
             throw new \Exception("file '" . $file . "' does not exist or is not readable");

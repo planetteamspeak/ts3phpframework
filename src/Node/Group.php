@@ -38,7 +38,12 @@ abstract class Group extends Node
      */
     public function iconDownload()
     {
-        if ($this->iconIsLocal("iconid") || $this["iconid"] == 0) {
+        $iconid = $this['iconid'];
+        if (!is_int($iconid)) {
+            $iconid = $iconid->toInt();
+        }
+
+        if ($this->iconIsLocal("iconid") || $iconid == 0) {
             return;
         }
 

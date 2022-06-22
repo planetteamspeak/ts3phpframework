@@ -38,9 +38,9 @@ class CharTest extends TestCase
     );
 
         $this->assertEquals($testLower, $char->toString()); // Expect: 97
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $char->toString());
+        $this->assertIsString($char->toString());
         $this->assertEquals((int)$testLower, $char->toInt()); // Expect: 97
-        $this->assertInternalType(PHPUnit_IsType::TYPE_INT, $char->toInt());
+        $this->assertIsInt($char->toInt());
     }
 
     public function testASCIIDigit()
@@ -72,9 +72,9 @@ class CharTest extends TestCase
     );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 57
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $char->toString());
+        $this->assertIsString($char->toString());
         $this->assertEquals((int)$testChar, $char->toInt()); // Expect: 57
-        $this->assertInternalType(PHPUnit_IsType::TYPE_INT, $char->toInt());
+        $this->assertIsInt($char->toInt());
     }
 
     public function testASCIISpace()
@@ -106,9 +106,9 @@ class CharTest extends TestCase
     );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 32
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $char->toString());
+        $this->assertIsString($char->toString());
         $this->assertEquals((int)$testChar, $char->toInt()); // Expect: 32
-        $this->assertInternalType(PHPUnit_IsType::TYPE_INT, $char->toInt());
+        $this->assertIsInt($char->toInt());
     }
 
     public function testASCIIMark()
@@ -140,9 +140,9 @@ class CharTest extends TestCase
     );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 45
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $char->toString());
+        $this->assertIsString($char->toString());
         $this->assertEquals((int)$testChar, $char->toInt()); // Expect: 45
-        $this->assertInternalType(PHPUnit_IsType::TYPE_INT, $char->toInt());
+        $this->assertIsInt($char->toInt());
     }
 
     public function testASCIIControl()
@@ -174,9 +174,9 @@ class CharTest extends TestCase
     );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 6
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $char->toString());
+        $this->assertIsString($char->toString());
         $this->assertEquals((int)$testChar, $char->toInt()); // Expect: 6
-        $this->assertInternalType(PHPUnit_IsType::TYPE_INT, $char->toInt());
+        $this->assertIsInt($char->toInt());
     }
 
     public function testASCIINull()
@@ -208,9 +208,9 @@ class CharTest extends TestCase
     );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 0
-        $this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $char->toString());
+        $this->assertIsString($char->toString());
         $this->assertEquals((int)$testChar, $char->toInt()); // Expect: 0
-        $this->assertInternalType(PHPUnit_IsType::TYPE_INT, $char->toInt());
+        $this->assertIsInt($char->toInt());
     }
 
     public function testUnicode1Byte()

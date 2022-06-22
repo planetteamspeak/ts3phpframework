@@ -24,16 +24,10 @@ class TCPTest extends TestCase
         $this->assertEquals(12345, $adapter->getConfig('port'));
 
         $this->assertArrayHasKey('timeout', $adapter->getConfig());
-        $this->assertInternalType(
-            PHPUnit_IsType::TYPE_INT,
-            $adapter->getConfig('timeout')
-        );
+        $this->assertIsInt($adapter->getConfig('timeout'));
 
         $this->assertArrayHasKey('blocking', $adapter->getConfig());
-        $this->assertInternalType(
-            PHPUnit_IsType::TYPE_INT,
-            $adapter->getConfig('blocking')
-        );
+        $this->assertIsInt($adapter->getConfig('blocking'));
     }
 
     public function testConstructorExceptionNoHost()
@@ -58,10 +52,7 @@ class TCPTest extends TestCase
             ['host' => 'test', 'port' => 12345]
         );
 
-        $this->assertInternalType(
-            PHPUnit_IsType::TYPE_ARRAY,
-            $adapter->getConfig()
-        );
+        $this->assertIsArray($adapter->getConfig());
         $this->assertCount(4, $adapter->getConfig());
         $this->assertArrayHasKey('host', $adapter->getConfig());
         $this->assertEquals('test', $adapter->getConfig()['host']);
@@ -90,11 +81,12 @@ class TCPTest extends TestCase
 
     public function testConnectBadHost()
     {
+        $host = 'test';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->connect();
     }
 
@@ -118,41 +110,45 @@ class TCPTest extends TestCase
 
     public function testReadNoConnection()
     {
+        $host = 'test';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->read();
     }
 
     public function testReadLineNoConnection()
     {
+        $host = 'test';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->readLine();
     }
 
     public function testSendNoConnection()
     {
+        $host = 'test';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->send('testsend');
     }
 
     public function testSendLineNoConnection()
     {
+        $host = 'abc';
         $transport = new TCP(
-            ['host' => 'test', 'port' => 12345]
+            ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('getaddrinfo failed');
+        $this->expectExceptionMessage("getaddrinfo for $host failed");
         $transport->sendLine('test.sendLine');
     }
 }
