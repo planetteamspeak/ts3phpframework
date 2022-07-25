@@ -353,7 +353,7 @@ class TeamSpeak3
             $options["password"] = $uri->getPass();
         }
 
-        $adapterClass = "PlanetTeamSpeak\\TeamSpeak3Framework\\" . $adapter;
+        $adapterClass = "PlanetTeamSpeak\\TeamSpeak3Framework\\" . str_replace(DIRECTORY_SEPARATOR, "\\", $adapter);
 
         $object = new $adapterClass($options);
 
