@@ -9,11 +9,13 @@
    ! Important - Take note!
 ===============================================================================
 
-=== Release 1.1.35 - WIP ===
+=== Release 1.1.35 - 03 Aug 2022 ===
  ! upgrading your servers to 3.12.1 (build >= 1585305527) is mandatory
  + added TeamSpeak3_Node_Host::apiKeyList()
  + added TeamSpeak3_Node_Host::apiKeyCreate()
  + added TeamSpeak3_Node_Host::apiKeyDelete()
+ - adjusted deconstruct adapter to force connection cleanup
+ - updated deprecated code
 
 === Release 1.1.34 - 04 Mar 2020 ===
  ! upgrading your servers to 3.10.0 (build >= 1564054246) is mandatory
