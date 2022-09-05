@@ -3,7 +3,6 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Helper;
 
 use PHPUnit\Framework\TestCase;
-use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\SignalException;
@@ -11,11 +10,11 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Handler;
 
 class SignalTest extends TestCase
 {
-    protected static $cTriggers;
+    protected static array $cTriggers;
 
-    protected static $signal = 'notifyEvent';
-    protected static $callback = __CLASS__ . '::onEvent';
-    protected static $testString = '!@w~//{tI_8G77<qS+g*[Gb@u`pJ^2>rO*f=KS:8Yj';
+    protected static string $signal = 'notifyEvent';
+    protected static string $callback = __CLASS__ . '::onEvent';
+    protected static string $testString = '!@w~//{tI_8G77<qS+g*[Gb@u`pJ^2>rO*f=KS:8Yj';
 
     protected function setUp(): void
     {
@@ -32,6 +31,9 @@ class SignalTest extends TestCase
         $this->assertEmpty(Signal::getInstance()->getSignals());
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testGetCallbackHash()
     {
         $this->assertEquals(
@@ -40,6 +42,9 @@ class SignalTest extends TestCase
         );
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testGetCallbackHashException()
     {
         $this->expectException(SignalException::class);
@@ -47,6 +52,9 @@ class SignalTest extends TestCase
         Signal::getInstance()->getCallbackHash([]);
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testSubscribe()
     {
         $snapshot = clone Signal::getInstance();
@@ -76,6 +84,9 @@ class SignalTest extends TestCase
         $this->assertEquals($signalHandler, $handler);
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testEmit()
     {
         $callbackHash = Signal::getInstance()
@@ -94,6 +105,9 @@ class SignalTest extends TestCase
         );
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testSubscribeTwo()
     {
         $instSignal = Signal::getInstance();
@@ -129,6 +143,9 @@ class SignalTest extends TestCase
         $this->assertEquals($signalHandler2, $handler2);
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testEmitToTwoSubscribers()
     {
         $instSignal = Signal::getInstance();
@@ -155,6 +172,9 @@ class SignalTest extends TestCase
         );
     }
 
+    /**
+     * @throws HelperException
+     */
     public static function onEvent($data)
     {
         $signature = Signal::getInstance()
@@ -164,6 +184,9 @@ class SignalTest extends TestCase
         return $data;
     }
 
+    /**
+     * @throws HelperException
+     */
     public static function onEvent2($data)
     {
         $signature = Signal::getInstance()

@@ -32,6 +32,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Host;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+
 /**
  * Class Event
  * @package PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery
@@ -45,28 +46,29 @@ class Event implements ArrayAccess
      *
      * @var StringHelper
      */
-    protected $type = null;
+    protected StringHelper $type;
 
     /**
      * Stores the event data.
      *
      * @var array
      */
-    protected $data = null;
+    protected array $data;
 
     /**
      * Stores the event data as an unparsed string.
      *
      * @var StringHelper
      */
-    protected $mesg = null;
+    protected StringHelper $mesg;
 
     /**
      * Creates a new PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Event object.
      *
-     * @param  StringHelper $evt
-     * @param  Host     $con
+     * @param StringHelper $evt
+     * @param Host|null $con
      * @throws AdapterException
+     * @throws ServerQueryException
      */
     public function __construct(StringHelper $evt, Host $con = null)
     {
@@ -96,7 +98,7 @@ class Event implements ArrayAccess
      *
      * @return StringHelper
      */
-    public function getType()
+    public function getType(): StringHelper
     {
         return $this->type;
     }
@@ -106,7 +108,7 @@ class Event implements ArrayAccess
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
@@ -116,7 +118,7 @@ class Event implements ArrayAccess
      *
      * @return StringHelper
      */
-    public function getMessage()
+    public function getMessage(): StringHelper
     {
         return $this->mesg;
     }
@@ -124,16 +126,16 @@ class Event implements ArrayAccess
     /**
      * @ignore
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
-        return array_key_exists($offset, $this->data) ? true : false;
+        return array_key_exists($offset, $this->data);
     }
 
     /**
      * @throws ServerQueryException
      * @ignore
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (!$this->offsetExists($offset)) {
             throw new ServerQueryException("invalid parameter", 0x602);
@@ -146,7 +148,7 @@ class Event implements ArrayAccess
      * @throws NodeException
      * @ignore
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new NodeException("event '" . $this->getType() . "' is read only");
     }
@@ -154,7 +156,7 @@ class Event implements ArrayAccess
     /**
      * @ignore
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->data[$offset]);
     }

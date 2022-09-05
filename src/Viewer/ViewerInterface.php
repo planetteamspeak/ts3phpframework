@@ -35,9 +35,9 @@ interface ViewerInterface
     /**
      * Returns the code needed to display a node in a TeamSpeak 3 viewer.
      *
-     * @param  Node $node
-     * @param  array $siblings
+     * @param Node $node
+     * @param array $siblings
      * @return string
      */
-    public function fetchObject(Node $node, array $siblings = []);
+    public function fetchObject(Node $node, array $siblings = []): string;
 }

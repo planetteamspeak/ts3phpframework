@@ -24,9 +24,9 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\SignalException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal\Handler;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 
 /**
  * Class Signal
@@ -39,31 +39,31 @@ class Signal
     /**
      * Stores the PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal object.
      *
-     * @var Signal
+     * @var Signal|null
      */
-    protected static $instance = null;
+    protected static ?Signal $instance = null;
 
     /**
      * Stores subscribed signals and their slots.
      *
      * @var array
      */
-    protected $sigslots = [];
+    protected array $sigslots = [];
 
     /**
      * Emits a signal with a given set of parameters.
      *
      * @param string $signal
-     * @param mixed $params
-     * @return mixed|void
+     * @param mixed|null $params
+     * @return mixed
      * @todo: Confirm / fix $return is set to last $slot->call() return value.
      *      It appears all previous calls before last are lost / ignored.
      *
      */
-    public function emit($signal, $params = null)
+    public function emit(string $signal, mixed $params = null): mixed
     {
         if (!$this->hasHandlers($signal)) {
-            return;
+            return null;
         }
 
         if (!is_array($params)) {
@@ -82,11 +82,10 @@ class Signal
      * Generates a MD5 hash based on a given callback.
      *
      * @param mixed $callback
-     * @param string
      * @return string
      * @throws HelperException
      */
-    public function getCallbackHash($callback)
+    public function getCallbackHash(mixed $callback): string
     {
         if (!is_callable($callback, true, $callable_name)) {
             throw new SignalException("invalid callback specified");
@@ -103,7 +102,7 @@ class Signal
      * @return Signal
      * @throws HelperException
      */
-    public function subscribe($signal, $callback)
+    public function subscribe(string $signal, mixed $callback): Signal
     {
         if (empty($this->sigslots[$signal])) {
             $this->sigslots[$signal] = [];
@@ -122,11 +121,11 @@ class Signal
      * Unsubscribes from a signal.
      *
      * @param string $signal
-     * @param mixed $callback
+     * @param mixed|null $callback
      * @return void
      * @throws HelperException
      */
-    public function unsubscribe($signal, $callback = null)
+    public function unsubscribe(string $signal, mixed $callback = null): void
     {
         if (!$this->hasHandlers($signal)) {
             return;
@@ -150,7 +149,7 @@ class Signal
      *
      * @return array
      */
-    public function getSignals()
+    public function getSignals(): array
     {
         return array_keys($this->sigslots);
     }
@@ -161,9 +160,9 @@ class Signal
      * @param string $signal
      * @return boolean
      */
-    public function hasHandlers($signal)
+    public function hasHandlers(string $signal): bool
     {
-        return empty($this->sigslots[$signal]) ? false : true;
+        return !empty($this->sigslots[$signal]);
     }
 
     /**
@@ -172,7 +171,7 @@ class Signal
      * @param string $signal
      * @return array
      */
-    public function getHandlers($signal)
+    public function getHandlers(string $signal): array
     {
         if ($this->hasHandlers($signal)) {
             return $this->sigslots[$signal];
@@ -187,7 +186,7 @@ class Signal
      * @param string $signal
      * @return void
      */
-    public function clearHandlers($signal)
+    public function clearHandlers(string $signal): void
     {
         if ($this->hasHandlers($signal)) {
             unset($this->sigslots[$signal]);
@@ -197,9 +196,9 @@ class Signal
     /**
      * Returns a singleton instance of PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal.
      *
-     * @return Signal
+     * @return Signal|null
      */
-    public static function getInstance()
+    public static function getInstance(): ?Signal
     {
         if (self::$instance === null) {
             self::$instance = new self();

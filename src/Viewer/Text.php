@@ -39,25 +39,25 @@ class Text implements ViewerInterface
      *
      * @var string
      */
-    protected $pattern = "%0%1 %2\n";
+    protected string $pattern = "%0%1 %2\n";
 
     /**
      * Returns the code needed to display a node in a TeamSpeak 3 viewer.
      *
-     * @param  Node $node
-     * @param  array $siblings
-     * @return StringHelper
+     * @param Node $node
+     * @param array $siblings
+     * @return string
      */
-    public function fetchObject(Node $node, array $siblings = [])
+    public function fetchObject(Node $node, array $siblings = []): string
     {
         $this->currObj = $node;
         $this->currSib = $siblings;
 
         $args = [
-      $this->getPrefix(),
-      $this->getCorpusIcon(),
-      $this->getCorpusName(),
-    ];
+            $this->getPrefix(),
+            $this->getCorpusIcon(),
+            $this->getCorpusName(),
+        ];
 
         return StringHelper::factory($this->pattern)->arg($args);
     }
@@ -67,7 +67,7 @@ class Text implements ViewerInterface
      *
      * @return string
      */
-    protected function getPrefix()
+    protected function getPrefix(): string
     {
         $prefix = "";
 
@@ -75,7 +75,7 @@ class Text implements ViewerInterface
             $last = array_pop($this->currSib);
 
             foreach ($this->currSib as $sibling) {
-                $prefix .=  ($sibling) ? "| " : "  ";
+                $prefix .= ($sibling) ? "| " : "  ";
             }
 
             $prefix .= ($last) ? "\\-" : "|-";
@@ -90,7 +90,7 @@ class Text implements ViewerInterface
      *
      * @return string
      */
-    protected function getCorpusIcon()
+    protected function getCorpusIcon(): string
     {
         return $this->currObj->getSymbol();
     }
@@ -101,7 +101,7 @@ class Text implements ViewerInterface
      *
      * @return string
      */
-    protected function getCorpusName()
+    protected function getCorpusName(): string
     {
         return $this->currObj;
     }

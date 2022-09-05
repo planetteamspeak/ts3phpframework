@@ -37,37 +37,37 @@ class Timer
      *
      * @var boolean
      */
-    protected $running = false;
+    protected bool $running = false;
 
     /**
      * Stores the timestamp when the timer was last started.
      *
      * @var integer
      */
-    protected $started = 0;
+    protected int $started = 0;
 
     /**
      * Stores the timer name.
      *
      * @var string
      */
-    protected $name = null;
+    protected string $name;
 
     /**
      * Stores various information about the server environment.
      *
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Timer constructor.
      *
-     * @param  string $name
+     * @param string $name
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
-        $this->name = (string) $name;
+        $this->name = $name;
 
         $this->data["runtime"] = 0;
         $this->data["realmem"] = 0;
@@ -81,7 +81,7 @@ class Timer
      *
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         if ($this->isRunning()) {
             return;
@@ -99,7 +99,7 @@ class Timer
      *
      * @return void
      */
-    public function stop()
+    public function stop(): void
     {
         if (!$this->isRunning()) {
             return;
@@ -118,7 +118,7 @@ class Timer
      *
      * @return mixed
      */
-    public function getRuntime()
+    public function getRuntime(): mixed
     {
         if ($this->isRunning()) {
             $this->stop();
@@ -131,10 +131,10 @@ class Timer
     /**
      * Returns the amount of memory allocated to PHP in bytes.
      *
-     * @param  boolean $realmem
+     * @param boolean $realmem
      * @return integer
      */
-    public function getMemUsage($realmem = false)
+    public function getMemUsage(bool $realmem = false): int
     {
         if ($this->isRunning()) {
             $this->stop();
@@ -149,7 +149,7 @@ class Timer
      *
      * @return boolean
      */
-    public function isRunning()
+    public function isRunning(): bool
     {
         return $this->running;
     }

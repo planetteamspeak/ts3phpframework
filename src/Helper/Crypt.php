@@ -39,23 +39,23 @@ class Crypt
     /**
      * Stores the secret passphrase to encrypt or decrypt a given string.
      *
-     * @var StringHelper
+     * @var StringHelper|null
      */
-    protected $passphrase = null;
+    protected ?StringHelper $passphrase = null;
 
     /**
      * Stores an array containing 18 32-bit entries.
      *
      * @var array
      */
-    protected $p = [];
+    protected array $p = [];
 
     /**
      * Stores an array containing 4 sub-arrays with 256 32-bit entries.
      *
      * @var array
      */
-    protected $s = [];
+    protected array $s = [];
 
     /**
      * Crypt constructor.
@@ -63,7 +63,7 @@ class Crypt
      * @param string $secret
      * @throws HelperException
      */
-    public function __construct($secret)
+    public function __construct(string $secret)
     {
         $this->setDefaultKeys();
         $this->setSecretKey($secret);
@@ -75,7 +75,7 @@ class Crypt
      * @param string $string
      * @return string
      */
-    public function encrypt($string)
+    public function encrypt(string $string): string
     {
         $string = trim($string);
         $encryp = "";
@@ -97,7 +97,7 @@ class Crypt
      * @param string $string
      * @return string
      */
-    public function decrypt($string)
+    public function decrypt(string $string): string
     {
         $string = base64_decode($string);
         $decryp = "";
@@ -119,7 +119,7 @@ class Crypt
      * @param integer $xl
      * @param integer $xr
      */
-    protected function encipher(&$xl, &$xr)
+    protected function encipher(int &$xl, int &$xr): void
     {
         for ($i = 0; $i < 16; $i++) {
             $temp = $xl ^ $this->p[$i];
@@ -138,7 +138,7 @@ class Crypt
      * @param integer $xr
      * @return void
      */
-    protected function decipher(&$xl, &$xr)
+    protected function decipher(int &$xl, int &$xr): void
     {
         for ($i = 17; $i > 1; $i--) {
             $temp = $xl ^ $this->p[$i];
@@ -157,7 +157,7 @@ class Crypt
      * @return void
      * @throws HelperException
      */
-    protected function setSecretKey($passphrase)
+    protected function setSecretKey(string $passphrase): void
     {
         $length = strlen($passphrase);
 
@@ -195,11 +195,11 @@ class Crypt
     }
 
     /**
-     * Sets the defult p and s keys.
+     * Sets the default p and s keys.
      *
      * @return void
      */
-    protected function setDefaultKeys()
+    protected function setDefaultKeys(): void
     {
         $this->p = [
             0x243F6A88, 0x85A308D3, 0x13198A2E, 0x03707344, 0xA4093822, 0x299F31D0,

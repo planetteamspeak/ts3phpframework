@@ -3,8 +3,6 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
 
-
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
@@ -20,9 +18,10 @@ class MockTCP extends TCP
         'login client_login_name=serveradmin client_login_password=secret' => self::S_ERROR_OK,
     );
 
-    protected $reply = null;
+    protected mixed $reply = null;
 
-    public function connect() {
+    public function connect(): void
+    {
         if ($this->stream !== null) {
             return;
         }
@@ -31,7 +30,8 @@ class MockTCP extends TCP
         $this->stream = true;
     }
 
-    public function readLine($token = "\n") {
+    public function readLine(string $token = "\n"): StringHelper
+    {
         $line = StringHelper::factory("");
         $this->connect();
 
@@ -40,15 +40,13 @@ class MockTCP extends TCP
 
             $data = $this->fget();
             Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
-            if ($data === false) {
+            if (!$data) {
                 if ($line->count()) {
                     $line->append($token);
-                }
-                else {
+                } else {
                     throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
                 }
-            }
-            else {
+            } else {
                 $line->append($data);
             }
         }
@@ -56,7 +54,8 @@ class MockTCP extends TCP
         return $line->trim();
     }
 
-    public function sendLine($data, $separator = "\n") {
+    public function sendLine(string $data, string $separator = "\n"): void
+    {
         $this->send($data);
     }
 
@@ -65,24 +64,25 @@ class MockTCP extends TCP
      *
      * @param string $data
      * @return void
-     * @throws TransportException
-     * @throws ServerQueryException
      */
-    public function send($data) {
+    public function send(string $data): void
+    {
         $this->fwrite($data);
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
     }
 
-    protected function fget() {
+    protected function fget(): string
+    {
         $this->reply = explode("\n", $this->reply);
         $reply = array_shift($this->reply);
         $this->reply = join("\n", $this->reply);
         return $reply . "\n";
     }
 
-    protected function fwrite($data) {
+    protected function fwrite($data)
+    {
 
-        if(!key_exists($data, self::CMD)) {
+        if (!key_exists($data, self::CMD)) {
             $this->reply = "error id=1 msg=Unkown\n";
             return;
         }

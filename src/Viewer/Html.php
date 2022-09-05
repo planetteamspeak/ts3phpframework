@@ -24,6 +24,9 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Viewer;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Convert;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel;
@@ -47,75 +50,75 @@ class Html implements ViewerInterface
      *
      * @var string
      */
-    protected $pattern = "<table id='%0' class='%1' summary='%2'><tr class='%3'><td class='%4'>%5</td><td class='%6' title='%7'>%8 %9</td><td class='%10'>%11%12</td></tr></table>\n";
+    protected string $pattern = "<table id='%0' class='%1' summary='%2'><tr class='%3'><td class='%4'>%5</td><td class='%6' title='%7'>%8 %9</td><td class='%10'>%11%12</td></tr></table>\n";
 
     /**
      * The PlanetTeamSpeak\TeamSpeak3Framework\Node\Node object which is currently processed.
      *
-     * @var Node
+     * @var Node|null
      */
-    protected $currObj = null;
+    protected ?Node $currObj = null;
 
     /**
      * An array filled with siblings for the PlanetTeamSpeak\TeamSpeak3Framework\Node\Node object which is currently
      * processed.
      *
-     * @var array
+     * @var array|null
      */
-    protected $currSib = null;
+    protected ?array $currSib = null;
 
     /**
      * An internal counter indicating the number of fetched PlanetTeamSpeak\TeamSpeak3Framework\Node\Node objects.
      *
      * @var integer
      */
-    protected $currNum = 0;
+    protected int $currNum = 0;
 
     /**
      * The relative URI path where the images used by the viewer can be found.
      *
      * @var string
      */
-    protected $iconpath = null;
+    protected string $iconpath;
 
     /**
      * The relative URI path where the country flag icons used by the viewer can be found.
      *
-     * @var string
+     * @var string|null
      */
-    protected $flagpath = null;
+    protected ?string $flagpath;
 
     /**
      * The relative path of the file transter client script on the server.
      *
-     * @var string
+     * @var string|null
      */
-    protected $ftclient = null;
+    protected ?string $ftclient;
 
     /**
      * Stores an array of local icon IDs.
      *
      * @var array
      */
-    protected $cachedIcons = [100, 200, 300, 400, 500, 600];
+    protected array $cachedIcons = [100, 200, 300, 400, 500, 600];
 
     /**
      * Stores an array of remote icon IDs.
      *
      * @var array
      */
-    protected $remoteIcons = [];
+    protected array $remoteIcons = [];
 
     /**
      * Html constructor.
      *
-     * @param  string $iconpath
-     * @param  string $flagpath
-     * @param  string $ftclient
-     * @param  string $pattern
+     * @param string $iconpath
+     * @param string|null $flagpath
+     * @param string|null $ftclient
+     * @param string|null $pattern
      * @return void
      */
-    public function __construct($iconpath = "images/viewer/", $flagpath = null, $ftclient = null, $pattern = null)
+    public function __construct(string $iconpath = "images/viewer/", string $flagpath = null, string $ftclient = null, string $pattern = null)
     {
         $this->iconpath = $iconpath;
         $this->flagpath = $flagpath;
@@ -129,52 +132,55 @@ class Html implements ViewerInterface
     /**
      * Returns the code needed to display a node in a TeamSpeak 3 viewer.
      *
-     * @param  Node $node
-     * @param  array $siblings
-     * @return StringHelper
+     * @param Node $node
+     * @param array $siblings
+     * @return string
+     * @throws AdapterException
+     * @throws HelperException
+     * @throws ServerQueryException
      */
-    public function fetchObject(Node $node, array $siblings = [])
+    public function fetchObject(Node $node, array $siblings = []): string
     {
         $this->currObj = $node;
         $this->currSib = $siblings;
 
         $args = [
-      $this->getContainerIdent(),
-      $this->getContainerClass(),
-      $this->getContainerSummary(),
-      $this->getRowClass(),
-      $this->getPrefixClass(),
-      $this->getPrefix(),
-      $this->getCorpusClass(),
-      $this->getCorpusTitle(),
-      $this->getCorpusIcon(),
-      $this->getCorpusName(),
-      $this->getSuffixClass(),
-      $this->getSuffixIcon(),
-      $this->getSuffixFlag(),
-    ];
+            $this->getContainerIdent(),
+            $this->getContainerClass(),
+            $this->getContainerSummary(),
+            $this->getRowClass(),
+            $this->getPrefixClass(),
+            $this->getPrefix(),
+            $this->getCorpusClass(),
+            $this->getCorpusTitle(),
+            $this->getCorpusIcon(),
+            $this->getCorpusName(),
+            $this->getSuffixClass(),
+            $this->getSuffixIcon(),
+            $this->getSuffixFlag(),
+        ];
 
         return StringHelper::factory($this->pattern)->arg($args);
     }
 
     /**
-     * Returns a unique identifier for the current node which can be used as a HTML id
+     * Returns a unique identifier for the current node which can be used as an HTML id
      * property.
      *
      * @return string
      */
-    protected function getContainerIdent()
+    protected function getContainerIdent(): string
     {
         return $this->currObj->getUniqueId();
     }
 
     /**
      * Returns a dynamic string for the current container element which can be used as
-     * a HTML class property.
+     * an HTML class property.
      *
      * @return string
      */
-    protected function getContainerClass()
+    protected function getContainerClass(): string
     {
         return "ts3_viewer " . $this->currObj->getClass(null);
     }
@@ -185,29 +191,29 @@ class Html implements ViewerInterface
      *
      * @return integer
      */
-    protected function getContainerSummary()
+    protected function getContainerSummary(): int
     {
         return $this->currObj->getId();
     }
 
     /**
-     * Returns a dynamic string for the current row element which can be used as a HTML
+     * Returns a dynamic string for the current row element which can be used as an HTML
      * class property.
      *
      * @return string
      */
-    protected function getRowClass()
+    protected function getRowClass(): string
     {
-        return ++$this->currNum%2 ? "row1" : "row2";
+        return ++$this->currNum % 2 ? "row1" : "row2";
     }
 
     /**
-     * Returns a string for the current prefix element which can be used as a HTML class
+     * Returns a string for the current prefix element which can be used as an HTML class
      * property.
      *
      * @return string
      */
-    protected function getPrefixClass()
+    protected function getPrefixClass(): string
     {
         return "prefix " . $this->currObj->getClass(null);
     }
@@ -217,7 +223,7 @@ class Html implements ViewerInterface
      *
      * @return string
      */
-    protected function getPrefix()
+    protected function getPrefix(): string
     {
         $prefix = "";
 
@@ -225,7 +231,7 @@ class Html implements ViewerInterface
             $last = array_pop($this->currSib);
 
             foreach ($this->currSib as $sibling) {
-                $prefix .=  ($sibling) ? $this->getImage("tree_line.gif") : $this->getImage("tree_blank.png");
+                $prefix .= ($sibling) ? $this->getImage("tree_line.gif") : $this->getImage("tree_blank.png");
             }
 
             $prefix .= ($last) ? $this->getImage("tree_end.gif") : $this->getImage("tree_mid.gif");
@@ -235,52 +241,52 @@ class Html implements ViewerInterface
     }
 
     /**
-     * Returns a string for the current corpus element which can be used as a HTML class
+     * Returns a string for the current corpus element which can be used as an HTML class
      * property. If the current node is a channel spacer the class string will contain
      * additional class names to allow further customization of the content via CSS.
      *
      * @return string
      */
-    protected function getCorpusClass()
+    protected function getCorpusClass(): string
     {
         $extras = "";
 
         if ($this->currObj instanceof Channel && $this->currObj->isSpacer()) {
             switch ($this->currObj->spacerGetType()) {
-        case (string) TeamSpeak3::SPACER_SOLIDLINE:
-          $extras .= " solidline";
-          break;
+                case (string)TeamSpeak3::SPACER_SOLIDLINE:
+                    $extras .= " solidline";
+                    break;
 
-        case (string) TeamSpeak3::SPACER_DASHLINE:
-          $extras .= " dashline";
-          break;
+                case (string)TeamSpeak3::SPACER_DASHLINE:
+                    $extras .= " dashline";
+                    break;
 
-        case (string) TeamSpeak3::SPACER_DASHDOTLINE:
-          $extras .= " dashdotline";
-          break;
+                case (string)TeamSpeak3::SPACER_DASHDOTLINE:
+                    $extras .= " dashdotline";
+                    break;
 
-        case (string) TeamSpeak3::SPACER_DASHDOTDOTLINE:
-          $extras .= " dashdotdotline";
-          break;
+                case (string)TeamSpeak3::SPACER_DASHDOTDOTLINE:
+                    $extras .= " dashdotdotline";
+                    break;
 
-        case (string) TeamSpeak3::SPACER_DOTLINE:
-          $extras .= " dotline";
-          break;
-      }
+                case (string)TeamSpeak3::SPACER_DOTLINE:
+                    $extras .= " dotline";
+                    break;
+            }
 
             switch ($this->currObj->spacerGetAlign()) {
-        case TeamSpeak3::SPACER_ALIGN_CENTER:
-          $extras .= " center";
-          break;
+                case TeamSpeak3::SPACER_ALIGN_CENTER:
+                    $extras .= " center";
+                    break;
 
-        case TeamSpeak3::SPACER_ALIGN_RIGHT:
-          $extras .= " right";
-          break;
+                case TeamSpeak3::SPACER_ALIGN_RIGHT:
+                    $extras .= " right";
+                    break;
 
-        case TeamSpeak3::SPACER_ALIGN_LEFT:
-          $extras .= " left";
-          break;
-      }
+                case TeamSpeak3::SPACER_ALIGN_LEFT:
+                    $extras .= " left";
+                    break;
+            }
         } elseif ($this->currObj instanceof Client && $this->currObj->client_is_recording) {
             $extras .= " recording";
         }
@@ -292,9 +298,9 @@ class Html implements ViewerInterface
      * Returns the HTML img tags which can be used to display the various icons for a
      * TeamSpeak_Node_Abstract object.
      *
-     * @return string
+     * @return string|null
      */
-    protected function getCorpusTitle()
+    protected function getCorpusTitle(): ?string
     {
         if ($this->currObj instanceof Server) {
             return "ID: " . $this->currObj->getId() . " | Clients: " . $this->currObj->clientCount() . "/" . $this->currObj["virtualserver_maxclients"] . " | Uptime: " . Convert::seconds($this->currObj["virtualserver_uptime"]);
@@ -305,18 +311,19 @@ class Html implements ViewerInterface
         } elseif ($this->currObj instanceof ServerGroup || $this->currObj instanceof ChannelGroup) {
             return "ID: " . $this->currObj->getId() . " | Type: " . Convert::groupType($this->currObj["type"]) . " (" . ($this->currObj["savedb"] ? "Permanent" : "Temporary") . ")";
         }
+        return null;
     }
 
     /**
-     * Returns a HTML img tag which can be used to display the status icon for a
+     * Returns an HTML img tag which can be used to display the status icon for a
      * TeamSpeak_Node_Abstract object.
      *
      * @return string
      */
-    protected function getCorpusIcon()
+    protected function getCorpusIcon(): string
     {
         if ($this->currObj instanceof Channel && $this->currObj->isSpacer()) {
-            return;
+            return "";
         }
 
         return $this->getImage($this->currObj->getIcon() . ".png");
@@ -328,11 +335,11 @@ class Html implements ViewerInterface
      *
      * @return string
      */
-    protected function getCorpusName()
+    protected function getCorpusName(): string
     {
         if ($this->currObj instanceof Channel && $this->currObj->isSpacer()) {
             if ($this->currObj->spacerGetType() != TeamSpeak3::SPACER_CUSTOM) {
-                return;
+                return "";
             }
 
             $string = $this->currObj["channel_name"]->section("]", 1, 99);
@@ -368,12 +375,12 @@ class Html implements ViewerInterface
     }
 
     /**
-     * Returns a string for the current suffix element which can be used as a HTML
+     * Returns a string for the current suffix element which can be used as an HTML
      * class property.
      *
      * @return string
      */
-    protected function getSuffixClass()
+    protected function getSuffixClass(): string
     {
         return "suffix " . $this->currObj->getClass(null);
     }
@@ -383,8 +390,11 @@ class Html implements ViewerInterface
      * TeamSpeak_Node_Abstract object.
      *
      * @return string
+     * @throws AdapterException
+     * @throws HelperException
+     * @throws ServerQueryException
      */
-    protected function getSuffixIcon()
+    protected function getSuffixIcon(): string
     {
         if ($this->currObj instanceof Server) {
             return $this->getSuffixIconServer();
@@ -393,6 +403,7 @@ class Html implements ViewerInterface
         } elseif ($this->currObj instanceof Client) {
             return $this->getSuffixIconClient();
         }
+        return "";
     }
 
     /**
@@ -400,8 +411,11 @@ class Html implements ViewerInterface
      * TeamSpeak_Node_Server object.
      *
      * @return string
+     * @throws AdapterException
+     * @throws HelperException
+     * @throws ServerQueryException
      */
-    protected function getSuffixIconServer()
+    protected function getSuffixIconServer(): string
     {
         $html = "";
 
@@ -411,7 +425,7 @@ class Html implements ViewerInterface
                     $download = $this->currObj->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->currObj->iconGetName("virtualserver_icon_id"));
 
                     if ($this->ftclient == "data:image") {
-                        $download = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== false ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
+                        $download = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
                     }
 
                     $this->cacheIcon[$this->currObj["virtualserver_icon_id"]] = $download;
@@ -437,11 +451,14 @@ class Html implements ViewerInterface
      * TeamSpeak_Node_Channel object.
      *
      * @return string
+     * @throws AdapterException
+     * @throws HelperException
+     * @throws ServerQueryException
      */
-    protected function getSuffixIconChannel()
+    protected function getSuffixIconChannel(): string
     {
         if ($this->currObj instanceof Channel && $this->currObj->isSpacer()) {
-            return;
+            return "";
         }
 
         $html = "";
@@ -468,7 +485,7 @@ class Html implements ViewerInterface
                     $download = $this->currObj->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->currObj->iconGetName("channel_icon_id"));
 
                     if ($this->ftclient == "data:image") {
-                        $download = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== false ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
+                        $download = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
                     }
 
                     $this->cacheIcon[$this->currObj["channel_icon_id"]] = $download;
@@ -494,8 +511,11 @@ class Html implements ViewerInterface
      * TeamSpeak_Node_Client object.
      *
      * @return string
+     * @throws AdapterException
+     * @throws HelperException
+     * @throws ServerQueryException
      */
-    protected function getSuffixIconClient()
+    protected function getSuffixIconClient(): string
     {
         $html = "";
 
@@ -527,7 +547,7 @@ class Html implements ViewerInterface
                     $download = $group->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $group->iconGetName("iconid"));
 
                     if ($this->ftclient == "data:image") {
-                        $download = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== false ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
+                        $download = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
                     }
 
                     $this->cacheIcon[$group["iconid"]] = $download;
@@ -551,7 +571,7 @@ class Html implements ViewerInterface
                     $download = $this->currObj->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->currObj->iconGetName("client_icon_id"));
 
                     if ($this->ftclient == "data:image") {
-                        $download = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== false ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
+                        $download = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
                     }
 
                     $this->cacheIcon[$this->currObj["client_icon_id"]] = $download;
@@ -573,33 +593,35 @@ class Html implements ViewerInterface
     }
 
     /**
-     * Returns a HTML img tag which can be used to display the country flag for a
+     * Returns an HTML img tag which can be used to display the country flag for a
      * TeamSpeak_Node_Client object.
      *
      * @return string
      */
-    protected function getSuffixFlag()
+    protected function getSuffixFlag(): string
     {
         if (!$this->currObj instanceof Client) {
-            return;
+            return "";
         }
 
         if ($this->flagpath && $this->currObj["client_country"]) {
             return $this->getImage($this->currObj["client_country"]->toLower() . ".png", $this->currObj["client_country"], null, false, true);
         }
+
+        return "";
     }
 
     /**
      * Returns the code to display a custom HTML img tag.
      *
-     * @param  string  $name
-     * @param  string  $text
-     * @param  string  $class
-     * @param  boolean $iconpath
-     * @param  boolean $flagpath
+     * @param string $name
+     * @param string $text
+     * @param string|null $class
+     * @param boolean $iconpath
+     * @param boolean $flagpath
      * @return string
      */
-    protected function getImage($name, $text = "", $class = null, $iconpath = true, $flagpath = false)
+    protected function getImage(string $name, string $text = "", string $class = null, bool $iconpath = true, bool $flagpath = false): string
     {
         $src = "";
 

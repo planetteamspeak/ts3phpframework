@@ -39,15 +39,15 @@ class Profiler
      *
      * @var array
      */
-    protected static $timers = [];
+    protected static array $timers = [];
 
     /**
      * Inits a timer.
      *
-     * @param  string $name
+     * @param string $name
      * @return void
      */
-    public static function init($name = "default")
+    public static function init(string $name = "default"): void
     {
         self::$timers[$name] = new Timer($name);
     }
@@ -55,10 +55,10 @@ class Profiler
     /**
      * Starts a timer.
      *
-     * @param  string $name
+     * @param string $name
      * @return void
      */
-    public static function start($name = "default")
+    public static function start(string $name = "default"): void
     {
         if (array_key_exists($name, self::$timers)) {
             self::$timers[$name]->start();
@@ -70,10 +70,10 @@ class Profiler
     /**
      * Stops a timer.
      *
-     * @param  string $name
+     * @param string $name
      * @return void
      */
-    public static function stop($name = "default")
+    public static function stop(string $name = "default"): void
     {
         if (!array_key_exists($name, self::$timers)) {
             self::init($name);
@@ -85,10 +85,10 @@ class Profiler
     /**
      * Returns a timer.
      *
-     * @param  string $name
+     * @param string $name
      * @return Timer
      */
-    public static function get($name = "default")
+    public static function get(string $name = "default"): Timer
     {
         if (!array_key_exists($name, self::$timers)) {
             self::init($name);

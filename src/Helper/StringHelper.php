@@ -28,8 +28,8 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 use JsonSerializable;
-use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
+use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
  * Class StringHelper
@@ -44,31 +44,31 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @var string
      */
-    protected $string;
+    protected string $string;
 
     /**
      * @ignore
      * @var integer
      */
-    protected $position = 0;
+    protected int $position = 0;
 
     /**
      * The StringHelper constructor.
      *
      * @param string $string
      */
-    public function __construct($string)
+    public function __construct(string $string)
     {
-        $this->string = (string)$string;
+        $this->string = $string;
     }
 
     /**
-     * Returns a StringHelper object for thegiven string.
+     * Returns a StringHelper object for the given string.
      *
      * @param string $string
      * @return self
      */
-    public static function factory($string)
+    public static function factory(string $string): StringHelper
     {
         return new self($string);
     }
@@ -76,12 +76,12 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Replaces every occurrence of the string or array $search with the string or array $replace.
      *
-     * @param string|array $search
-     * @param string|array $replace
+     * @param array|string $search
+     * @param array|string $replace
      * @param boolean $caseSensitivity
      * @return self
      */
-    public function replace($search, $replace, $caseSensitivity = true)
+    public function replace(array|string $search, array|string $replace, bool $caseSensitivity = true): static
     {
         if ($caseSensitivity) {
             $this->string = str_replace($search, $replace, $this->string);
@@ -99,7 +99,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $char
      * @return self
      */
-    public function arg(array $args, $char = "%")
+    public function arg(array $args, string $char = "%"): static
     {
         $args = array_reverse($args, true);
 
@@ -119,9 +119,9 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $pattern
      * @return boolean
      */
-    public function startsWith($pattern)
+    public function startsWith(string $pattern): bool
     {
-        return (substr($this->string, 0, strlen($pattern)) == $pattern) ? true : false;
+        return str_starts_with($this->string, $pattern);
     }
 
     /**
@@ -130,9 +130,9 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $pattern
      * @return boolean
      */
-    public function endsWith($pattern)
+    public function endsWith(string $pattern): bool
     {
-        return (substr($this->string, strlen($pattern) * -1) == $pattern) ? true : false;
+        return str_ends_with($this->string, $pattern);
     }
 
     /**
@@ -141,7 +141,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $needle
      * @return integer
      */
-    public function findFirst($needle)
+    public function findFirst(string $needle): int
     {
         return strpos($this->string, $needle);
     }
@@ -152,7 +152,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $needle
      * @return integer
      */
-    public function findLast($needle)
+    public function findLast(string $needle): int
     {
         return strrpos($this->string, $needle);
     }
@@ -162,7 +162,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return self
      */
-    public function toLower()
+    public function toLower(): StringHelper
     {
         return new self(strtolower($this->string));
     }
@@ -172,7 +172,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return self
      */
-    public function toUpper()
+    public function toUpper(): StringHelper
     {
         return new self(strtoupper($this->string));
     }
@@ -184,7 +184,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param boolean $regexp
      * @return boolean
      */
-    public function contains($pattern, $regexp = false)
+    public function contains(string $pattern, bool $regexp = false): bool
     {
         if (empty($pattern)) {
             return true;
@@ -193,7 +193,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
         if ($regexp) {
             return boolval(preg_match(sprintf("/%s/i", $pattern), $this->string));
         } else {
-            return (stristr($this->string, $pattern) !== false) ? true : false;
+            return stristr($this->string, $pattern) !== false;
         }
     }
 
@@ -201,10 +201,10 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * Returns part of a string.
      *
      * @param integer $start
-     * @param integer $length
+     * @param integer|null $length
      * @return self
      */
-    public function substr($start, $length = null)
+    public function substr(int $start, int $length = null): StringHelper
     {
         $string = ($length !== null) ? substr($this->string, $start, $length) : substr($this->string, $start);
 
@@ -218,9 +218,9 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param integer $limit
      * @return array
      */
-    public function split($separator, $limit = 0)
+    public function split(string $separator, int $limit = 0): array
     {
-        $parts = explode($separator, $this->string, ($limit) ? intval($limit) : $this->count());
+        $parts = explode($separator, $this->string, ($limit) ?: $this->count());
 
         foreach ($parts as $key => $val) {
             $parts[$key] = new self($val);
@@ -235,9 +235,9 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $part
      * @return self
      */
-    public function append($part)
+    public function append(string $part): static
     {
-        $this->string = $this->string . strval($part);
+        $this->string = $this->string . $part;
 
         return $this;
     }
@@ -248,9 +248,9 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $part
      * @return self
      */
-    public function prepend($part)
+    public function prepend(string $part): static
     {
-        $this->string = strval($part) . $this->string;
+        $this->string = $part . $this->string;
 
         return $this;
     }
@@ -261,15 +261,13 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $separator
      * @param integer $first
      * @param integer $last
-     * @return self
+     * @return StringHelper|null
      */
-    public function section($separator, $first = 0, $last = 0)
+    public function section(string $separator, int $first = 0, int $last = 0): ?StringHelper
     {
         $sections = explode($separator, $this->string);
 
         $total = count($sections);
-        $first = intval($first);
-        $last = intval($last);
 
         if ($first > $total) {
             return null;
@@ -296,14 +294,14 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $char
      * @return self
      */
-    public function resize($size, $char = "\0")
+    public function resize(int $size, string $char = "\0"): static
     {
         $chars = ($size - $this->count());
 
         if ($chars < 0) {
             $this->string = substr($this->string, 0, $chars);
         } elseif ($chars > 0) {
-            $this->string = str_pad($this->string, $size, strval($char));
+            $this->string = str_pad($this->string, $size, $char);
         }
 
         return $this;
@@ -314,7 +312,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return self
      */
-    public function trim()
+    public function trim(): static
     {
         $this->string = trim($this->string);
 
@@ -326,7 +324,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return self
      */
-    public function escape()
+    public function escape(): static
     {
         foreach (TeamSpeak3::getEscapePatterns() as $search => $replace) {
             $this->string = str_replace($search, $replace, $this->string);
@@ -340,7 +338,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return self
      */
-    public function unescape()
+    public function unescape(): static
     {
         $this->string = strtr($this->string, array_flip(TeamSpeak3::getEscapePatterns()));
 
@@ -348,11 +346,11 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Removes any non alphanumeric characters from the string.
+     * Removes any non-alphanumeric characters from the string.
      *
      * @return self
      */
-    public function filterAlnum()
+    public function filterAlnum(): static
     {
         $this->string = preg_replace("/[^[:alnum:]]/", "", $this->string);
 
@@ -360,11 +358,11 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Removes any non alphabetic characters from the string.
+     * Removes any non-alphabetic characters from the string.
      *
      * @return self
      */
-    public function filterAlpha()
+    public function filterAlpha(): static
     {
         $this->string = preg_replace("/[^[:alpha:]]/", "", $this->string);
 
@@ -372,11 +370,11 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Removes any non numeric characters from the string.
+     * Removes any non-numeric characters from the string.
      *
      * @return self
      */
-    public function filterDigits()
+    public function filterDigits(): static
     {
         $this->string = preg_replace("/[^[:digit:]]/", "", $this->string);
 
@@ -388,7 +386,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return boolean
      */
-    public function isInt()
+    public function isInt(): bool
     {
         return is_numeric($this->string) &&
             !$this->contains(".") &&
@@ -401,10 +399,9 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Returns the integer value of the string.
      *
-     * @return float
-     * @return integer
+     * @return float|int
      */
-    public function toInt()
+    public function toInt(): float|int
     {
         if ($this->string == pow(2, 63) || $this->string == pow(2, 64)) {
             return -1;
@@ -416,9 +413,9 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Calculates and returns the crc32 polynomial of the string.
      *
-     * @return string
+     * @return int
      */
-    public function toCrc32()
+    public function toCrc32(): int
     {
         return crc32($this->string);
     }
@@ -428,7 +425,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return string
      */
-    public function toMd5()
+    public function toMd5(): string
     {
         return md5($this->string);
     }
@@ -438,7 +435,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return string
      */
-    public function toSha1()
+    public function toSha1(): string
     {
         return sha1($this->string);
     }
@@ -449,7 +446,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return boolean
      */
-    public function isUtf8()
+    public function isUtf8(): bool
     {
         $pattern = [];
 
@@ -469,7 +466,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return self
      */
-    public function toUtf8()
+    public function toUtf8(): static
     {
         if (!$this->isUtf8()) {
             $this->string = utf8_encode($this->string);
@@ -483,7 +480,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return string
      */
-    public function toBase64()
+    public function toBase64(): string
     {
         return base64_encode($this->string);
     }
@@ -494,7 +491,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $base64
      * @return self
      */
-    public static function fromBase64($base64)
+    public static function fromBase64(string $base64): StringHelper
     {
         return new self(base64_decode($base64));
     }
@@ -504,7 +501,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return string
      */
-    public function toHex()
+    public function toHex(): string
     {
         $hex = "";
 
@@ -522,7 +519,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @return self
      * @throws HelperException
      */
-    public static function fromHex($hex)
+    public static function fromHex(string $hex): StringHelper
     {
         $string = "";
 
@@ -542,7 +539,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return self
      */
-    public function transliterate()
+    public function transliterate(): StringHelper
     {
         $utf8_accents = [
             "à" => "a",
@@ -765,7 +762,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param string $spacer
      * @return self
      */
-    public function uriSafe($spacer = "-")
+    public function uriSafe(string $spacer = "-"): StringHelper
     {
         $this->string = str_replace($spacer, " ", $this->string);
         $this->string = $this->transliterate();
@@ -780,7 +777,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return string
      */
-    public function spaceToPercent()
+    public function spaceToPercent(): string
     {
         return str_replace(" ", "%20", $this->string);
     }
@@ -790,7 +787,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return $this->string;
     }
@@ -803,7 +800,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @return self
      * @throws HelperException
      */
-    public function __call($function, $args)
+    public function __call(string $function, array $args)
     {
         if (!function_exists($function)) {
             throw new HelperException("cannot call undefined function '" . $function . "' on this object");
@@ -837,7 +834,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function __toString()
     {
-        return (string)$this->string;
+        return $this->string;
     }
 
     /**
@@ -845,7 +842,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return string
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): string
     {
         return $this->toUtf8()->string;
     }
@@ -853,7 +850,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * @ignore
      */
-    public function count()
+    public function count(): int
     {
         return strlen($this->string);
     }
@@ -861,7 +858,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * @ignore
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
@@ -869,7 +866,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * @ignore
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->position < $this->count();
     }
@@ -877,16 +874,16 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * @ignore
      */
-    public function key()
+    public function key(): int
     {
         return $this->position;
     }
 
     /**
-     * @ignore
      * @throws HelperException
+     * @ignore
      */
-    public function current()
+    public function current(): Char
     {
         return new Char($this->string[$this->position]);
     }
@@ -894,7 +891,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * @ignore
      */
-    public function next()
+    public function next(): void
     {
         $this->position++;
     }
@@ -902,15 +899,16 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * @ignore
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
-        return ($offset < strlen($this->string)) ? true : false;
+        return $offset < strlen($this->string);
     }
 
     /**
+     * @throws HelperException
      * @ignore
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?Char
     {
         return ($this->offsetExists($offset)) ? new Char($this->string[$offset]) : null;
     }
@@ -918,7 +916,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * @ignore
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (!$this->offsetExists($offset)) {
             return;
@@ -930,7 +928,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * @ignore
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (!$this->offsetExists($offset)) {
             return;

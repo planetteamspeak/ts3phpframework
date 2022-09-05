@@ -17,10 +17,10 @@ class MockServerQuery extends ServerQuery
      * Connects the Transport object and performs initial actions on the remote
      * server.
      *
-     * @throws AdapterException
      * @return void
+     * @throws AdapterException
      */
-    protected function syn()
+    protected function syn(): void
     {
         $this->initTransport($this->options, MockTCP::class);
         $this->transport->setAdapter($this);

@@ -1,15 +1,17 @@
 <?php
 
-namespace Tests\Transport;
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Transport;
 
-use \PHPUnit\Framework\TestCase;
-use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
+use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\UDP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 class UDPTest extends TestCase
 {
+    /**
+     * @throws TransportException
+     */
     public function testConstructorNoException()
     {
         $adapter = new UDP(
@@ -35,7 +37,7 @@ class UDPTest extends TestCase
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage("config must have a key for 'host'");
 
-        $adapter = new UDP(['port' => 12345]);
+        new UDP(['port' => 12345]);
     }
 
     public function testConstructorExceptionNoPort()
@@ -43,9 +45,12 @@ class UDPTest extends TestCase
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage("config must have a key for 'port'");
 
-        $adapter = new UDP(['host' => 'test']);
+        new UDP(['host' => 'test']);
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testGetConfig()
     {
         $adapter = new UDP(
@@ -59,6 +64,9 @@ class UDPTest extends TestCase
         $this->assertEquals('test', $adapter->getConfig('host'));
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testSetGetAdapter()
     {
         $transport = new UDP(
@@ -71,6 +79,9 @@ class UDPTest extends TestCase
         $this->assertSame($adaptor, $transport->getAdapter());
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testGetStream()
     {
         $transport = new UDP(
@@ -79,15 +90,21 @@ class UDPTest extends TestCase
         $this->assertNull($transport->getStream());
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testConnect()
     {
         $transport = new UDP(
             ['host' => '127.0.0.1', 'port' => 12345]
         );
-        $this->assertNull($transport->connect());
+        $transport->connect();
         $this->assertIsResource($transport->getStream());
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testConnectBadHost()
     {
         $host = 'test';
@@ -96,9 +113,12 @@ class UDPTest extends TestCase
         );
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage("getaddrinfo for $host failed");
-        $this->assertNull($transport->connect());
+        $transport->connect();
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testDisconnect()
     {
         $transport = new UDP(
@@ -108,14 +128,20 @@ class UDPTest extends TestCase
         $this->assertIsResource($transport->getStream());
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testDisconnectNoConnection()
     {
         $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
-        $this->assertNull($transport->disconnect());
+        $transport->disconnect();
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testReadNoConnection()
     {
         $host = 'test';
@@ -127,6 +153,9 @@ class UDPTest extends TestCase
         $transport->read();
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testSendNoConnection()
     {
         $host = 'test';

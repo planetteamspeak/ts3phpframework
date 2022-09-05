@@ -26,14 +26,13 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Convert;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Crypt;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use ReflectionClass;
 
 /**
@@ -47,57 +46,57 @@ class Host extends Node
     /**
      * @ignore
      */
-    protected $whoami = null;
+    protected array|null $whoami = null;
 
     /**
      * @ignore
      */
-    protected $version = null;
+    protected array|null $version = null;
 
     /**
      * @ignore
      */
-    protected $serverList = null;
+    protected array|null $serverList = null;
 
     /**
      * @ignore
      */
-    protected $permissionEnds = null;
+    protected array|null $permissionEnds = null;
 
     /**
      * @ignore
      */
-    protected $permissionList = null;
+    protected array|null $permissionList = null;
 
     /**
      * @ignore
      */
-    protected $permissionCats = null;
+    protected array|null $permissionCats = null;
 
     /**
      * @ignore
      */
-    protected $predefined_query_name = null;
+    protected string|null $predefined_query_name = null;
 
     /**
      * @ignore
      */
-    protected $exclude_query_clients = false;
+    protected bool $exclude_query_clients = false;
 
     /**
      * @ignore
      */
-    protected $start_offline_virtual = false;
+    protected bool $start_offline_virtual = false;
 
     /**
      * @ignore
      */
-    protected $sort_clients_channels = false;
+    protected bool $sort_clients_channels = false;
 
     /**
      * The PlanetTeamSpeak\TeamSpeak3Framework\Node\Host constructor.
      *
-     * @param  ServerQuery $squery
+     * @param ServerQuery $squery
      */
     public function __construct(ServerQuery $squery)
     {
@@ -108,8 +107,10 @@ class Host extends Node
      * Returns the primary ID of the selected virtual server.
      *
      * @return integer
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverSelectedId()
+    public function serverSelectedId(): int
     {
         return $this->whoamiGet("virtualserver_id", 0);
     }
@@ -118,8 +119,10 @@ class Host extends Node
      * Returns the primary UDP port of the selected virtual server.
      *
      * @return integer
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverSelectedPort()
+    public function serverSelectedPort(): int
     {
         return $this->whoamiGet("virtualserver_port", 0);
     }
@@ -127,10 +130,12 @@ class Host extends Node
     /**
      * Returns the servers version information including platform and build number.
      *
-     * @param  string $ident
+     * @param string|null $ident
      * @return mixed
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function version($ident = null)
+    public function version(string $ident = null): mixed
     {
         if ($this->version === null) {
             $this->version = $this->request("version")->toList();
@@ -143,11 +148,13 @@ class Host extends Node
      * Selects a virtual server by ID to allow further interaction.
      * todo   remove additional clientupdate call (breaks compatibility with server versions <= 3.4.0)
      *
-     * @param  integer $sid
-     * @param  boolean $virtual
+     * @param integer $sid
+     * @param boolean|null $virtual
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverSelect($sid, $virtual = null)
+    public function serverSelect(int $sid, bool $virtual = null): void
     {
         if ($this->whoami !== null && $this->serverSelectedId() == $sid) {
             return;
@@ -157,7 +164,7 @@ class Host extends Node
         $getargs = func_get_args();
 
         if ($sid != 0 && $this->predefined_query_name !== null) {
-            $this->execute("use", ["sid" => $sid, "client_nickname" => (string) $this->predefined_query_name, $virtual ? "-virtual" : null]);
+            $this->execute("use", ["sid" => $sid, "client_nickname" => (string)$this->predefined_query_name, $virtual ? "-virtual" : null]);
         } else {
             $this->execute("use", ["sid" => $sid, $virtual ? "-virtual" : null]);
         }
@@ -165,7 +172,7 @@ class Host extends Node
         $this->whoamiReset();
 
         if ($sid != 0 && $this->predefined_query_name !== null && $this->whoamiGet("client_nickname") != $this->predefined_query_name) {
-            $this->execute("clientupdate", ["client_nickname" => (string) $this->predefined_query_name]);
+            $this->execute("clientupdate", ["client_nickname" => (string)$this->predefined_query_name]);
         }
 
         $this->setStorage("_server_use", [__FUNCTION__, $getargs]);
@@ -176,11 +183,13 @@ class Host extends Node
     /**
      * Alias for serverSelect().
      *
-     * @param  integer $sid
-     * @param  boolean $virtual
+     * @param integer $sid
+     * @param boolean|null $virtual
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverSelectById($sid, $virtual = null)
+    public function serverSelectById(int $sid, bool $virtual = null): void
     {
         $this->serverSelect($sid, $virtual);
     }
@@ -188,12 +197,14 @@ class Host extends Node
     /**
      * Selects a virtual server by UDP port to allow further interaction.
      *
-     * @param  integer $port
-     * @param  boolean $virtual
-     * @todo   remove additional clientupdate call (breaks compatibility with server versions <= 3.4.0)
+     * @param integer $port
+     * @param boolean|null $virtual
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
+     * @todo   remove additional clientupdate call (breaks compatibility with server versions <= 3.4.0)
      */
-    public function serverSelectByPort($port, $virtual = null)
+    public function serverSelectByPort(int $port, bool $virtual = null): void
     {
         if ($this->whoami !== null && $this->serverSelectedPort() == $port) {
             return;
@@ -203,7 +214,7 @@ class Host extends Node
         $getargs = func_get_args();
 
         if ($port != 0 && $this->predefined_query_name !== null) {
-            $this->execute("use", ["port" => $port, "client_nickname" => (string) $this->predefined_query_name, $virtual ? "-virtual" : null]);
+            $this->execute("use", ["port" => $port, "client_nickname" => (string)$this->predefined_query_name, $virtual ? "-virtual" : null]);
         } else {
             $this->execute("use", ["port" => $port, $virtual ? "-virtual" : null]);
         }
@@ -211,7 +222,7 @@ class Host extends Node
         $this->whoamiReset();
 
         if ($port != 0 && $this->predefined_query_name !== null && $this->whoamiGet("client_nickname") != $this->predefined_query_name) {
-            $this->execute("clientupdate", ["client_nickname" => (string) $this->predefined_query_name]);
+            $this->execute("clientupdate", ["client_nickname" => (string)$this->predefined_query_name]);
         }
 
         $this->setStorage("_server_use", [__FUNCTION__, $getargs]);
@@ -223,8 +234,10 @@ class Host extends Node
      * Deselects the active virtual server.
      *
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverDeselect()
+    public function serverDeselect(): void
     {
         $this->serverSelect(0);
 
@@ -234,10 +247,12 @@ class Host extends Node
     /**
      * Returns the ID of a virtual server matching the given port.
      *
-     * @param  integer $port
+     * @param integer $port
      * @return integer
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverIdGetByPort($port)
+    public function serverIdGetByPort(int $port): int
     {
         $sid = $this->execute("serveridgetbyport", ["virtualserver_port" => $port])->toList();
 
@@ -247,26 +262,28 @@ class Host extends Node
     /**
      * Returns the port of a virtual server matching the given ID.
      *
-     * @param  integer $sid
+     * @param integer $sid
      * @return integer
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function serverGetPortById($sid)
+    public function serverGetPortById(int $sid): int
     {
-        if (!array_key_exists((string) $sid, $this->serverList())) {
+        if (!array_key_exists((string)$sid, $this->serverList())) {
             throw new ServerQueryException("invalid serverID", 0x400);
         }
 
-        return $this->serverList[intval((string) $sid)]["virtualserver_port"];
+        return $this->serverList[intval((string)$sid)]["virtualserver_port"];
     }
 
     /**
      * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Server object matching the currently selected ID.
      *
      * @return Server
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function serverGetSelected()
+    public function serverGetSelected(): Server
     {
         return $this->serverGetById($this->serverSelectedId());
     }
@@ -274,25 +291,27 @@ class Host extends Node
     /**
      * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Server object matching the given ID.
      *
-     * @param  integer $sid
+     * @param integer $sid
      * @return Server
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function serverGetById($sid)
+    public function serverGetById(int $sid): Server
     {
         $this->serverSelectById($sid);
 
-        return new Server($this, ["virtualserver_id" => intval($sid)]);
+        return new Server($this, ["virtualserver_id" => $sid]);
     }
 
     /**
      * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Server object matching the given port number.
      *
-     * @param  integer $port
+     * @param integer $port
      * @return Server
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function serverGetByPort($port)
+    public function serverGetByPort(int $port): Server
     {
         $this->serverSelectByPort($port);
 
@@ -302,11 +321,12 @@ class Host extends Node
     /**
      * Returns the first PlanetTeamSpeak\TeamSpeak3Framework\Node\Server object matching the given name.
      *
-     * @param  string $name
+     * @param string $name
      * @return Server
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function serverGetByName($name)
+    public function serverGetByName(string $name): Server
     {
         foreach ($this->serverList() as $server) {
             if ($server["virtualserver_name"] == $name) {
@@ -320,11 +340,12 @@ class Host extends Node
     /**
      * Returns the first PlanetTeamSpeak\TeamSpeak3Framework\Node\Server object matching the given unique identifier.
      *
-     * @param  string $uid
+     * @param string $uid
      * @return Server
-     *@throws ServerQueryException
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverGetByUid($uid)
+    public function serverGetByUid(string $uid): Server
     {
         foreach ($this->serverList() as $server) {
             if ($server["virtualserver_unique_identifier"] == $uid) {
@@ -341,9 +362,10 @@ class Host extends Node
      *
      * @param array $properties
      * @return array
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function serverCreate(array $properties = [])
+    public function serverCreate(array $properties = []): array
     {
         $this->serverListReset();
 
@@ -359,10 +381,12 @@ class Host extends Node
     /**
      * Deletes the virtual server specified by ID.
      *
-     * @param  integer $sid
+     * @param integer $sid
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverDelete($sid)
+    public function serverDelete(int $sid): void
     {
         if ($sid == $this->serverSelectedId()) {
             $this->serverDeselect();
@@ -377,10 +401,12 @@ class Host extends Node
     /**
      * Starts the virtual server specified by ID.
      *
-     * @param  integer $sid
+     * @param integer $sid
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverStart($sid)
+    public function serverStart(int $sid): void
     {
         if ($sid == $this->serverSelectedId()) {
             $this->serverDeselect();
@@ -395,11 +421,13 @@ class Host extends Node
     /**
      * Stops the virtual server specified by ID.
      *
-     * @param  integer $sid
-     * @param  string  $msg
+     * @param integer $sid
+     * @param string|null $msg
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverStop($sid, $msg = null)
+    public function serverStop(int $sid, string $msg = null): void
     {
         if ($sid == $this->serverSelectedId()) {
             $this->serverDeselect();
@@ -414,10 +442,12 @@ class Host extends Node
     /**
      * Stops the entire TeamSpeak 3 Server instance by shutting down the process.
      *
-     * @param  string $msg
+     * @param string|null $msg
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverStopProcess($msg = null)
+    public function serverStopProcess(string $msg = null): void
     {
         Signal::getInstance()->emit("notifyServershutdown", $this);
 
@@ -427,11 +457,12 @@ class Host extends Node
     /**
      * Returns an array filled with PlanetTeamSpeak\TeamSpeak3Framework\Node\Server objects.
      *
-     * @param  array $filter
-     * @return array|Server[]
+     * @param array $filter
+     * @return array|Server
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function serverList(array $filter = [])
+    public function serverList(array $filter = []): array|Server
     {
         if ($this->serverList === null) {
             $servers = $this->request("serverlist -uid")->toAssocArray("virtualserver_id");
@@ -453,7 +484,7 @@ class Host extends Node
      *
      * @return void
      */
-    public function serverListReset()
+    public function serverListReset(): void
     {
         $this->resetNodeList();
         $this->serverList = null;
@@ -462,9 +493,12 @@ class Host extends Node
     /**
      * Returns a list of IP addresses used by the server instance on multi-homed machines.
      *
+     * @param string $subsystem
      * @return array
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function bindingList($subsystem = "voice")
+    public function bindingList(string $subsystem = "voice"): array
     {
         return $this->execute("bindinglist", ["subsystem" => $subsystem])->toArray();
     }
@@ -473,8 +507,10 @@ class Host extends Node
      * Returns the number of WebQuery API keys known by the virtual server.
      *
      * @return integer
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function apiKeyCount()
+    public function apiKeyCount(): int
     {
         return current($this->execute("apikeylist -count", ["duration" => 1])->toList("count"));
     }
@@ -484,12 +520,14 @@ class Host extends Node
      * at once. When no $cldbid is specified, API keys for the invoker are returned. In addition, using '*' as $cldbid
      * will return all known API keys.
      *
-     * @param  integer $offset
-     * @param  integer $limit
-     * @param  mixed   $cldbid
+     * @param integer|null $offset
+     * @param integer|null $limit
+     * @param mixed|null $cldbid
      * @return array
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function apiKeyList($offset = null, $limit = null, $cldbid = null)
+    public function apiKeyList(int $offset = null, int $limit = null, mixed $cldbid = null): array
     {
         return $this->execute("apikeylist -count", ["start" => $offset, "duration" => $limit, "cldbid" => $cldbid])->toAssocArray("id");
     }
@@ -499,16 +537,18 @@ class Host extends Node
      * key lifetime in days. Setting $lifetime to 0 means the key will be valid forever. $cldbid defaults to the invoker
      * database ID.
      *
-     * @param  string  $scope
-     * @param  integer $lifetime
-     * @param  integer $cldbid
+     * @param string $scope
+     * @param integer $lifetime
+     * @param integer|null $cldbid
      * @return array
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function apiKeyCreate($scope = TeamSpeak3::APIKEY_READ, $lifetime = 14, $cldbid = null)
+    public function apiKeyCreate(string $scope = TeamSpeak3::APIKEY_READ, int $lifetime = 14, int $cldbid = null): array
     {
         $detail = $this->execute("apikeyadd", ["scope" => $scope, "lifetime" => $lifetime, "cldbid" => $cldbid])->toList();
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyApikeycreated", $this, $detail["apikey"]);
+        Signal::getInstance()->emit("notifyApikeycreated", $this, $detail["apikey"]);
 
         return $detail;
     }
@@ -516,10 +556,12 @@ class Host extends Node
     /**
      * Deletes an API key specified by $id.
      *
-     * @param  integer $id
+     * @param integer $id
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function apiKeyDelete($id)
+    public function apiKeyDelete(int $id): void
     {
         $this->execute("apikeydel", ["id" => $id]);
     }
@@ -528,9 +570,10 @@ class Host extends Node
      * Returns a list of permissions available on the server instance.
      *
      * @return array
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function permissionList()
+    public function permissionList(): array
     {
         if ($this->permissionList === null) {
             $this->fetchPermissionList();
@@ -547,9 +590,9 @@ class Host extends Node
             $grantsid = "i_needed_modify_power_" . substr($permname, 2);
 
             if (!$permdata["permname"]->startsWith("i_needed_modify_power_") && !isset($this->permissionList[$grantsid])) {
-                $this->permissionList[$grantsid]["permid"]    = $this->permissionList[$permname]["permgrant"];
-                $this->permissionList[$grantsid]["permname"]  = StringHelper::factory($grantsid);
-                $this->permissionList[$grantsid]["permdesc"]  = null;
+                $this->permissionList[$grantsid]["permid"] = $this->permissionList[$permname]["permgrant"];
+                $this->permissionList[$grantsid]["permname"] = StringHelper::factory($grantsid);
+                $this->permissionList[$grantsid]["permdesc"] = null;
                 $this->permissionList[$grantsid]["permcatid"] = 0xFF;
                 $this->permissionList[$grantsid]["permgrant"] = $this->permissionList[$permname]["permgrant"];
             }
@@ -563,7 +606,7 @@ class Host extends Node
      *
      * @return array
      */
-    public function permissionCats()
+    public function permissionCats(): array
     {
         if ($this->permissionCats === null) {
             $this->fetchPermissionCats();
@@ -576,8 +619,10 @@ class Host extends Node
      * Returns a list of permission category endings available on the server instance.
      *
      * @return array
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function permissionEnds()
+    public function permissionEnds(): array
     {
         if ($this->permissionEnds === null) {
             $this->fetchPermissionList();
@@ -591,19 +636,20 @@ class Host extends Node
      * their ID, name and parent.
      *
      * @return array
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function permissionTree()
+    public function permissionTree(): array
     {
         $permtree = [];
 
-        foreach ($this->permissionCats() as $key => $val) {
-            $permtree[$val]["permcatid"]      = $val;
-            $permtree[$val]["permcathex"]     = "0x" . dechex($val);
-            $permtree[$val]["permcatname"]    = StringHelper::factory(Convert::permissionCategory($val));
-            $permtree[$val]["permcatparent"]  = $permtree[$val]["permcathex"][3] == 0 ? 0 : hexdec($permtree[$val]["permcathex"][2] . 0);
+        foreach ($this->permissionCats() as $val) {
+            $permtree[$val]["permcatid"] = $val;
+            $permtree[$val]["permcathex"] = "0x" . dechex($val);
+            $permtree[$val]["permcatname"] = StringHelper::factory(Convert::permissionCategory($val));
+            $permtree[$val]["permcatparent"] = $permtree[$val]["permcathex"][3] == 0 ? 0 : hexdec($permtree[$val]["permcathex"][2] . 0);
             $permtree[$val]["permcatchilren"] = 0;
-            $permtree[$val]["permcatcount"]   = 0;
+            $permtree[$val]["permcatcount"] = 0;
 
             if (isset($permtree[$permtree[$val]["permcatparent"]])) {
                 $permtree[$permtree[$val]["permcatparent"]]["permcatchilren"]++;
@@ -627,12 +673,12 @@ class Host extends Node
      * Returns the IDs of all clients, channels or groups using the permission with the
      * specified ID.
      *
-     * @param integer $permissionId
+     * @param integer|integer[] $permissionId
      * @return array
      * @throws ServerQueryException
-     * @throws \PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException
+     * @throws AdapterException
      */
-    public function permissionFind($permissionId)
+    public function permissionFind(int|array $permissionId): array
     {
         if (!is_array($permissionId)) {
             $permident = (is_numeric($permissionId)) ? "permid" : "permsid";
@@ -646,27 +692,29 @@ class Host extends Node
     /**
      * Returns the ID of the permission matching the given name.
      *
-     * @param  string $name
+     * @param string $name
      * @return integer
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function permissionGetIdByName($name)
+    public function permissionGetIdByName(string $name): int
     {
-        if (!array_key_exists((string) $name, $this->permissionList())) {
+        if (!array_key_exists($name, $this->permissionList())) {
             throw new ServerQueryException("invalid permission ID", 0xA02);
         }
 
-        return $this->permissionList[(string) $name]["permid"];
+        return $this->permissionList[$name]["permid"];
     }
 
     /**
      * Returns the name of the permission matching the given ID.
      *
-     * @param  integer $permissionId
+     * @param integer $permissionId
      * @return StringHelper
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function permissionGetNameById($permissionId)
+    public function permissionGetNameById(int $permissionId): StringHelper
     {
         foreach ($this->permissionList() as $name => $perm) {
             if ($perm["permid"] == $permissionId) {
@@ -680,14 +728,15 @@ class Host extends Node
     /**
      * Returns the internal category of the permission matching the given ID.
      *
-     * All pre-3.0.7 permission IDs are are 2 bytes wide. The first byte identifies the category while
+     * All pre-3.0.7 permission IDs are 2 bytes wide. The first byte identifies the category while
      * the second byte is the permission count within that group.
      *
-     * @param  integer $permid
+     * @param integer $permid
      * @return integer
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function permissionGetCategoryById($permid)
+    public function permissionGetCategoryById(int $permid): int
     {
         if (!is_numeric($permid)) {
             $permid = $this->permissionGetIdByName($permid);
@@ -712,7 +761,7 @@ class Host extends Node
 
             return 0;
         } else {
-            return (int) $permid >> 8;
+            return (int)$permid >> 8;
         }
     }
 
@@ -722,20 +771,21 @@ class Host extends Node
      * Every permission has an associated i_needed_modify_power_* permission, for example b_client_ban_create has an
      * associated permission called i_needed_modify_power_client_ban_create.
      *
-     * @param  integer $permid
+     * @param integer $permid
      * @return integer
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function permissionGetGrantById($permid)
+    public function permissionGetGrantById(int $permid): int
     {
         if (!is_numeric($permid)) {
             $permid = $this->permissionGetIdByName($permid);
         }
 
         if ($permid < 0x1000) {
-            return (int) $permid+0x8000;
+            return (int)$permid + 0x8000;
         } else {
-            return (int) bindec(substr(decbin($permid), -8))+0xFF00;
+            return (int)bindec(substr(decbin($permid), -8)) + 0xFF00;
         }
     }
 
@@ -743,14 +793,16 @@ class Host extends Node
      * Adds a set of specified permissions to all regular server groups on all virtual servers. The target groups will
      * be identified by the value of their i_group_auto_update_type permission specified with $sgtype.
      *
-     * @param  integer $sgtype
-     * @param  integer $permid
-     * @param  integer $permvalue
-     * @param  integer $permnegated
-     * @param  integer $permskip
+     * @param integer $sgtype
+     * @param integer|integer[] $permid
+     * @param integer|integer[] $permvalue
+     * @param integer|integer[] $permnegated
+     * @param bool|bool[] $permskip
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverGroupPermAutoAssign($sgtype, $permid, $permvalue, $permnegated = 0, $permskip = 0)
+    public function serverGroupPermAutoAssign(int $sgtype, int|array $permid, int|array $permvalue, int|array $permnegated = 0, array|bool $permskip = false): void
     {
         if (!is_array($permid)) {
             $permident = (is_numeric($permid)) ? "permid" : "permsid";
@@ -765,11 +817,13 @@ class Host extends Node
      * Removes a set of specified permissions from all regular server groups on all virtual servers. The target groups
      * will be identified by the value of their i_group_auto_update_type permission specified with $sgtype.
      *
-     * @param  integer $sgtype
-     * @param  integer $permid
+     * @param integer $sgtype
+     * @param integer|integer[] $permid
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function serverGroupPermAutoRemove($sgtype, $permid)
+    public function serverGroupPermAutoRemove(int $sgtype, int|array $permid): void
     {
         if (!is_array($permid)) {
             $permident = (is_numeric($permid)) ? "permid" : "permsid";
@@ -783,10 +837,12 @@ class Host extends Node
     /**
      * Returns an array containing the value of a specified permission for your own client.
      *
-     * @param  integer $permid
+     * @param integer|integer[] $permid
      * @return array
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function selfPermCheck($permid)
+    public function selfPermCheck(int|array $permid): array
     {
         if (!is_array($permid)) {
             $permident = (is_numeric($permid)) ? "permid" : "permsid";
@@ -800,10 +856,12 @@ class Host extends Node
     /**
      * Changes the server instance configuration using given properties.
      *
-     * @param  array $properties
+     * @param array $properties
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function modify(array $properties)
+    public function modify(array $properties): void
     {
         $this->execute("instanceedit", $properties);
         $this->resetNodeInfo();
@@ -812,10 +870,12 @@ class Host extends Node
     /**
      * Sends a text message to all clients on all virtual servers in the TeamSpeak 3 Server instance.
      *
-     * @param  string $msg
+     * @param string $msg
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function message($msg)
+    public function message(string $msg): void
     {
         $this->execute("gm", ["msg" => $msg]);
     }
@@ -823,13 +883,15 @@ class Host extends Node
     /**
      * Displays a specified number of entries (1-100) from the servers log.
      *
-     * @param  integer $lines
-     * @param  integer $begin_pos
-     * @param  boolean $reverse
-     * @param  boolean $instance
+     * @param integer $lines
+     * @param integer|null $begin_pos
+     * @param boolean|null $reverse
+     * @param boolean $instance
      * @return array
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function logView($lines = 30, $begin_pos = null, $reverse = null, $instance = true)
+    public function logView(int $lines = 30, int $begin_pos = null, bool $reverse = null, bool $instance = true): array
     {
         return $this->execute("logview", ["lines" => $lines, "begin_pos" => $begin_pos, "instance" => $instance, "reverse" => $reverse])->toArray();
     }
@@ -837,11 +899,13 @@ class Host extends Node
     /**
      * Writes a custom entry into the server instance log.
      *
-     * @param  string  $logmsg
-     * @param  integer $loglevel
+     * @param string $logmsg
+     * @param integer $loglevel
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function logAdd($logmsg, $loglevel = TeamSpeak3::LOGLEVEL_INFO)
+    public function logAdd(string $logmsg, int $loglevel = TeamSpeak3::LOGLEVEL_INFO): void
     {
         $sid = $this->serverSelectedId();
 
@@ -856,9 +920,11 @@ class Host extends Node
      * @param string $username
      * @param string $password
      * @return void
+     * @throws AdapterException
      * @throws HelperException
+     * @throws ServerQueryException
      */
-    public function login($username, $password)
+    public function login(string $username, string $password): void
     {
         $this->execute("login", ["client_login_name" => $username, "client_login_password" => $password]);
         $this->whoamiReset();
@@ -875,8 +941,10 @@ class Host extends Node
      * Deselects the active virtual server and logs out from the server instance.
      *
      * @return void
+     * @throws AdapterException
+     * @throws ServerQueryException
      */
-    public function logout()
+    public function logout(): void
     {
         $this->request("logout");
         $this->whoamiReset();
@@ -890,12 +958,12 @@ class Host extends Node
     /**
      * Returns the number of ServerQuery logins on the selected virtual server.
      *
-     * @param null|string $pattern
+     * @param string|null $pattern
      * @return mixed
      * @throws ServerQueryException
      * @throws AdapterException
      */
-    public function queryCountLogin($pattern = null)
+    public function queryCountLogin(string $pattern = null): mixed
     {
         return current($this->execute("queryloginlist -count", ["duration" => 1, "pattern" => $pattern])->toList("count"));
     }
@@ -904,21 +972,21 @@ class Host extends Node
      * Returns a list of ServerQuery logins on the selected virtual server. By default, the server spits out 25 entries
      * at once.
      *
-     * @param null|integer $offset
-     * @param null|integer $limit
-     * @param null|string $pattern
+     * @param integer|null $offset
+     * @param integer|null $limit
+     * @param string|null $pattern
      * @return array
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function queryListLogin($offset = null, $limit = null, $pattern = null)
+    public function queryListLogin(int $offset = null, int $limit = null, string $pattern = null): array
     {
         return $this->execute("queryloginlist -count", ["start" => $offset, "duration" => $limit, "pattern" => $pattern])->toAssocArray("cldbid");
     }
 
     /**
      * Creates a new ServerQuery login, or enables ServerQuery logins for an existing client. When no virtual server is
-     * selected, the command will create global ServerQuery login. Otherwise a ServerQuery login will be added for an
+     * selected, the command will create global ServerQuery login, otherwise a ServerQuery login will be added for an
      * existing client (cldbid must be specified).
      *
      * @param string $username
@@ -927,7 +995,7 @@ class Host extends Node
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function queryLoginCreate($username, $cldbid = 0)
+    public function queryLoginCreate(string $username, int $cldbid = 0): array
     {
         if ($this->serverSelectedId()) {
             return $this->execute("queryloginadd", ["client_login_name" => $username, "cldbid" => $cldbid])->toList();
@@ -943,7 +1011,7 @@ class Host extends Node
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function queryLoginDelete($cldbid)
+    public function queryLoginDelete(int $cldbid)
     {
         $this->execute("querylogindel", ["cldbid" => $cldbid]);
     }
@@ -955,7 +1023,7 @@ class Host extends Node
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function whoami()
+    public function whoami(): array
     {
         if ($this->whoami === null) {
             $this->whoami = $this->request("whoami")->toList();
@@ -968,12 +1036,12 @@ class Host extends Node
      * Returns a single value from the current ServerQuery connection info.
      *
      * @param string $ident
-     * @param mixed $default
+     * @param mixed|null $default
      * @return mixed|null
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function whoamiGet($ident, $default = null)
+    public function whoamiGet(string $ident, mixed $default = null): mixed
     {
         if (array_key_exists($ident, $this->whoami())) {
             return $this->whoami[$ident];
@@ -986,15 +1054,15 @@ class Host extends Node
      * Sets a single value in the current ServerQuery connection info.
      *
      * @param string $ident
-     * @param null|mixed $value
+     * @param mixed|null $value
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function whoamiSet($ident, $value = null)
+    public function whoamiSet(string $ident, mixed $value = null)
     {
         $this->whoami();
 
-        $this->whoami[$ident] = (is_numeric($value)) ? (int) $value : StringHelper::factory($value);
+        $this->whoami[$ident] = (is_numeric($value)) ? (int)$value : StringHelper::factory($value);
     }
 
     /**
@@ -1010,7 +1078,7 @@ class Host extends Node
      *
      * @return string
      */
-    public function getAdapterHost()
+    public function getAdapterHost(): string
     {
         return $this->getParent()->getTransportHost();
     }
@@ -1020,14 +1088,15 @@ class Host extends Node
      *
      * @return string
      */
-    public function getAdapterPort()
+    public function getAdapterPort(): string
     {
         return $this->getParent()->getTransportPort();
     }
 
     /**
-     * @ignore
+     * @throws AdapterException
      * @throws ServerQueryException
+     * @ignore
      */
     protected function fetchNodeList()
     {
@@ -1039,9 +1108,9 @@ class Host extends Node
     }
 
     /**
-     * @ignore
      * @throws AdapterException
      * @throws ServerQueryException
+     * @ignore
      */
     protected function fetchNodeInfo()
     {
@@ -1052,9 +1121,9 @@ class Host extends Node
     }
 
     /**
-     * @ignore
      * @throws AdapterException
      * @throws ServerQueryException
+     * @ignore
      */
     protected function fetchPermissionList()
     {
@@ -1096,9 +1165,9 @@ class Host extends Node
      * Sets a pre-defined nickname for ServerQuery clients which will be used automatically
      * after selecting a virtual server.
      *
-     * @param  string $name
+     * @param string|null $name
      */
-    public function setPredefinedQueryName($name = null)
+    public function setPredefinedQueryName(string $name = null)
     {
         $this->setStorage("_query_nick", $name);
 
@@ -1109,9 +1178,9 @@ class Host extends Node
      * Returns the pre-defined nickname for ServerQuery clients which will be used automatically
      * after selecting a virtual server.
      *
-     * @return string
+     * @return string|null
      */
-    public function getPredefinedQueryName()
+    public function getPredefinedQueryName(): ?string
     {
         return $this->predefined_query_name;
     }
@@ -1120,10 +1189,10 @@ class Host extends Node
      * Sets the option to decide whether ServerQuery clients should be excluded from node
      * lists or not.
      *
-     * @param  boolean $exclude
+     * @param boolean $exclude
      * @return void
      */
-    public function setExcludeQueryClients($exclude = false)
+    public function setExcludeQueryClients(bool $exclude = false): void
     {
         $this->setStorage("_query_hide", $exclude);
 
@@ -1136,7 +1205,7 @@ class Host extends Node
      *
      * @return boolean
      */
-    public function getExcludeQueryClients()
+    public function getExcludeQueryClients(): bool
     {
         return $this->exclude_query_clients;
     }
@@ -1145,10 +1214,10 @@ class Host extends Node
      * Sets the option to decide whether offline servers will be started in virtual mode
      * by default or not.
      *
-     * @param  boolean $virtual
+     * @param boolean $virtual
      * @return void
      */
-    public function setUseOfflineAsVirtual($virtual = false)
+    public function setUseOfflineAsVirtual(bool $virtual = false): void
     {
         $this->setStorage("_do_virtual", $virtual);
 
@@ -1161,7 +1230,7 @@ class Host extends Node
      *
      * @return boolean
      */
-    public function getUseOfflineAsVirtual()
+    public function getUseOfflineAsVirtual(): bool
     {
         return $this->start_offline_virtual;
     }
@@ -1170,9 +1239,9 @@ class Host extends Node
      * Sets the option to decide whether clients should be sorted before sub-channels to support
      * the new TeamSpeak 3 Client display mode or not.
      *
-     * @param  boolean $first
+     * @param boolean $first
      */
-    public function setLoadClientlistFirst($first = false)
+    public function setLoadClientlistFirst(bool $first = false)
     {
         $this->setStorage("_client_top", $first);
 
@@ -1185,7 +1254,7 @@ class Host extends Node
      *
      * @return boolean
      */
-    public function getLoadClientlistFirst()
+    public function getLoadClientlistFirst(): bool
     {
         return $this->sort_clients_channels;
     }
@@ -1195,17 +1264,17 @@ class Host extends Node
      *
      * @return ServerQuery
      */
-    public function getAdapter()
+    public function getAdapter(): ServerQuery
     {
         return $this->getParent();
     }
 
     /**
-     * Returns a unique identifier for the node which can be used as a HTML property.
+     * Returns a unique identifier for the node which can be used as an HTML property.
      *
      * @return string
      */
-    public function getUniqueId()
+    public function getUniqueId(): string
     {
         return "ts3_h";
     }
@@ -1215,7 +1284,7 @@ class Host extends Node
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return "host";
     }
@@ -1225,7 +1294,7 @@ class Host extends Node
      *
      * @return string
      */
-    public function getSymbol()
+    public function getSymbol(): string
     {
         return "+";
     }
@@ -1234,8 +1303,9 @@ class Host extends Node
      * Re-authenticates with the TeamSpeak 3 Server instance using given ServerQuery login
      * credentials and re-selects a previously selected virtual server.
      *
+     * @throws AdapterException
      * @throws HelperException
-     * @throws NodeException
+     * @throws ServerQueryException
      */
     public function __wakeup()
     {
@@ -1257,13 +1327,7 @@ class Host extends Node
             $func = array_shift($server);
             $args = array_shift($server);
 
-            try {
-                call_user_func_array([$this, $func], $args);
-            } catch (NodeException $e) {
-                $class = get_class($e);
-
-                throw new $class($e->getMessage(), $e->getCode());
-            }
+            call_user_func_array([$this, $func], $args);
         }
     }
 
@@ -1274,6 +1338,6 @@ class Host extends Node
      */
     public function __toString()
     {
-        return (string) $this->getAdapterHost();
+        return $this->getAdapterHost();
     }
 }

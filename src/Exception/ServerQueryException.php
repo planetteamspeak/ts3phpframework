@@ -35,18 +35,18 @@ class ServerQueryException extends AdapterException
     /**
      * Stores the optional return code for ServerQuery errors.
      *
-     * @var string
+     * @var string|null
      */
-    protected $return_code = null;
+    protected ?string $return_code;
 
     /**
      * The PlanetTeamSpeak\TeamSpeak3Framework\ServerQuery\Exception constructor.
      *
-     * @param  string  $mesg
-     * @param  integer $code
-     * @param  string  $return_code
+     * @param string $mesg
+     * @param integer $code
+     * @param string $return_code
      */
-    public function __construct($mesg, $code = 0x00, $return_code = null)
+    public function __construct(string $mesg, int $code = 0x00, $return_code = null)
     {
         parent::__construct($mesg, $code);
 
@@ -58,7 +58,7 @@ class ServerQueryException extends AdapterException
      *
      * @return boolean
      */
-    public function hasReturnCode()
+    public function hasReturnCode(): bool
     {
         return $this->return_code !== null;
     }
@@ -66,9 +66,9 @@ class ServerQueryException extends AdapterException
     /**
      * Returns the optional return code for ServerQuery errors.
      *
-     * @return string
+     * @return string|null
      */
-    public function getReturnCode()
+    public function getReturnCode(): ?string
     {
         return $this->return_code;
     }
