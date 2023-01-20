@@ -300,7 +300,7 @@ class TeamSpeak3
     ];
 
     /**
-     * Factory for PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter classes. $uri must be formatted as
+     * Factory for PlanetTeamSpeak\TeamSpeak3Framework\Node\Server classes. $uri must be formatted as
      * "<adapter>://<user>:<pass>@<host>:<port>/<options>#<flags>". All parameters
      * except adapter, host and port are optional.
      *
@@ -333,13 +333,13 @@ class TeamSpeak3
      *   - filetransfer://127.0.0.1:30011/
      *
      * @param string $uri
-     * @return Adapter
+     * @return Server
      * @throws AdapterException
      * @throws HelperException
      * @throws ServerQueryException
      * @throws Exception
      */
-    public static function factory(string $uri): Adapter
+    public static function factory(string $uri): Server
     {
         self::init();
 

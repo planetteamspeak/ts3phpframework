@@ -97,7 +97,7 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
      */
     public function prepare(string $cmd, array $params = []): StringHelper
     {
-        return $this->getParent()->prepare($cmd, $params);
+        return StringHelper::factory($this->getParent()->prepare($cmd, $params));
     }
 
     /**

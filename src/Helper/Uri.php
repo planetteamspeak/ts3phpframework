@@ -142,7 +142,7 @@ class Uri
      */
     protected function parseUri(string $uriString = ''): void
     {
-        $status = @preg_match("~^((//)([^/?#]*))([^?#]*)(\?([^#]*))?(#(.*))?$~", $uriString, $matches);
+        $status = @preg_match("~^//(?P<user>.*):(?P<password>.*)@(?P<host>.*):(?P<port>[0-9]{2,5})(?:/(?P<path>.*?))?(?:\?(?P<query>.*?))?(?:#(?P<fragment>.*))?$~", $uriString, $matches);
 
         if ($status === false) {
             throw new HelperException("URI scheme-specific decomposition failed");
@@ -152,24 +152,14 @@ class Uri
             return;
         }
 
-        $this->path = (isset($matches[4])) ? $matches[4] : '';
-        $this->query = (isset($matches[6])) ? $matches[6] : '';
-        $this->fragment = (isset($matches[8])) ? $matches[8] : '';
+        $this->user = StringHelper::factory($matches[1] ?? "");
+        $this->pass = StringHelper::factory($matches[2] ?? "");
+        $this->host = StringHelper::factory($matches[3] ?? "");
+        $this->port = StringHelper::factory($matches[4] ?? "");
 
-        $status = @preg_match("~^(([^:@]*)(:([^@]*))?@)?((?(?=[)[][^]]+]|[^:]+))(:(.*))?$", (isset($matches[3])) ? $matches[3] : "", $matches);
-
-        if ($status === false) {
-            throw new HelperException("URI scheme-specific authority decomposition failed");
-        }
-
-        if (!$status) {
-            return;
-        }
-
-        $this->user = $matches[2] ?? "";
-        $this->pass = $matches[4] ?? "";
-        $this->host = isset($matches[5]) === true ? preg_replace('~^\[([^]]+)]$~', '\1', $matches[5]) : "";
-        $this->port = $matches[7] ?? "";
+        $this->path = StringHelper::factory((isset($matches[5])) ? $matches[5] : "");
+        $this->query = StringHelper::factory((isset($matches[6])) ? $matches[6] : "");
+        $this->fragment = StringHelper::factory((isset($matches[7])) ? $matches[7] : "");
     }
 
     /**
@@ -239,7 +229,7 @@ class Uri
             return true;
         }
 
-        $pattern = "/^(" . $this->regex["alphanum"] . $this->regex["mark"] . $this->regex["escaped"] . "[;:&=+$,])+$/";
+        $pattern = "/^(" . $this->regex["alphanum"] . "|" . $this->regex["mark"] . "|" . $this->regex["escaped"] . "|" . "[;:&=+$,])+$/";
         $status = @preg_match($pattern, $username);
 
         if ($status === false) {
@@ -287,7 +277,7 @@ class Uri
             return true;
         }
 
-        $pattern = "/^(" . $this->regex["alphanum"] . $this->regex["mark"] . $this->regex["escaped"] . "[;:&=+$,])+$/";
+        $pattern = "/^(" . $this->regex["alphanum"] . "|" . $this->regex["mark"] . "|" . $this->regex["escaped"] . "|" . "[;:&=+$,])+$/";
         $status = @preg_match($pattern, $password);
 
         if ($status === false) {
@@ -378,7 +368,7 @@ class Uri
      */
     public function hasPort(): bool
     {
-        return (bool)strlen($this->port);
+        return (bool)strlen($this->port->toString());
     }
 
     /**
@@ -389,7 +379,7 @@ class Uri
      */
     public function getPort(mixed $default = null): int
     {
-        return ($this->hasPort()) ? intval($this->port) : $default;
+        return ($this->hasPort()) ? intval($this->port->toString()) : $default;
     }
 
     /**
