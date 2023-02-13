@@ -20,7 +20,8 @@ class SignalTest extends TestCase
   protected static $callback = __CLASS__ . '::onEvent';
   protected static $testString = '!@w~//{tI_8G77<qS+g*[Gb@u`pJ^2>rO*f=KS:8Yj';
   
-  protected function setUp() {
+  protected function setUp(): void
+  {
     static::$cTriggers = [];
     foreach(TS3_Signal::getInstance()->getSignals() as $signal)
       TS3_Signal::getInstance()->clearHandlers($signal);
@@ -152,4 +153,3 @@ class SignalTest extends TestCase
     return $data;
   }
 }
-
