@@ -44,5 +44,10 @@
     "compatibility": "./vendor/bin/phpcs -ps --basepath=. --standard=PHPCompatibility --runtime-set testVersion 5.2- libraries/TeamSpeak3",
     "test": "./vendor/bin/phpunit --no-coverage",
     "coverage": "./vendor/bin/phpunit"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
