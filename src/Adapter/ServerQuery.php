@@ -45,39 +45,39 @@ class ServerQuery extends Adapter
     /**
      * Stores a singleton instance of the active Host object.
      *
-     * @var Host
+     * @var Host|null
      */
-    protected $host = null;
+    protected ?Host $host = null;
 
     /**
      * Stores the timestamp of the last command.
      *
-     * @var integer
+     * @var integer|null
      */
-    protected $timer = null;
+    protected ?int $timer = null;
 
     /**
      * Number of queries executed on the server.
      *
      * @var integer
      */
-    protected $count = 0;
+    protected int $count = 0;
 
     /**
      * Stores an array with unsupported commands.
      *
      * @var array
      */
-    protected $block = ["help"];
+    protected array $block = ["help"];
 
     /**
      * Connects the Transport object and performs initial actions on the remote
      * server.
      *
-     * @throws AdapterException
      * @return void
+     * @throws AdapterException
      */
-    protected function syn()
+    protected function syn(): void
     {
         $this->initTransport($this->options);
         $this->transport->setAdapter($this);
@@ -103,7 +103,7 @@ class ServerQuery extends Adapter
         if ($this->getTransport() instanceof Transport && $this->transport->isConnected()) {
             try {
                 $this->request("quit");
-            } catch (AdapterException $e) {
+            } catch (AdapterException) {
                 return;
             }
         }
@@ -112,12 +112,12 @@ class ServerQuery extends Adapter
     /**
      * Sends a prepared command to the server and returns the result.
      *
-     * @param  string  $cmd
-     * @param  boolean $throw
-     * @throws AdapterException|ServerQueryException
+     * @param string $cmd
+     * @param boolean $throw
      * @return Reply
+     * @throws AdapterException|ServerQueryException
      */
-    public function request($cmd, $throw = true)
+    public function request(string $cmd, bool $throw = true): Reply
     {
         $query = StringHelper::factory($cmd)->section(TeamSpeak3::SEPARATOR_CELL);
 
@@ -139,7 +139,7 @@ class ServerQuery extends Adapter
         do {
             $str = $this->getTransport()->readLine();
             $rpl[] = $str;
-        } while ($str instanceof StringHelper && $str->section(TeamSpeak3::SEPARATOR_CELL) != TeamSpeak3::ERROR);
+        } while ($str->section(TeamSpeak3::SEPARATOR_CELL) != TeamSpeak3::ERROR);
 
         $this->getProfiler()->stop();
 
@@ -153,10 +153,10 @@ class ServerQuery extends Adapter
     /**
      * Waits for the server to send a notification message and returns the result.
      *
-     * @throws AdapterException
      * @return Event
+     * @throws AdapterException
      */
-    public function wait()
+    public function wait(): Event
     {
         if ($this->getTransport()->getConfig("blocking")) {
             throw new AdapterException("only available in non-blocking mode");
@@ -164,7 +164,7 @@ class ServerQuery extends Adapter
 
         do {
             $evt = $this->getTransport()->readLine();
-        } while ($evt instanceof StringHelper && !$evt->section(TeamSpeak3::SEPARATOR_CELL)->startsWith(TeamSpeak3::EVENT));
+        } while (!$evt->section(TeamSpeak3::SEPARATOR_CELL)->startsWith(TeamSpeak3::EVENT));
 
         return new Event($evt, $this->getHost());
     }
@@ -172,11 +172,11 @@ class ServerQuery extends Adapter
     /**
      * Uses given parameters and returns a prepared ServerQuery command.
      *
-     * @param  string $cmd
-     * @param  array  $params
+     * @param string $cmd
+     * @param array $params
      * @return string
      */
-    public function prepare($cmd, array $params = [])
+    public function prepare(string $cmd, array $params = []): string
     {
         $args = [];
         $cells = [];
@@ -232,9 +232,9 @@ class ServerQuery extends Adapter
     /**
      * Returns the timestamp of the last command.
      *
-     * @return integer
+     * @return int|null
      */
-    public function getQueryLastTimestamp()
+    public function getQueryLastTimestamp(): ?int
     {
         return $this->timer;
     }
@@ -244,7 +244,7 @@ class ServerQuery extends Adapter
      *
      * @return integer
      */
-    public function getQueryCount()
+    public function getQueryCount(): int
     {
         return $this->count;
     }
@@ -254,7 +254,7 @@ class ServerQuery extends Adapter
      *
      * @return mixed
      */
-    public function getQueryRuntime()
+    public function getQueryRuntime(): mixed
     {
         return $this->getProfiler()->getRuntime();
     }
@@ -264,7 +264,7 @@ class ServerQuery extends Adapter
      *
      * @return Host|null
      */
-    public function getHost()
+    public function getHost(): ?Host
     {
         if ($this->host === null) {
             $this->host = new Host($this);

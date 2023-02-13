@@ -1,15 +1,18 @@
 <?php
 
-namespace Tests\Transport;
+namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Transport;
 
-use \PHPUnit\Framework\TestCase;
-use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
+use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\TCP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 class TCPTest extends TestCase
 {
+    /**
+     * @throws TransportException
+     */
     public function testConstructorNoException()
     {
         $adapter = new TCP(
@@ -35,7 +38,7 @@ class TCPTest extends TestCase
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage("config must have a key for 'host'");
 
-        $adapter = new TCP(['port' => 12345]);
+        new TCP(['port' => 12345]);
     }
 
     public function testConstructorExceptionNoPort()
@@ -43,9 +46,12 @@ class TCPTest extends TestCase
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage("config must have a key for 'port'");
 
-        $adapter = new TCP(['host' => 'test']);
+         new TCP(['host' => 'test']);
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testGetConfig()
     {
         $adapter = new TCP(
@@ -59,6 +65,9 @@ class TCPTest extends TestCase
         $this->assertEquals('test', $adapter->getConfig('host'));
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testSetGetAdapter()
     {
         $transport = new TCP(
@@ -71,6 +80,9 @@ class TCPTest extends TestCase
         $this->assertSame($adaptor, $transport->getAdapter());
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testGetStream()
     {
         $transport = new TCP(
@@ -79,6 +91,10 @@ class TCPTest extends TestCase
         $this->assertNull($transport->getStream());
     }
 
+    /**
+     * @throws TransportException
+     * @throws ServerQueryException
+     */
     public function testConnectBadHost()
     {
         $host = 'test';
@@ -90,6 +106,10 @@ class TCPTest extends TestCase
         $transport->connect();
     }
 
+    /**
+     * @throws TransportException
+     * @throws ServerQueryException
+     */
     public function testConnectHostRefuseConnection()
     {
         $transport = new TCP(
@@ -100,14 +120,21 @@ class TCPTest extends TestCase
         $transport->connect();
     }
 
+    /**
+     * @throws TransportException
+     */
     public function testDisconnectNoConnection()
     {
         $transport = new TCP(
             ['host' => 'test', 'port' => 12345]
         );
-        $this->assertNull($transport->disconnect());
+        $transport->disconnect();
     }
 
+    /**
+     * @throws ServerQueryException
+     * @throws TransportException
+     */
     public function testReadNoConnection()
     {
         $host = 'test';
@@ -119,6 +146,10 @@ class TCPTest extends TestCase
         $transport->read();
     }
 
+    /**
+     * @throws TransportException
+     * @throws ServerQueryException
+     */
     public function testReadLineNoConnection()
     {
         $host = 'test';
@@ -130,6 +161,10 @@ class TCPTest extends TestCase
         $transport->readLine();
     }
 
+    /**
+     * @throws TransportException
+     * @throws ServerQueryException
+     */
     public function testSendNoConnection()
     {
         $host = 'test';
@@ -141,6 +176,10 @@ class TCPTest extends TestCase
         $transport->send('testsend');
     }
 
+    /**
+     * @throws ServerQueryException
+     * @throws TransportException
+     */
     public function testSendLineNoConnection()
     {
         $host = 'abc';

@@ -39,25 +39,25 @@ class Handler
      *
      * @var string
      */
-    protected $signal = null;
+    protected string $signal;
 
     /**
      * Stores the callback function for the subscribed signal.
      *
      * @var mixed
      */
-    protected $callback = null;
+    protected mixed $callback;
 
     /**
      * Handler constructor.
      *
-     * @param  string $signal
-     * @param  mixed  $callback
+     * @param string $signal
+     * @param mixed $callback
      * @throws SignalException
      */
-    public function __construct($signal, $callback)
+    public function __construct(string $signal, mixed $callback)
     {
-        $this->signal = (string) $signal;
+        $this->signal = $signal;
 
         if (!is_callable($callback)) {
             throw new SignalException("invalid callback specified for signal '" . $signal . "'");
@@ -69,10 +69,10 @@ class Handler
     /**
      * Invoke the signal handler.
      *
-     * @param  array $args
+     * @param array $args
      * @return mixed
      */
-    public function call(array $args = [])
+    public function call(array $args = []): mixed
     {
         return call_user_func_array($this->callback, $args);
     }

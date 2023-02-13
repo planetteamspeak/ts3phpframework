@@ -3,6 +3,8 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
@@ -13,11 +15,12 @@ abstract class Group extends Node
     /**
      * Sends a text message to all clients residing in the channel group on the virtual server.
      *
-     * @param  string $msg
+     * @param string $msg
      * @return void
      * @throws ServerQueryException
+     * @throws AdapterException
      */
-    public function message($msg)
+    public function message(string $msg): void
     {
         foreach ($this as $client) {
             try {
@@ -35,6 +38,9 @@ abstract class Group extends Node
      * Downloads and returns the channel groups icon file content.
      *
      * @return StringHelper|void
+     * @throws AdapterException
+     * @throws HelperException
+     * @throws ServerQueryException
      */
     public function iconDownload()
     {
@@ -48,7 +54,7 @@ abstract class Group extends Node
         }
 
         $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("iconid"));
-        $transfer = TeamSpeak3::factory("filetransfer://" . (strstr($download["host"], ":") !== false ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
+        $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
         return $transfer->download($download["ftkey"], $download["size"]);
     }
@@ -58,7 +64,7 @@ abstract class Group extends Node
      *
      * @return string
      */
-    public function getSymbol()
+    public function getSymbol(): string
     {
         return "%";
     }

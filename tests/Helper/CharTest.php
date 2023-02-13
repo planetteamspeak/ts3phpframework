@@ -3,11 +3,14 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Helper;
 
 use PHPUnit\Framework\TestCase;
-use \PHPUnit\Framework\Constraint\IsType as PHPUnit_IsType;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Char;
 
 class CharTest extends TestCase
 {
+    /**
+     * @throws HelperException
+     */
     public function testASCIILetter()
     {
         $testLower = chr(97);
@@ -34,7 +37,7 @@ class CharTest extends TestCase
     $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('61')
     $this->assertEquals(
         $testLower,
-        (string)\PlanetTeamSpeak\TeamSpeak3Framework\Helper\Char::fromHex('61')
+        (string)Char::fromHex('61')
     );
 
         $this->assertEquals($testLower, $char->toString()); // Expect: 97
@@ -43,6 +46,9 @@ class CharTest extends TestCase
         $this->assertIsInt($char->toInt());
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testASCIIDigit()
     {
         $testChar = chr(57);
@@ -77,6 +83,9 @@ class CharTest extends TestCase
         $this->assertIsInt($char->toInt());
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testASCIISpace()
     {
         $testChar = chr(32);
@@ -111,6 +120,9 @@ class CharTest extends TestCase
         $this->assertIsInt($char->toInt());
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testASCIIMark()
     {
         $testChar = chr(45);
@@ -145,6 +157,9 @@ class CharTest extends TestCase
         $this->assertIsInt($char->toInt());
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testASCIIControl()
     {
         $testChar = chr(6);
@@ -179,6 +194,9 @@ class CharTest extends TestCase
         $this->assertIsInt($char->toInt());
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testASCIINull()
     {
         $testChar = chr(0);
@@ -213,6 +231,9 @@ class CharTest extends TestCase
         $this->assertIsInt($char->toInt());
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testUnicode1Byte()
     {
         // Arbitrary value: first lowercase letter from English alphabet
@@ -270,7 +291,7 @@ class CharTest extends TestCase
      *
      * @return int
      */
-    private static function calculateUTF8Ordinal($char)
+    private static function calculateUTF8Ordinal(string $char): int
     {
         $charString = mb_substr($char, 0, 1, 'utf-8');
         $charLength = strlen($charString);

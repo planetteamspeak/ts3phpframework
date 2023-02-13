@@ -35,12 +35,12 @@ use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 class Convert
 {
     /**
-     * Converts bytes to a human readable value.
+     * Converts bytes to a human-readable value.
      *
      * @param integer $bytes
      * @return string
      */
-    public static function bytes($bytes)
+    public static function bytes(int $bytes): string
     {
         // @todo: Fix precision lost from multiple rounding
         $kbytes = sprintf("%.02f", $bytes / 1024);
@@ -67,7 +67,7 @@ class Convert
     }
 
     /**
-     * Converts seconds/milliseconds to a human readable value.
+     * Converts seconds/milliseconds to a human-readable value.
      *
      * Note: Assumes non-negative integer, but no validation
      * @param integer $seconds
@@ -77,7 +77,7 @@ class Convert
      * @todo: Handle negative integer $seconds, or invalidate
      *
      */
-    public static function seconds($seconds, $is_ms = false, $format = "%dD %02d:%02d:%02d")
+    public static function seconds(int $seconds, bool $is_ms = false, string $format = "%dD %02d:%02d:%02d"): string
     {
         if ($is_ms) {
             $seconds = $seconds / 1000;
@@ -87,12 +87,12 @@ class Convert
     }
 
     /**
-     * Converts a given codec ID to a human readable name.
+     * Converts a given codec ID to a human-readable name.
      *
      * @param integer $codec
      * @return string
      */
-    public static function codec($codec)
+    public static function codec(int $codec): string
     {
         if ($codec == TeamSpeak3::CODEC_SPEEX_NARROWBAND) {
             return "Speex Narrowband";
@@ -117,12 +117,12 @@ class Convert
     }
 
     /**
-     * Converts a given group type ID to a human readable name.
+     * Converts a given group type ID to a human-readable name.
      *
      * @param integer $type
      * @return string
      */
-    public static function groupType($type)
+    public static function groupType(int $type): string
     {
         if ($type == TeamSpeak3::GROUP_DBTYPE_TEMPLATE) {
             return "Template";
@@ -138,12 +138,12 @@ class Convert
     }
 
     /**
-     * Converts a given permission type ID to a human readable name.
+     * Converts a given permission type ID to a human-readable name.
      *
      * @param integer $type
      * @return string
      */
-    public static function permissionType($type)
+    public static function permissionType(int $type): string
     {
         if ($type == TeamSpeak3::PERM_TYPE_SERVERGROUP) {
             return "Server Group";
@@ -165,12 +165,12 @@ class Convert
     }
 
     /**
-     * Converts a given permission category value to a human readable name.
+     * Converts a given permission category value to a human-readable name.
      *
      * @param integer $pcat
      * @return string
      */
-    public static function permissionCategory($pcat)
+    public static function permissionCategory(int $pcat): string
     {
         if ($pcat == TeamSpeak3::PERM_CAT_GLOBAL) {
             return "Global";
@@ -263,7 +263,7 @@ class Convert
      * @param mixed $level
      * @return string
      */
-    public static function logLevel($level)
+    public static function logLevel(mixed $level): string
     {
         if (is_numeric($level)) {
             if ($level == TeamSpeak3::LOGLEVEL_CRITICAL) {
@@ -310,7 +310,7 @@ class Convert
      * @param string $entry
      * @return array
      */
-    public static function logEntry($entry)
+    public static function logEntry(string $entry): array
     {
         $parts = explode("|", $entry, 5);
         $array = [];
@@ -342,9 +342,9 @@ class Convert
      * @param integer $unsigned
      * @return integer
      */
-    public static function iconId($unsigned)
+    public static function iconId(int $unsigned): int
     {
-        $signed = (int)$unsigned;
+        $signed = $unsigned;
 
         if (PHP_INT_SIZE > 4) { // 64-bit
             if ($signed & 0x80000000) {
@@ -361,7 +361,7 @@ class Convert
      * @param string $plain
      * @return string
      */
-    public static function password($plain)
+    public static function password(string $plain): string
     {
         return base64_encode(sha1($plain, true));
     }
@@ -371,9 +371,9 @@ class Convert
      *
      * @param string $version
      * @param string $format
-     * @return StringHelper
+     * @return string|StringHelper
      */
-    public static function version($version, $format = "Y-m-d h:i:s")
+    public static function version(string $version, string $format = "Y-m-d h:i:s"): string|StringHelper
     {
         if (!$version instanceof StringHelper) {
             $version = new StringHelper($version);
@@ -390,24 +390,24 @@ class Convert
      * @param string $version
      * @return StringHelper
      */
-    public static function versionShort($version)
+    public static function versionShort(string $version): StringHelper
     {
         if (!$version instanceof StringHelper) {
             $version = new StringHelper($version);
         }
 
-        return $version->section(" ", 0);
+        return $version->section(" ");
     }
 
     /**
-     * Tries to detect the type of an image by a given string and returns it.
+     * Tries to detect the type of image by a given string and returns it.
      *
      * @param string $binary
      * @return string
      */
-    public static function imageMimeType($binary)
+    public static function imageMimeType(string $binary): string
     {
-        if (!preg_match('/\A(?:(\xff\xd8\xff)|(GIF8[79]a)|(\x89PNG\x0d\x0a)|(BM)|(\x49\x49(\x2a\x00|\x00\x4a))|(FORM.{4}ILBM))/', $binary, $matches)) {
+        if (!preg_match('/\A(?:(\xff\xd8\xff)|(GIF8[79]a)|(\x89PNG\x0d\x0a)|(BM)|(\x49\x49(\\x2a\x00|\x00\x4a))|(FORM.{4}ILBM))/', $binary, $matches)) {
             return "image/svg+xml";
         }
 

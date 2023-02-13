@@ -39,7 +39,7 @@ class Char
      *
      * @var string
      */
-    protected $char = null;
+    protected string $char;
 
     /**
      * Char constructor.
@@ -47,13 +47,13 @@ class Char
      * @param string $char
      * @throws HelperException
      */
-    public function __construct($char)
+    public function __construct(string $char)
     {
         if (strlen($char) != 1) {
             throw new HelperException("char parameter may not contain more or less than one character");
         }
 
-        $this->char = strval($char);
+        $this->char = $char;
     }
 
     /**
@@ -61,7 +61,7 @@ class Char
      *
      * @return boolean
      */
-    public function isLetter()
+    public function isLetter(): bool
     {
         return ctype_alpha($this->char);
     }
@@ -71,7 +71,7 @@ class Char
      *
      * @return boolean
      */
-    public function isDigit()
+    public function isDigit(): bool
     {
         return ctype_digit($this->char);
     }
@@ -81,7 +81,7 @@ class Char
      *
      * @return boolean
      */
-    public function isSpace()
+    public function isSpace(): bool
     {
         return ctype_space($this->char);
     }
@@ -91,7 +91,7 @@ class Char
      *
      * @return boolean
      */
-    public function isMark()
+    public function isMark(): bool
     {
         return ctype_punct($this->char);
     }
@@ -101,7 +101,7 @@ class Char
      *
      * @return boolean
      */
-    public function isControl()
+    public function isControl(): bool
     {
         return ctype_cntrl($this->char);
     }
@@ -111,7 +111,7 @@ class Char
      *
      * @return boolean
      */
-    public function isPrintable()
+    public function isPrintable(): bool
     {
         return ctype_print($this->char);
     }
@@ -121,9 +121,9 @@ class Char
      *
      * @return boolean
      */
-    public function isNull()
+    public function isNull(): bool
     {
-        return ($this->char === "\0") ? true : false;
+        return $this->char === "\0";
     }
 
     /**
@@ -131,9 +131,9 @@ class Char
      *
      * @return boolean
      */
-    public function isUpper()
+    public function isUpper(): bool
     {
-        return ($this->char === strtoupper($this->char)) ? true : false;
+        return $this->char === strtoupper($this->char);
     }
 
     /**
@@ -141,9 +141,9 @@ class Char
      *
      * @return boolean
      */
-    public function isLower()
+    public function isLower(): bool
     {
-        return ($this->char === strtolower($this->char)) ? true : false;
+        return $this->char === strtolower($this->char);
     }
 
     /**
@@ -152,7 +152,7 @@ class Char
      * @return Char
      * @throws HelperException
      */
-    public function toUpper()
+    public function toUpper(): Char
     {
         return ($this->isUpper()) ? $this : new self(strtoupper($this));
     }
@@ -163,7 +163,7 @@ class Char
      * @return Char
      * @throws HelperException
      */
-    public function toLower()
+    public function toLower(): Char
     {
         return ($this->isLower()) ? $this : new self(strtolower($this));
     }
@@ -173,7 +173,7 @@ class Char
      *
      * @return integer
      */
-    public function toAscii()
+    public function toAscii(): int
     {
         return ord($this->char);
     }
@@ -183,7 +183,7 @@ class Char
      *
      * @return integer
      */
-    public function toUnicode()
+    public function toUnicode(): int
     {
         $h = ord($this->char[0]);
 
@@ -198,7 +198,7 @@ class Char
         } elseif ($h <= 0xF4) {
             return ($h & 0x0F) << 18 | (ord($this->char[1]) & 0x3F) << 12 | (ord($this->char[2]) & 0x3F) << 6 | (ord($this->char[3]) & 0x3F);
         } else {
-            return false;
+            return -1;
         }
     }
 
@@ -207,7 +207,7 @@ class Char
      *
      * @return string
      */
-    public function toHex()
+    public function toHex(): string
     {
         return strtoupper(dechex($this->toAscii()));
     }
@@ -219,7 +219,7 @@ class Char
      * @return Char
      * @throws HelperException
      */
-    public static function fromHex($hex)
+    public static function fromHex(string $hex): Char
     {
         if (strlen($hex) != 2) {
             throw new HelperException("given parameter '" . $hex . "' is not a valid hexadecimal number");
@@ -233,7 +233,7 @@ class Char
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return $this->char;
     }
@@ -243,7 +243,7 @@ class Char
      *
      * @return integer
      */
-    public function toInt()
+    public function toInt(): int
     {
         return intval($this->char);
     }

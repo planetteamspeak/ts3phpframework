@@ -24,9 +24,9 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 /**
  * Class UDP
@@ -42,7 +42,7 @@ class UDP extends Transport
      * @return void
      * @throws TransportException
      */
-    public function connect()
+    public function connect(): void
     {
         if ($this->stream !== null) {
             return;
@@ -51,7 +51,7 @@ class UDP extends Transport
         $host = strval($this->config["host"]);
         $port = strval($this->config["port"]);
 
-        $address = "udp://" . (strstr($host, ":") !== false ? "[" . $host . "]" : $host) . ":" . $port;
+        $address = "udp://" . (str_contains($host, ":") ? "[" . $host . "]" : $host) . ":" . $port;
         $timeout = (int)$this->config["timeout"];
 
         $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout);
@@ -69,7 +69,7 @@ class UDP extends Transport
      *
      * @return void
      */
-    public function disconnect()
+    public function disconnect(): void
     {
         if ($this->stream === null) {
             return;
@@ -87,7 +87,7 @@ class UDP extends Transport
      * @return StringHelper
      * @throws TransportException
      */
-    public function read($length = 4096)
+    public function read(int $length = 4096): StringHelper
     {
         $this->connect();
         $this->waitForReadyRead();
@@ -110,7 +110,7 @@ class UDP extends Transport
      * @return void
      * @throws TransportException
      */
-    public function send($data)
+    public function send(string $data): void
     {
         $this->connect();
 

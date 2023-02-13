@@ -2,7 +2,9 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Helper;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
@@ -275,6 +277,9 @@ class StringTest extends TestCase
         $this->assertEquals("Hello world!", $string->toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testToHex()
     {
         TeamSpeak3::init();
@@ -282,6 +287,9 @@ class StringTest extends TestCase
         $this->assertEquals("48656C6C6F", $string->toHex());
     }
 
+    /**
+     * @throws HelperException
+     */
     public function testFromHex()
     {
         $string = StringHelper::fromHex("48656C6C6F");

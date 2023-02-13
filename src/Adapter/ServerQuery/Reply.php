@@ -44,58 +44,58 @@ class Reply
      *
      * @var StringHelper
      */
-    protected $cmd = null;
+    protected StringHelper $cmd;
 
     /**
      * Stores the servers reply (if available).
      *
-     * @var StringHelper
+     * @var StringHelper|null
      */
-    protected $rpl = null;
+    protected ?StringHelper $rpl = null;
 
     /**
      * Stores connected PlanetTeamSpeak\TeamSpeak3Framework\Node\Host object.
      *
      * @var Host
      */
-    protected $con = null;
+    protected Host $con;
 
     /**
      * Stores an assoc array containing the error info for this reply.
      *
      * @var array
      */
-    protected $err = [];
+    protected array $err = [];
 
     /**
      * Sotres an array of events that occured before or during this reply.
      *
      * @var array
      */
-    protected $evt = [];
+    protected array $evt = [];
 
     /**
      * Indicates whether exceptions should be thrown or not.
      *
      * @var boolean
      */
-    protected $exp = true;
+    protected bool $exp = true;
 
     /**
      * Creates a new PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Reply object.
      *
      * @param array $rpl
-     * @param string $cmd
-     * @param Host $con
+     * @param null $cmd
+     * @param Host|null $con
      * @param boolean $exp
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function __construct(array $rpl, $cmd = null, Host $con = null, $exp = true)
+    public function __construct(array $rpl, $cmd = null, Host $con = null, bool $exp = true)
     {
         $this->cmd = new StringHelper($cmd);
         $this->con = $con;
-        $this->exp = (bool) $exp;
+        $this->exp = $exp;
 
         $this->fetchError(array_pop($rpl));
         $this->fetchReply($rpl);
@@ -106,7 +106,7 @@ class Reply
      *
      * @return StringHelper
      */
-    public function toString()
+    public function toString(): ?StringHelper
     {
         return (!func_num_args()) ? $this->rpl->unescape() : $this->rpl;
     }
@@ -116,7 +116,7 @@ class Reply
      *
      * @return array
      */
-    public function toLines()
+    public function toLines(): array
     {
         if (!count($this->rpl)) {
             return [];
@@ -138,7 +138,7 @@ class Reply
      *
      * @return array
      */
-    public function toTable()
+    public function toTable(): array
     {
         $table = [];
 
@@ -162,7 +162,7 @@ class Reply
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $array = [];
         $table = $this->toTable(1);
@@ -194,7 +194,7 @@ class Reply
      * @return array
      * @throws ServerQueryException
      */
-    public function toAssocArray($ident)
+    public function toAssocArray($ident): array
     {
         $nodes = (func_num_args() > 1) ? $this->toArray(1) : $this->toArray();
         $array = [];
@@ -211,11 +211,11 @@ class Reply
     }
 
     /**
-     * Returns an array containing the reply splitted in multiple rows and columns.
+     * Returns an array containing the reply split in multiple rows and columns.
      *
      * @return array
      */
-    public function toList()
+    public function toList(): array
     {
         $array = func_num_args() ? $this->toArray(1) : $this->toArray();
 
@@ -229,14 +229,14 @@ class Reply
     /**
      * Returns an array containing stdClass objects.
      *
-     * @return \ArrayObject|array
+     * @return array
      */
-    public function toObjectArray()
+    public function toObjectArray(): array
     {
         $array = (func_num_args() > 1) ? $this->toArray(1) : $this->toArray();
 
         for ($i = 0; $i < count($array); $i++) {
-            $array[$i] = (object) $array[$i];
+            $array[$i] = (object)$array[$i];
         }
 
         return $array;
@@ -247,7 +247,7 @@ class Reply
      *
      * @return StringHelper
      */
-    public function getCommandString()
+    public function getCommandString(): StringHelper
     {
         return new StringHelper($this->cmd);
     }
@@ -257,7 +257,7 @@ class Reply
      *
      * @return array
      */
-    public function getNotifyEvents()
+    public function getNotifyEvents(): array
     {
         return $this->evt;
     }
@@ -265,11 +265,11 @@ class Reply
     /**
      * Returns the value for a specified error property.
      *
-     * @param  string $ident
-     * @param  mixed  $default
+     * @param string $ident
+     * @param mixed|null $default
      * @return mixed
      */
-    public function getErrorProperty($ident, $default = null)
+    public function getErrorProperty(string $ident, mixed $default = null): mixed
     {
         return (array_key_exists($ident, $this->err)) ? $this->err[$ident] : $default;
     }
@@ -278,11 +278,12 @@ class Reply
      * Parses a ServerQuery error and throws a PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException object if
      * there's an error.
      *
-     * @param  StringHelper $err
+     * @param StringHelper $err
      * @return void
+     * @throws AdapterException
      * @throws ServerQueryException
      */
-    protected function fetchError(StringHelper $err)
+    protected function fetchError(StringHelper $err): void
     {
         $cells = $err->section(TeamSpeak3::SEPARATOR_CELL, 1, 3);
 
@@ -314,17 +315,17 @@ class Reply
     /**
      * Parses a ServerQuery reply and creates a PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper object.
      *
-     * @param  array $rpl
+     * @param array $rpl
      * @return void
      * @throws AdapterException
      */
-    protected function fetchReply($rpl)
+    protected function fetchReply(array $rpl): void
     {
         foreach ($rpl as $key => $val) {
             if ($val->startsWith(TeamSpeak3::TS3_MOTD_PREFIX) || $val->startsWith(TeamSpeak3::TEA_MOTD_PREFIX) || (defined("CUSTOM_MOTD_PREFIX") && $val->startsWith(CUSTOM_MOTD_PREFIX))) {
                 unset($rpl[$key]);
             } elseif ($val->startsWith(TeamSpeak3::EVENT)) {
-                $this->evt[] = new Event($rpl[$key], $this->con);
+                $this->evt[] = new Event($val, $this->con);
                 unset($rpl[$key]);
             }
         }

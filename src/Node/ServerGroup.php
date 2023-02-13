@@ -24,8 +24,8 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
-use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\NodeException;
+use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
  * @class ServerGroup
@@ -42,7 +42,7 @@ class ServerGroup extends Group
      * @param string $index
      * @throws NodeException
      */
-    public function __construct(Server $server, array $info, $index = "sgid")
+    public function __construct(Server $server, array $info, string $index = "sgid")
     {
         $this->parent = $server;
         $this->nodeInfo = $info;
@@ -60,7 +60,7 @@ class ServerGroup extends Group
      * @param string $name
      * @return void
      */
-    public function rename($name)
+    public function rename(string $name): void
     {
         $this->getParent()->serverGroupRename($this->getId(), $name);
     }
@@ -72,7 +72,7 @@ class ServerGroup extends Group
      * @param boolean $force
      * @return void
      */
-    public function delete($force = false)
+    public function delete(bool $force = false): void
     {
         $this->getParent()->serverGroupDelete($this->getId(), $force);
     }
@@ -80,12 +80,12 @@ class ServerGroup extends Group
     /**
      * Creates a copy of the server group and returns the new groups ID.
      *
-     * @param string $name
+     * @param string|null $name
      * @param integer $tsgid
      * @param integer $type
      * @return integer
      */
-    public function copy($name = null, $tsgid = 0, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
+    public function copy(string $name = null, int $tsgid = 0, int $type = TeamSpeak3::GROUP_DBTYPE_REGULAR): int
     {
         return $this->getParent()->serverGroupCopy($this->getId(), $name, $tsgid, $type);
     }
@@ -96,7 +96,7 @@ class ServerGroup extends Group
      * @param boolean $permsid
      * @return array
      */
-    public function permList($permsid = false)
+    public function permList(bool $permsid = false): array
     {
         return $this->getParent()->serverGroupPermList($this->getId(), $permsid);
     }
@@ -111,7 +111,7 @@ class ServerGroup extends Group
      * @param integer $permskip
      * @return void
      */
-    public function permAssign($permid, $permvalue, $permnegated = 0, $permskip = 0)
+    public function permAssign(int $permid, int $permvalue, int $permnegated = 0, int $permskip = 0): void
     {
         $this->getParent()->serverGroupPermAssign($this->getId(), $permid, $permvalue, $permnegated, $permskip);
     }
@@ -133,7 +133,7 @@ class ServerGroup extends Group
      * @param integer $permid
      * @return void
      */
-    public function permRemove($permid)
+    public function permRemove(int $permid): void
     {
         $this->getParent()->serverGroupPermRemove($this->getId(), $permid);
     }
@@ -153,7 +153,7 @@ class ServerGroup extends Group
      *
      * @return array
      */
-    public function clientList()
+    public function clientList(): array
     {
         return $this->getParent()->serverGroupClientList($this->getId());
     }
@@ -165,7 +165,7 @@ class ServerGroup extends Group
      * @param integer $cldbid
      * @return void
      */
-    public function clientAdd($cldbid)
+    public function clientAdd(int $cldbid): void
     {
         $this->getParent()->serverGroupClientAdd($this->getId(), $cldbid);
     }
@@ -176,7 +176,7 @@ class ServerGroup extends Group
      * @param integer $cldbid
      * @return void
      */
-    public function clientDel($cldbid)
+    public function clientDel(int $cldbid): void
     {
         $this->getParent()->serverGroupClientDel($this->getId(), $cldbid);
     }
@@ -186,7 +186,7 @@ class ServerGroup extends Group
      *
      * @deprecated
      */
-    public function tokenCreate($description = null, $customset = null)
+    public function tokenCreate($description = null, $customset = null): string
     {
         return $this->privilegeKeyCreate($description, $customset);
     }
@@ -194,14 +194,14 @@ class ServerGroup extends Group
     /**
      * Creates a new privilege key (token) for the server group and returns the key.
      *
-     * @param string $description
-     * @param string $customset
+     * @param string|null $description
+     * @param string|null $customset
      * @return string
      */
-    public function privilegeKeyCreate($description = null, $customset = null)
+    public function privilegeKeyCreate(string $description = null, string $customset = null): string
     {
         return $this->getParent()
-                    ->privilegeKeyCreate($this->getId(), TeamSpeak3::TOKEN_SERVERGROUP, 0, $description, $customset);
+            ->privilegeKeyCreate($this->getId(), TeamSpeak3::TOKEN_SERVERGROUP, 0, $description, $customset);
     }
 
     /**
@@ -223,7 +223,7 @@ class ServerGroup extends Group
      *
      * @return string
      */
-    public function getUniqueId()
+    public function getUniqueId(): string
     {
         return $this->getParent()->getUniqueId() . "_sg" . $this->getId();
     }
@@ -233,7 +233,7 @@ class ServerGroup extends Group
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return "group_server";
     }

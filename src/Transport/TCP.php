@@ -24,10 +24,10 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
  * Class TCP
@@ -44,7 +44,7 @@ class TCP extends Transport
      * @throws TransportException
      * @throws ServerQueryException
      */
-    public function connect()
+    public function connect(): void
     {
         if ($this->stream !== null) {
             return;
@@ -56,7 +56,7 @@ class TCP extends Transport
         $blocking = intval($this->config["blocking"]);
 
         if (empty($this->config["ssh"])) {
-            $address = "tcp://" . (strstr($host, ":") !== false ? "[" . $host . "]" : $host) . ":" . $port;
+            $address = "tcp://" . (str_contains($host, ":") ? "[" . $host . "]" : $host) . ":" . $port;
             $options = empty($this->config["tls"]) ? [] : ["ssl" => ["allow_self_signed" => true, "verify_peer" => false, "verify_peer_name" => false]];
 
             $this->stream = @stream_socket_client($address, $errno, $errstr, $this->config["timeout"], STREAM_CLIENT_CONNECT, stream_context_create($options));
@@ -95,7 +95,7 @@ class TCP extends Transport
      *
      * @return void
      */
-    public function disconnect()
+    public function disconnect(): void
     {
         if ($this->stream === null) {
             return;
@@ -118,7 +118,7 @@ class TCP extends Transport
      * @throws TransportException
      * @throws ServerQueryException
      */
-    public function read($length = 4096)
+    public function read(int $length = 4096): StringHelper
     {
         $this->connect();
         $this->waitForReadyRead();
@@ -142,7 +142,7 @@ class TCP extends Transport
      * @throws TransportException
      * @throws ServerQueryException
      */
-    public function readLine($token = "\n")
+    public function readLine(string $token = "\n"): StringHelper
     {
         $this->connect();
 
@@ -177,7 +177,7 @@ class TCP extends Transport
      * @throws TransportException
      * @throws ServerQueryException
      */
-    public function send($data)
+    public function send(string $data): void
     {
         $this->connect();
 
@@ -195,14 +195,14 @@ class TCP extends Transport
      * @throws TransportException
      * @throws ServerQueryException
      */
-    public function sendLine($data, $separator = "\n")
+    public function sendLine(string $data, string $separator = "\n"): void
     {
         $size = strlen($data);
         $pack = 4096;
 
         for ($seek = 0; $seek < $size;) {
             $rest = $size - $seek;
-            $pack = $rest < $pack ? $rest : $pack;
+            $pack = min($rest, $pack);
             $buff = substr($data, $seek, $pack);
             $seek = $seek + $pack;
 

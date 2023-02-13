@@ -39,21 +39,21 @@ abstract class Adapter
     /**
      * Stores user-provided options.
      *
-     * @var array
+     * @var array|null
      */
-    protected $options = null;
+    protected ?array $options = null;
 
     /**
      * Stores an PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport object.
      *
-     * @var Transport
+     * @var Transport|null
      */
-    protected $transport = null;
+    protected ?Transport $transport = null;
 
     /**
      * The PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter constructor.
      *
-     * @param  array $options
+     * @param array $options
      * @throws AdapterException
      */
     public function __construct(array $options)
@@ -76,10 +76,10 @@ abstract class Adapter
      * Connects the PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport object and performs initial actions on the remote
      * server.
      *
-     * @throws AdapterException
      * @return void
+     * @throws AdapterException
      */
-    abstract protected function syn();
+    abstract protected function syn(): void;
 
     /**
      * Commit pending data.
@@ -107,7 +107,7 @@ abstract class Adapter
      *
      * @return Timer
      */
-    public function getProfiler()
+    public function getProfiler(): Timer
     {
         return Profiler::get(spl_object_hash($this));
     }
@@ -115,9 +115,9 @@ abstract class Adapter
     /**
      * Returns the transport object used for this connection adapter.
      *
-     * @return Transport
+     * @return Transport|null
      */
-    public function getTransport()
+    public function getTransport(): ?Transport
     {
         return $this->transport;
     }
@@ -126,17 +126,12 @@ abstract class Adapter
      * Loads the transport object object used for the connection adapter and passes a given set
      * of options.
      *
-     * @param  array  $options
-     * @param  string $transport
-     * @throws AdapterException
+     * @param array $options
+     * @param string $transport
      * @return void
      */
-    protected function initTransport($options, $transport = TCP::class)
+    protected function initTransport(array $options, string $transport = TCP::class): void
     {
-        if (!is_array($options)) {
-            throw new AdapterException("transport parameters must provided in an array");
-        }
-
         $this->transport = new $transport($options);
     }
 
@@ -146,7 +141,7 @@ abstract class Adapter
      *
      * @return string
      */
-    public function getTransportHost()
+    public function getTransportHost(): string
     {
         return $this->getTransport()->getConfig("host", "0.0.0.0");
     }
@@ -157,7 +152,7 @@ abstract class Adapter
      *
      * @return string
      */
-    public function getTransportPort()
+    public function getTransportPort(): string
     {
         return $this->getTransport()->getConfig("port", "0");
     }

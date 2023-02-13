@@ -25,9 +25,9 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 /**
  * Class Transport
@@ -42,7 +42,7 @@ abstract class Transport
      *
      * @var array
      */
-    protected $config = null;
+    protected array $config;
 
     /**
      * Stores the stream resource of the connection.
@@ -61,9 +61,9 @@ abstract class Transport
     /**
      * Stores the PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter object using this transport.
      *
-     * @var Adapter
+     * @var Adapter|null
      */
-    protected $adapter = null;
+    protected ?Adapter $adapter = null;
 
     /**
      * The PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport constructor.
@@ -91,6 +91,7 @@ abstract class Transport
         }
 
         $this->config = $config;
+        return $this;
     }
 
     /**
@@ -134,14 +135,14 @@ abstract class Transport
      * @return void
      * @throws TransportException
      */
-    abstract public function connect();
+    abstract public function connect(): void;
 
     /**
      * Disconnects from a remote server.
      *
      * @return void
      */
-    abstract public function disconnect();
+    abstract public function disconnect(): void;
 
     /**
      * Reads data from the stream.
@@ -150,7 +151,7 @@ abstract class Transport
      * @return StringHelper
      * @throws TransportException
      */
-    abstract public function read($length = 4096);
+    abstract public function read(int $length = 4096): StringHelper;
 
     /**
      * Writes data to the stream.
@@ -158,7 +159,7 @@ abstract class Transport
      * @param string $data
      * @return void
      */
-    abstract public function send($data);
+    abstract public function send(string $data): void;
 
     /**
      * Returns the underlying stream resource.
@@ -173,11 +174,11 @@ abstract class Transport
     /**
      * Returns the configuration variables in this adapter.
      *
-     * @param string $key
-     * @param mixed $default
+     * @param string|null $key
+     * @param mixed|null $default
      * @return array|string
      */
-    public function getConfig($key = null, $default = null)
+    public function getConfig(string $key = null, mixed $default = null): array|string
     {
         if ($key !== null) {
             return array_key_exists($key, $this->config) ? $this->config[$key] : $default;
@@ -192,7 +193,7 @@ abstract class Transport
      * @param Adapter $adapter
      * @return void
      */
-    public function setAdapter(Adapter $adapter)
+    public function setAdapter(Adapter $adapter): void
     {
         $this->adapter = $adapter;
     }
@@ -200,9 +201,9 @@ abstract class Transport
     /**
      * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter object using this transport.
      *
-     * @return Adapter
+     * @return Adapter|null
      */
-    public function getAdapter()
+    public function getAdapter(): ?Adapter
     {
         return $this->adapter;
     }
@@ -212,7 +213,7 @@ abstract class Transport
      *
      * @return string
      */
-    public function getAdapterType()
+    public function getAdapterType(): string
     {
         if ($this->adapter instanceof Adapter) {
             $string = StringHelper::factory(get_class($this->adapter));
@@ -229,7 +230,7 @@ abstract class Transport
      * @return array
      * @throws TransportException
      */
-    public function getMetaData()
+    public function getMetaData(): array
     {
         if ($this->stream === null) {
             throw new TransportException("unable to retrieve header/meta data from stream pointer");
@@ -243,9 +244,9 @@ abstract class Transport
      *
      * @return boolean
      */
-    public function isConnected()
+    public function isConnected(): bool
     {
-        return (is_resource($this->stream)) ? true : false;
+        return is_resource($this->stream);
     }
 
     /**
@@ -255,7 +256,7 @@ abstract class Transport
      * @param integer $time
      * @return void
      */
-    protected function waitForReadyRead($time = 0)
+    protected function waitForReadyRead(int $time = 0): void
     {
         if (!$this->isConnected() || $this->config["blocking"]) {
             return;
@@ -267,7 +268,7 @@ abstract class Transport
 
             if ($time) {
                 Signal::getInstance()
-                      ->emit(strtolower($this->getAdapterType()) . "WaitTimeout", $time, $this->getAdapter());
+                    ->emit(strtolower($this->getAdapterType()) . "WaitTimeout", $time, $this->getAdapter());
             }
 
             $time = $time + $this->config["timeout"];

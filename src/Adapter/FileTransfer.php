@@ -24,7 +24,6 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
 
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\FileTransferException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
@@ -42,9 +41,8 @@ class FileTransfer extends Adapter
 {
     /**
      * Connects the PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport object and performs initial actions on the remote server.
-     * @throws AdapterException
      */
-    public function syn()
+    public function syn(): void
     {
         $this->initTransport($this->options);
         $this->transport->setAdapter($this);
@@ -71,7 +69,7 @@ class FileTransfer extends Adapter
      * @return void
      * @throws FileTransferException
      */
-    protected function init($ftkey)
+    protected function init(string $ftkey): void
     {
         if (strlen($ftkey) != 32 && strlen($ftkey) != 16) {
             throw new FileTransferException("invalid file transfer key format");
@@ -92,19 +90,18 @@ class FileTransfer extends Adapter
      * @return void
      * @throws FileTransferException
      */
-    public function upload($ftkey, $seek, $data)
+    public function upload(string $ftkey, int $seek, string $data): void
     {
         $this->init($ftkey);
 
         $size = strlen($data);
-        $seek = intval($seek);
         $pack = 4096;
 
         Signal::getInstance()->emit("filetransferUploadStarted", $ftkey, $seek, $size);
 
         for (; $seek < $size;) {
             $rest = $size - $seek;
-            $pack = $rest < $pack ? $rest : $pack;
+            $pack = min($rest, $pack);
             $buff = substr($data, $seek, $pack);
             $seek = $seek + $pack;
 
@@ -116,10 +113,6 @@ class FileTransfer extends Adapter
         $this->getProfiler()->stop();
 
         Signal::getInstance()->emit("filetransferUploadFinished", $ftkey, $seek, $size);
-
-        if ($seek < $size) {
-            throw new FileTransferException("incomplete file upload (" . $seek . " of " . $size . " bytes)");
-        }
     }
 
     /**
@@ -132,7 +125,7 @@ class FileTransfer extends Adapter
      * @throws FileTransferException
      * @throws TransportException
      */
-    public function download($ftkey, $size, $passthru = false)
+    public function download(string $ftkey, int $size, bool $passthru = false)
     {
         $this->init($ftkey);
 
@@ -142,15 +135,14 @@ class FileTransfer extends Adapter
         }
 
         $buff = new StringHelper("");
-        $size = intval($size);
         $pack = 4096;
 
         Signal::getInstance()->emit("filetransferDownloadStarted", $ftkey, count($buff), $size);
 
         for ($seek = 0; $seek < $size;) {
             $rest = $size - $seek;
-            $pack = $rest < $pack ? $rest : $pack;
-            $data = $this->getTransport()->read($rest < $pack ? $rest : $pack);
+            $pack = min($rest, $pack);
+            $data = $this->getTransport()->read(min($rest, $pack));
             $seek = $seek + $pack;
 
             $buff->append($data);
@@ -177,12 +169,12 @@ class FileTransfer extends Adapter
      * @return void
      * @throws FileTransferException
      */
-    protected function passthru($size)
+    protected function passthru(int $size): void
     {
         $buff_size = fpassthru($this->getTransport()->getStream());
 
         if ($buff_size != $size) {
-            throw new FileTransferException("incomplete file download (" . intval($buff_size) . " of " . $size . " bytes)");
+            throw new FileTransferException("incomplete file download (" . $buff_size . " of " . $size . " bytes)");
         }
     }
 }

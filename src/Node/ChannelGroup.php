@@ -24,9 +24,9 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Node;
 
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
-use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 /**
  * Class ChannelGroup
@@ -39,12 +39,12 @@ class ChannelGroup extends Group
     /**
      * ChannelGroup constructor.
      *
-     * @param  Server $server
-     * @param  array  $info
-     * @param  string $index
+     * @param Server $server
+     * @param array $info
+     * @param string $index
      * @throws ServerQueryException
      */
-    public function __construct(Server $server, array $info, $index = "cgid")
+    public function __construct(Server $server, array $info, string $index = "cgid")
     {
         $this->parent = $server;
         $this->nodeInfo = $info;
@@ -59,10 +59,10 @@ class ChannelGroup extends Group
     /**
      * Renames the channel group specified.
      *
-     * @param  string $name
+     * @param string $name
      * @return void
      */
-    public function rename($name)
+    public function rename(string $name): void
     {
         $this->getParent()->channelGroupRename($this->getId(), $name);
     }
@@ -71,10 +71,10 @@ class ChannelGroup extends Group
      * Deletes the channel group. If $force is set to TRUE, the channel group will be
      * deleted even if there are clients within.
      *
-     * @param  boolean $force
+     * @param boolean $force
      * @return void
      */
-    public function delete($force = false)
+    public function delete(bool $force = false): void
     {
         $this->getParent()->channelGroupDelete($this->getId(), $force);
     }
@@ -82,12 +82,12 @@ class ChannelGroup extends Group
     /**
      * Creates a copy of the channel group and returns the new groups ID.
      *
-     * @param  string  $name
-     * @param  integer $tcgid
-     * @param  integer $type
+     * @param string|null $name
+     * @param integer $tcgid
+     * @param integer $type
      * @return integer
      */
-    public function copy($name = null, $tcgid = 0, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
+    public function copy(string $name = null, int $tcgid = 0, int $type = TeamSpeak3::GROUP_DBTYPE_REGULAR): int
     {
         return $this->getParent()->channelGroupCopy($this->getId(), $name, $tcgid, $type);
     }
@@ -95,10 +95,10 @@ class ChannelGroup extends Group
     /**
      * Returns a list of permissions assigned to the channel group.
      *
-     * @param  boolean $permsid
+     * @param boolean $permsid
      * @return array
      */
-    public function permList($permsid = false)
+    public function permList(bool $permsid = false): array
     {
         return $this->getParent()->channelGroupPermList($this->getId(), $permsid);
     }
@@ -107,11 +107,11 @@ class ChannelGroup extends Group
      * Adds a set of specified permissions to the channel group. Multiple permissions
      * can be added by providing the two parameters of each permission in separate arrays.
      *
-     * @param  integer $permid
-     * @param  integer $permvalue
+     * @param integer $permid
+     * @param integer $permvalue
      * @return void
      */
-    public function permAssign($permid, $permvalue)
+    public function permAssign(int $permid, int $permvalue): void
     {
         $this->getParent()->channelGroupPermAssign($this->getId(), $permid, $permvalue);
     }
@@ -130,10 +130,10 @@ class ChannelGroup extends Group
      * Removes a set of specified permissions from the channel group. Multiple
      * permissions can be removed at once.
      *
-     * @param  integer $permid
+     * @param integer $permid
      * @return void
      */
-    public function permRemove($permid)
+    public function permRemove(int $permid): void
     {
         $this->getParent()->channelGroupPermRemove($this->getId(), $permid);
     }
@@ -151,12 +151,12 @@ class ChannelGroup extends Group
     /**
      * Returns a list of clients assigned to the channel group specified.
      *
-     * @param  integer $cid
-     * @param  integer $cldbid
-     * @param  boolean $resolve
+     * @param integer|null $cid
+     * @param integer|null $cldbid
+     * @param boolean $resolve
      * @return array
      */
-    public function clientList($cid = null, $cldbid = null, $resolve = false)
+    public function clientList(int $cid = null, int $cldbid = null, bool $resolve = false): array
     {
         return $this->getParent()->channelGroupClientList($this->getId(), $cid, $cldbid, $resolve);
     }
@@ -166,7 +166,7 @@ class ChannelGroup extends Group
      *
      * @deprecated
      */
-    public function tokenCreate($cid, $description = null, $customset = null)
+    public function tokenCreate($cid, $description = null, $customset = null): StringHelper
     {
         return $this->privilegeKeyCreate($cid, $description, $customset);
     }
@@ -174,12 +174,12 @@ class ChannelGroup extends Group
     /**
      * Creates a new privilege key (token) for the channel group and returns the key.
      *
-     * @param  integer $cid
-     * @param  string  $description
-     * @param  string  $customset
+     * @param integer $cid
+     * @param string|null $description
+     * @param string|null $customset
      * @return StringHelper
      */
-    public function privilegeKeyCreate($cid, $description = null, $customset = null)
+    public function privilegeKeyCreate(int $cid, string $description = null, string $customset = null): StringHelper
     {
         return $this->getParent()->privilegeKeyCreate($this->getId(), TeamSpeak3::TOKEN_CHANNELGROUP, $cid, $description, $customset);
     }
@@ -203,7 +203,7 @@ class ChannelGroup extends Group
      *
      * @return string
      */
-    public function getUniqueId()
+    public function getUniqueId(): string
     {
         return $this->getParent()->getUniqueId() . "_cg" . $this->getId();
     }
@@ -213,7 +213,7 @@ class ChannelGroup extends Group
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return "group_channel";
     }
