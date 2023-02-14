@@ -10,6 +10,11 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 class TCPTest extends TestCase
 {
+    private function testGithubWorkflow()
+    {
+        print("TEST");
+    }
+
     /**
      * @throws TransportException
      */
