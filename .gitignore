@@ -5,6 +5,7 @@
 # Build related
 build/
 .php_cs.cache
+.phpunit.result.cache
 
 # OS-specific
 .DS_Store
