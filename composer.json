@@ -17,7 +17,10 @@
     "docs": "https://docs.planetteamspeak.com/ts3/php/framework"
   },
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   },
   "require": {
     "php": "^8.0",

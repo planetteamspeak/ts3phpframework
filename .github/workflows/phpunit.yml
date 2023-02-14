@@ -1,0 +1,37 @@
+name: "PHPUnit"
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 15 * * 2'
+
+jobs:
+  phpunit-tests:
+    strategy:
+      matrix:
+        php_versions: [
+          '8.0',
+          '8.1',
+          '8.2',
+        ]
+    name: PHP ${{ matrix.php_versions }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v3
+
+    - name: install dependencies
+      uses: php-actions/composer@v6
+
+    - name: run phpunit tests
+      uses: php-actions/phpunit@v3
+      with:
+        php_version: ${{ matrix.php_versions }}
+        php_extensions: openssl ssh2
+        configuration: ./phpunit.xml.dist
+        memory_limit: 256M
+        bootstrap: tests\bootstrap.php
