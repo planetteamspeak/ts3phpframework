@@ -34,4 +34,3 @@ jobs:
         php_extensions: openssl ssh2
         configuration: ./phpunit.xml.dist
         memory_limit: 256M
-        bootstrap: tests\bootstrap.php
