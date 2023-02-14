@@ -17,10 +17,7 @@
     "docs": "https://docs.planetteamspeak.com/ts3/php/framework"
   },
   "config": {
-    "sort-packages": true,
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    }
+    "sort-packages": true
   },
   "require": {
     "php": "^8.0",
@@ -30,7 +27,6 @@
     "ext-openssl": "*"
   },
   "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "friendsofphp/php-cs-fixer": "^3.8",
     "php-coveralls/php-coveralls": "^2.5",
     "phpcompatibility/php-compatibility": "^9.3",
