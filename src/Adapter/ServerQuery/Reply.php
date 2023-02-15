@@ -58,7 +58,7 @@ class Reply
      *
      * @var Host
      */
-    protected Host $con;
+    protected ?Host $con;
 
     /**
      * Stores an assoc array containing the error info for this reply.
@@ -91,7 +91,7 @@ class Reply
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function __construct(array $rpl, $cmd = null, Host $con = null, bool $exp = true)
+    public function __construct(array $rpl, string $cmd = "", Host $con = null, bool $exp = true)
     {
         $this->cmd = new StringHelper($cmd);
         $this->con = $con;
