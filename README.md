@@ -16,8 +16,8 @@ There are lots of arguments for the TS3 PHP Framework in comparison with other P
 
 Features of the TS3 PHP Framework include:
 
-* Fully object-oriented PHP 5 and E_STRICT compliant components
-* Access to all TeamSpeak 3 Server features via ServerQuery
+* Fully object-oriented PHP and E_STRICT compliant components
+* Access to all TeamSpeak 3 and 5 Server features via ServerQuery
 * Integrated full featured and customizable TSViewer interfaces
 * Full support for file transfers to up- and /or download custom icons and other stuff
 * Powerful error handling capablities using exceptions and customizable error messages
@@ -30,7 +30,7 @@ Speed up new development and reduce maintenance costs by using this nifty piece 
 
 **Requirements**
 
-* PHP - Developed on PHP 8.x, with 8.0.x targeted for testing.
+* PHP 8.0.x, 8.1.x or 8.2.x
 * TeamSpeak Server - v3.4.0 (build >= 1536564584) or higher.
 
 **Often used with...**
@@ -40,17 +40,23 @@ Speed up new development and reduce maintenance costs by using this nifty piece 
 
 Note that the majority of TS3 PHP Framework development and deployment is done on nginx, so there is more community experience and testing performed on Apache than on other web servers.
 
-You can install the TS3 PHP Framework by [manually downloading](https://github.com/ronindesign/ts3phpframework/archive/master.zip) it or using Composer:
+You can install the TS3 PHP Framework by [manually downloading](https://github.com/planetteamspeak/ts3phpframework/archive/refs/heads/master.zip) it or using Composer.
 
-```
+Install the latest available release:
+
+```shell
 composer require planetteamspeak/ts3-php-framework
 ```
 
-The above command will install the latest available release.
+Install a specific [release](https://github.com/planetteamspeak/ts3phpframework/releases) (e.g. `1.1.35`):
+
+```shell
+composer require planetteamspeak/ts3-php-framework:1.1.35
+```
 
 If you want to install the TS3 PHP Framework's `master` branch instead (which may not be released / tagged yet), you need to run:
 
-```
+```shell
 composer require planetteamspeak/ts3-php-framework:dev-master
 ```
 
