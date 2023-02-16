@@ -112,7 +112,11 @@ class UDPTest extends TestCase
             ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("getaddrinfo for $host failed");
+        if (PHP_VERSION_ID < 80100) {
+            $this->expectExceptionMessage("getaddrinfo failed");
+        } else {
+            $this->expectExceptionMessage("getaddrinfo for $host failed");
+        }
         $transport->connect();
     }
 
@@ -149,7 +153,11 @@ class UDPTest extends TestCase
             ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("getaddrinfo for $host failed");
+        if (PHP_VERSION_ID < 80100) {
+            $this->expectExceptionMessage("getaddrinfo failed");
+        } else {
+            $this->expectExceptionMessage("getaddrinfo for $host failed");
+        }
         $transport->read();
     }
 
@@ -163,7 +171,11 @@ class UDPTest extends TestCase
             ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("getaddrinfo for $host failed");
+        if (PHP_VERSION_ID < 80100) {
+            $this->expectExceptionMessage("getaddrinfo failed");
+        } else {
+            $this->expectExceptionMessage("getaddrinfo for $host failed");
+        }
         $transport->send('test.send');
     }
 }

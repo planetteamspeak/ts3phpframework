@@ -102,7 +102,11 @@ class TCPTest extends TestCase
             ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("getaddrinfo for $host failed");
+        if (PHP_VERSION_ID < 80100) {
+            $this->expectExceptionMessage("getaddrinfo failed");
+        } else {
+            $this->expectExceptionMessage("getaddrinfo for $host failed");
+        }
         $transport->connect();
     }
 
@@ -142,7 +146,11 @@ class TCPTest extends TestCase
             ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("getaddrinfo for $host failed");
+        if (PHP_VERSION_ID < 80100) {
+            $this->expectExceptionMessage("getaddrinfo failed");
+        } else {
+            $this->expectExceptionMessage("getaddrinfo for $host failed");
+        }
         $transport->read();
     }
 
@@ -157,7 +165,11 @@ class TCPTest extends TestCase
             ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("getaddrinfo for $host failed");
+        if (PHP_VERSION_ID < 80100) {
+            $this->expectExceptionMessage("getaddrinfo failed");
+        } else {
+            $this->expectExceptionMessage("getaddrinfo for $host failed");
+        }
         $transport->readLine();
     }
 
@@ -172,7 +184,11 @@ class TCPTest extends TestCase
             ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("getaddrinfo for $host failed");
+        if (PHP_VERSION_ID < 80100) {
+            $this->expectExceptionMessage("getaddrinfo failed");
+        } else {
+            $this->expectExceptionMessage("getaddrinfo for $host failed");
+        }
         $transport->send('testsend');
     }
 
@@ -187,7 +203,11 @@ class TCPTest extends TestCase
             ['host' => $host, 'port' => 12345]
         );
         $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("getaddrinfo for $host failed");
+        if (PHP_VERSION_ID < 80100) {
+            $this->expectExceptionMessage("getaddrinfo failed");
+        } else {
+            $this->expectExceptionMessage("getaddrinfo for $host failed");
+        }
         $transport->sendLine('test.sendLine');
     }
 }
