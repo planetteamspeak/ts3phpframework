@@ -48,10 +48,17 @@ Install the latest available release:
 composer require planetteamspeak/ts3-php-framework
 ```
 
-Install a specific [release](https://github.com/planetteamspeak/ts3phpframework/releases) (e.g. `1.1.35`):
+
+Install a specific [release](https://github.com/planetteamspeak/ts3phpframework/releases) (e.g. `1.2.0`):
 
 ```shell
-composer require planetteamspeak/ts3-php-framework:1.1.35
+composer require planetteamspeak/ts3-php-framework:1.2.0
+```
+
+Install a specific [branch](https://github.com/planetteamspeak/ts3phpframework/branches) (e.g. `dev`):
+
+```shell
+composer require planetteamspeak/ts3-php-framework:dev-dev
 ```
 
 If you want to install the TS3 PHP Framework's `master` branch instead (which may not be released / tagged yet), you need to run:
