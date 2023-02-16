@@ -9,6 +9,13 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Release 1.2.0 - 16 Feb 2023 ===
+ + added full support for PHP 8.0, 8.1, 8.2
+ + refactoring for PHP8
+ - fixed PHPUnit tests
+ - updated deprecated code
+ - removed TravisCI support
+
 === Release 1.1.35 - WIP ===
  ! upgrading your servers to 3.12.1 (build >= 1585305527) is mandatory
  + added TeamSpeak3_Node_Host::apiKeyList()
