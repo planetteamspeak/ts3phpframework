@@ -1,7 +1,6 @@
 # TeamSpeak 3 PHP Framework
 
 [![PHPUnit](https://github.com/planetteamspeak/ts3phpframework/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/planetteamspeak/ts3phpframework/actions/workflows/phpunit.yml?branch=master)
-[![Build Status](https://travis-ci.org/planetteamspeak/ts3phpframework.svg?branch=master)](https://travis-ci.org/planetteamspeak/ts3phpframework)
 
 Initially released in January 2010, the TS3 PHP Framework is a powerful, open source, object-oriented framework implemented in PHP 5 and licensed under the GNU General Public License. It’s based on simplicity and a rigorously tested agile codebase. Extend the functionality of your servers with scripts or create powerful web applications to manage all features of your TeamSpeak 3 Server instances.
 
