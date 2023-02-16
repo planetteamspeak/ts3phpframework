@@ -425,9 +425,9 @@ class Uri
      * @param mixed|null $default
      * @return StringHelper
      */
-    public function getPath(mixed $default = null): StringHelper
+    public function getPath(string $default = "/"): StringHelper
     {
-        return ($this->hasPath()) ? new StringHelper(rawurldecode($this->path)) : $default;
+        return ($this->hasPath()) ? new StringHelper(rawurldecode($this->path)) : new StringHelper($default);
     }
 
     /**

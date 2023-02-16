@@ -99,10 +99,10 @@ class Signal
      *
      * @param string $signal
      * @param mixed $callback
-     * @return Signal
+     * @return Handler
      * @throws HelperException
      */
-    public function subscribe(string $signal, mixed $callback): Signal
+    public function subscribe(string $signal, mixed $callback): Handler
     {
         if (empty($this->sigslots[$signal])) {
             $this->sigslots[$signal] = [];

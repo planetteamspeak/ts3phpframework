@@ -13,6 +13,7 @@ on:
 jobs:
   phpunit-tests:
     strategy:
+      fail-fast: false
       matrix:
         php_versions: [
           '8.0',
@@ -25,13 +26,20 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v3
 
+    - name: install php ${{ matrix.php_versions }} with extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: json ctype openssl ssh2
+        coverage: none
+        tools: none
+
     - name: install dependencies
       uses: php-actions/composer@v6
+      with:
+        dev: yes
+        php_version: ${{ matrix.php_versions }}
+        php_extensions: json ctype openssl ssh2
 
     - name: run phpunit tests
-      uses: php-actions/phpunit@v3
-      with:
-        php_version: ${{ matrix.php_versions }}
-        php_extensions: openssl ssh2
-        configuration: ./phpunit.xml.dist
-        memory_limit: 256M
+      run: ./vendor/bin/phpunit --no-coverage
