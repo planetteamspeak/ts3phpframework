@@ -130,6 +130,8 @@ class UDPTest extends TestCase
         );
         $transport->connect();
         $this->assertIsResource($transport->getStream());
+        $transport->disconnect();
+        $this->assertNull($transport->getStream());
     }
 
     /**
