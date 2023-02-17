@@ -132,6 +132,7 @@ class TCPTest extends TestCase
         $transport = new TCP(
             ['host' => 'test', 'port' => 12345]
         );
+        $this->assertNull($transport->getStream());
         $transport->disconnect();
     }
 
