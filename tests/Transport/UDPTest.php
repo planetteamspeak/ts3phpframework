@@ -140,6 +140,7 @@ class UDPTest extends TestCase
         $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
+        $this->assertNull($transport->getStream());
         $transport->disconnect();
     }
 
