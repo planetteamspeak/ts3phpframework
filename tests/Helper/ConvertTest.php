@@ -174,9 +174,9 @@ class ConvertTest extends TestCase
         $this->assertIsString($output);
 
         // @todo: Enable after ::seconds() can handle negative integers
-    //$output = Convert::seconds(-1);
-    //$this->assertEquals('-0D 00:00:01', $output);
-    //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        //$output = Convert::seconds(-1);
+        //$this->assertEquals('-0D 00:00:01', $output);
+        //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
     }
 
     public function testConvertCodecIDToHumanReadable()
@@ -208,8 +208,8 @@ class ConvertTest extends TestCase
     {
         // @todo: Implement matching integration test for testing real log entries
         $mock_data = [
-      '2017-06-26 21:55:30.307009|INFO    |Query         |   |query from 47 [::1]:62592 issued: login with account "serveradmin"(serveradmin)'
-    ];
+            '2017-06-26 21:55:30.307009|INFO    |Query         |   |query from 47 [::1]:62592 issued: login with account "serveradmin"(serveradmin)'
+        ];
 
         foreach ($mock_data as $entry) {
             $entryParsed = Convert::logEntry($entry);
@@ -250,8 +250,8 @@ class ConvertTest extends TestCase
         $this->assertEquals(
             'image/gif',
             Convert::imageMimeType(
-            base64_decode('R0lGODdhAQABAIAAAPxqbAAAACwAAAAAAQABAAACAkQBADs=')
-        )
+                base64_decode('R0lGODdhAQABAIAAAPxqbAAAACwAAAAAAQABAAACAkQBADs=')
+            )
         );
     }
 }
