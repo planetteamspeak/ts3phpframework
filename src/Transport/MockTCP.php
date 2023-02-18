@@ -1,6 +1,5 @@
 <?php
 
-
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Transport;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
@@ -9,11 +8,11 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 
 class MockTCP extends TCP
 {
-    const S_WELCOME_L0 = 'TS3';
-    const S_WELCOME_L1 = 'Welcome to the TeamSpeak 3 ServerQuery interface, type "help" for a list of commands and "help <command>" for information on a specific command.';
-    const S_ERROR_OK = 'error id=0 msg=ok';
+    public const S_WELCOME_L0 = 'TS3';
+    public const S_WELCOME_L1 = 'Welcome to the TeamSpeak 3 ServerQuery interface, type "help" for a list of commands and "help <command>" for information on a specific command.';
+    public const S_ERROR_OK = 'error id=0 msg=ok';
 
-    const CMD = [
+    public const CMD = [
         'login serveradmin secret' => self::S_ERROR_OK,
         'login client_login_name=serveradmin client_login_password=secret' => self::S_ERROR_OK,
     ];

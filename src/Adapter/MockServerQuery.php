@@ -1,6 +1,5 @@
 <?php
 
-
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
 
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
