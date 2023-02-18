@@ -347,7 +347,6 @@ class Uri
 
     /**
      * Returns TRUE if the port is valid.
-     * todo: Implement check for port URI segment
      *
      * @param integer|null $port
      * @return boolean
@@ -355,7 +354,15 @@ class Uri
     public function checkPort(int $port = null): bool
     {
         if ($port === null) {
-            $port = $this->port;
+            $port = intval($this->port->toString());
+        }
+
+        switch ($port) {
+            case str_starts_with($port, '-'):
+            case $port < 0:
+            case !is_int($port):
+            case !filter_var($port, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 65535]]):
+                return false;
         }
 
         return true;

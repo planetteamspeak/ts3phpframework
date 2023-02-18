@@ -146,7 +146,21 @@ class UriTest extends TestCase
 
     public function testCheckPort()
     {
-        // @todo: Implement after checkPort() validation implemented
+        $uri = new Uri($this->mock['test_uri'][0]);
+
+        $validPorts = [
+            80, 443, 8080, 9200, 9987, 10011, 10022,
+        ];
+        foreach ($validPorts as $port) {
+            $this->assertTrue($uri->checkPort($port));
+        }
+
+        $invalidPorts = [
+            -443, -1.5, -1, 0, 0.5, 65536,
+        ];
+        foreach ($invalidPorts as $port) {
+            $this->assertFalse($uri->checkPort($port));
+        }
     }
 
     /**
