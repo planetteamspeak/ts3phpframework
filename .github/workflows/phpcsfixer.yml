@@ -1,0 +1,43 @@
+name: "PHP-CS-Fixer"
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - dev
+  pull_request:
+  schedule:
+    - cron: '0 15 * * 2'
+
+jobs:
+  code-style:
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: [
+          '8.1', # PHP 8.2 is currently not (fully) supported by PHP-CS-Fixer
+        ]
+    name: PHP ${{ matrix.php_versions }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v3
+
+    - name: install php ${{ matrix.php_versions }} with extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: json ctype openssl ssh2
+        coverage: none
+        tools: none
+
+    - name: install dependencies
+      uses: php-actions/composer@v6
+      with:
+        dev: yes
+        php_version: ${{ matrix.php_versions }}
+        php_extensions: json ctype openssl ssh2
+
+    - name: run php-cs-fixer
+      run: ./vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php --diff --dry-run
