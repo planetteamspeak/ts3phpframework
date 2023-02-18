@@ -310,7 +310,6 @@ class Uri
 
     /**
      * Returns TRUE if the host is valid.
-     * todo: Implement check for host URI segment
      *
      * @param string|null $host
      * @return boolean
@@ -319,6 +318,21 @@ class Uri
     {
         if ($host === null) {
             $host = $this->host;
+        }
+
+        switch ($host) {
+            // Valid IPv4 or IPv6 address
+            case filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4|FILTER_FLAG_IPV6):
+                break;
+            // Valid hostname as specified in RFC 1123 (IPv4 like strings are excluded)
+            // `filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)` unfortunately also reports invalid IP
+            // addresses (e.g. `127.0.0.300`) as valid, so we can not use this filter here.
+            // Regex reference: https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+            case !preg_match("/^(([0-9]{1,3})\.){3}([0-9]{1,3})$/", $host) and preg_match("/^(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])$/i", $host):
+                break;
+            // Otherwise invalid host provided
+            default:
+                return false;
         }
 
         return true;
