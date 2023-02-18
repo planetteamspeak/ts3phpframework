@@ -84,9 +84,9 @@ class ConvertTest extends TestCase
         $this->assertIsString($output);
 
         // @todo: Enable once ::bytes() can handle negatives values >= 1024
-    //$output = Convert::bytes(-1024);
-    //$this->assertEquals('-1.00 KB', $output);
-    //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        //$output = Convert::bytes(-1024);
+        //$this->assertEquals('-1.00 KB', $output);
+        //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
     }
 
     public function testConvertSecondsToHumanReadable()
@@ -136,9 +136,9 @@ class ConvertTest extends TestCase
         $this->assertIsString($output);
 
         // @todo: Enable after ::seconds() can handle negative integers
-    //$output = Convert::seconds(-1);
-    //$this->assertEquals('-0D 00:00:01', $output);
-    //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        //$output = Convert::seconds(-1);
+        //$this->assertEquals('-0D 00:00:01', $output);
+        //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
     }
 
     public function testConvertCodecIDToHumanReadable()
@@ -212,8 +212,8 @@ class ConvertTest extends TestCase
         $this->assertEquals(
             'image/gif',
             Convert::imageMimeType(
-            base64_decode('R0lGODdhAQABAIAAAPxqbAAAACwAAAAAAQABAAACAkQBADs=')
-        )
+                base64_decode('R0lGODdhAQABAIAAAPxqbAAAACwAAAAAAQABAAACAkQBADs=')
+            )
         );
     }
 }

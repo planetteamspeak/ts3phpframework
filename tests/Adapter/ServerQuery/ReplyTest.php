@@ -91,10 +91,10 @@ class ReplyTest extends TestCase
     public function testFetchError()
     {
         //$this->assertInstanceOf(\TeamSpeak3_Adapter_ServerQuery_Reply::class, $reply);
-    //$this->assertInternalType(PHPUnit_IsType::TYPE_INT, $reply->getErrorProperty('id'));
-    //$this->assertEquals(0, $reply->getErrorProperty('id'));
-    //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $reply->getErrorProperty('msg'));
-    //$this->assertEquals('ok', $reply->getErrorProperty('msg'));
+        //$this->assertInternalType(PHPUnit_IsType::TYPE_INT, $reply->getErrorProperty('id'));
+        //$this->assertEquals(0, $reply->getErrorProperty('id'));
+        //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $reply->getErrorProperty('msg'));
+        //$this->assertEquals('ok', $reply->getErrorProperty('msg'));
     }
     public function testFetchReply()
     {

@@ -3,7 +3,6 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Adapter;
 
-
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
@@ -12,7 +11,6 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Transport\MockTCP;
 
 class MockServerQuery extends ServerQuery
 {
-
     /**
      * Connects the Transport object and performs initial actions on the remote
      * server.

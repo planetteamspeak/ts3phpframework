@@ -11,7 +11,6 @@ use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 abstract class Group extends Node
 {
-
     /**
      * Sends a text message to all clients residing in the channel group on the virtual server.
      *

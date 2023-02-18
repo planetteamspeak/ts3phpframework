@@ -30,15 +30,15 @@ class CharTest extends TestCase
         $this->assertFalse($char->isUpper());
 
         $this->assertEquals($testLower, (string)$char);  // Expect: 'a'
-    $this->assertEquals($testUpper, (string)$char->toUpper()); // Expect: 'A'
-    $this->assertEquals($testLower, (string)$char->toLower()); // Expect: 'a'
+        $this->assertEquals($testUpper, (string)$char->toUpper()); // Expect: 'A'
+        $this->assertEquals($testLower, (string)$char->toLower()); // Expect: 'a'
 
-    $this->assertEquals($testOrd, $char->toAscii()); // Expect: 97
-    $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('61')
-    $this->assertEquals(
-        $testLower,
-        (string)Char::fromHex('61')
-    );
+        $this->assertEquals($testOrd, $char->toAscii()); // Expect: 97
+        $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('61')
+        $this->assertEquals(
+            $testLower,
+            (string)Char::fromHex('61')
+        );
 
         $this->assertEquals($testLower, $char->toString()); // Expect: 97
         $this->assertIsString($char->toString());
@@ -67,15 +67,15 @@ class CharTest extends TestCase
         $this->assertFalse($char->isNull());
 
         $this->assertEquals($testChar, (string)$char);  // Expect: '9'
-    $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: '9'
-    $this->assertEquals($testChar, (string)$char->toLower()); // Expect: '9'
+        $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: '9'
+        $this->assertEquals($testChar, (string)$char->toLower()); // Expect: '9'
 
-    $this->assertEquals($testOrd, $char->toAscii()); // Expect: 57
-    $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('39')
-    $this->assertEquals(
-        $testChar,
-        (string)Char::fromHex('39')
-    );
+        $this->assertEquals($testOrd, $char->toAscii()); // Expect: 57
+        $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('39')
+        $this->assertEquals(
+            $testChar,
+            (string)Char::fromHex('39')
+        );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 57
         $this->assertIsString($char->toString());
@@ -104,15 +104,15 @@ class CharTest extends TestCase
         $this->assertFalse($char->isNull());
 
         $this->assertEquals($testChar, (string)$char);  // Expect: ' '
-    $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: ' '
-    $this->assertEquals($testChar, (string)$char->toLower()); // Expect: ' '
+        $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: ' '
+        $this->assertEquals($testChar, (string)$char->toLower()); // Expect: ' '
 
-    $this->assertEquals($testOrd, $char->toAscii()); // Expect: 32
-    $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('20')
-    $this->assertEquals(
-        $testChar,
-        (string)Char::fromHex('20')
-    );
+        $this->assertEquals($testOrd, $char->toAscii()); // Expect: 32
+        $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('20')
+        $this->assertEquals(
+            $testChar,
+            (string)Char::fromHex('20')
+        );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 32
         $this->assertIsString($char->toString());
@@ -141,15 +141,15 @@ class CharTest extends TestCase
         $this->assertFalse($char->isNull());
 
         $this->assertEquals($testChar, (string)$char);  // Expect: '-'
-    $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: '-'
-    $this->assertEquals($testChar, (string)$char->toLower()); // Expect: '-'
+        $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: '-'
+        $this->assertEquals($testChar, (string)$char->toLower()); // Expect: '-'
 
-    $this->assertEquals($testOrd, $char->toAscii()); // Expect: 45
-    $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('2d')
-    $this->assertEquals(
-        $testChar,
-        (string)Char::fromHex('2d')
-    );
+        $this->assertEquals($testOrd, $char->toAscii()); // Expect: 45
+        $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('2d')
+        $this->assertEquals(
+            $testChar,
+            (string)Char::fromHex('2d')
+        );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 45
         $this->assertIsString($char->toString());
@@ -178,15 +178,15 @@ class CharTest extends TestCase
         $this->assertFalse($char->isNull());
 
         $this->assertEquals($testChar, (string)$char);  // Expect: [ACK]
-    $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: [ACK]
-    $this->assertEquals($testChar, (string)$char->toLower()); // Expect: [ACK]
+        $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: [ACK]
+        $this->assertEquals($testChar, (string)$char->toLower()); // Expect: [ACK]
 
-    $this->assertEquals($testOrd, $char->toAscii()); // Expect: 6
-    $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('06')
-    $this->assertEquals(
-        $testChar,
-        (string)Char::fromHex('06')
-    );
+        $this->assertEquals($testOrd, $char->toAscii()); // Expect: 6
+        $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('06')
+        $this->assertEquals(
+            $testChar,
+            (string)Char::fromHex('06')
+        );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 6
         $this->assertIsString($char->toString());
@@ -215,15 +215,15 @@ class CharTest extends TestCase
         $this->assertFalse($char->isPrintable());
 
         $this->assertEquals($testChar, (string)$char);  // Expect: [NUL]
-    $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: [NUL]
-    $this->assertEquals($testChar, (string)$char->toLower()); // Expect: [NUL]
+        $this->assertEquals($testChar, (string)$char->toUpper()); // Expect: [NUL]
+        $this->assertEquals($testChar, (string)$char->toLower()); // Expect: [NUL]
 
-    $this->assertEquals($testOrd, $char->toAscii()); // Expect: 0
-    $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('00')
-    $this->assertEquals(
-        $testChar,
-        (string)Char::fromHex('00')
-    );
+        $this->assertEquals($testOrd, $char->toAscii()); // Expect: 0
+        $this->assertEquals($testOrd, hexdec($char->toHex())); // hexdec('00')
+        $this->assertEquals(
+            $testChar,
+            (string)Char::fromHex('00')
+        );
 
         $this->assertEquals($testChar, $char->toString()); // Expect: 0
         $this->assertIsString($char->toString());

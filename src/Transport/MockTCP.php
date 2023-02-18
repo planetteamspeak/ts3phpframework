@@ -13,10 +13,10 @@ class MockTCP extends TCP
     const S_WELCOME_L1 = 'Welcome to the TeamSpeak 3 ServerQuery interface, type "help" for a list of commands and "help <command>" for information on a specific command.';
     const S_ERROR_OK = 'error id=0 msg=ok';
 
-    const CMD = array(
+    const CMD = [
         'login serveradmin secret' => self::S_ERROR_OK,
         'login client_login_name=serveradmin client_login_password=secret' => self::S_ERROR_OK,
-    );
+    ];
 
     protected mixed $reply = null;
 
@@ -81,7 +81,6 @@ class MockTCP extends TCP
 
     protected function fwrite($data)
     {
-
         if (!key_exists($data, self::CMD)) {
             $this->reply = "error id=1 msg=Unkown\n";
             return;

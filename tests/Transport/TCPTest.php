@@ -46,7 +46,7 @@ class TCPTest extends TestCase
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage("config must have a key for 'port'");
 
-         new TCP(['host' => 'test']);
+        new TCP(['host' => 'test']);
     }
 
     /**
