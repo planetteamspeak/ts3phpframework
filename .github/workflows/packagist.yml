@@ -13,6 +13,7 @@ on:
 jobs:
   packagist-update:
     name: Packagist Update
+    runs-on: ubuntu-latest
     steps:
     - uses: mnavarrocarter/packagist-update@v1.0
       with:
