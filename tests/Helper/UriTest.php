@@ -141,12 +141,68 @@ class UriTest extends TestCase
 
     public function testCheckHost()
     {
-        // @todo: Implement after checkHost() validation implemented
+        $uri = new Uri($this->mock['test_uri'][0]);
+
+        $validHosts = [
+            // Private IPv4 addresses
+            "127.0.0.1", "127.1.2.3", "192.168.178.37", "192.168.2.13", "10.0.0.10", "10.10.10.10", "172.16.5.250",
+            // Private IPv6 addresses
+            "0:0:0:0:0:0:0:1", "::1", "2003:cf:273b:9b00:7a8d:8622:fc3b:e684",
+            // Private DNS hostnames
+            "localhost", "localhost.localdomain", "web-03.host.example.com",
+            // Current hostname of the local machine
+            gethostname(),
+
+            // Public IPv4 addresses
+            "8.8.8.8", "8.8.4.4", "1.1.1.1",
+            // Public IPv6 addresses
+            "2001:4860:4860:0:0:0:0:8888", "2001:4860:4860::8888", "2001:4860:4860::8844",
+            // Public DNS hostnames
+            "github.com", "google.com", "wikipedia.org", "some-site1337.com",
+        ];
+        foreach ($validHosts as $host) {
+            $this->assertTrue($uri->checkHost($host));
+        }
+
+        $invalidHosts = [
+            // Private IPv4 addresses (invalid address)
+            "127.0.0.256", "192.168.178.260", "10.256.0.1",
+            // Private IPv6 addresses (invalid address)
+            "0:0:0:0:0:0:0:YZ", "::YZ",
+            // Private IPv6 addresses (invalid format)
+            "fe80:::", ":::", "0:::0", "2003:cf:::fc3b::",
+            // Private DNS hostnames (not RFC 1123 conform)
+            ".localhost.local", "-localhost", "localhost-",
+
+            // Public IPv4 addresses (invalid address)
+            "256.1.2.3", "83.256.1.37",
+            // Public IPv6 addresses (invalid format)
+            "2001:4860:::0:0:0:0::1", "2001:::8888", ":::8844",
+            // Public DNS hostnames (not RFC 1123 conform)
+            ".github.com", "-github.wtf", "github-.com",
+        ];
+        foreach ($invalidHosts as $host) {
+            $this->assertFalse($uri->checkHost($host));
+        }
     }
 
     public function testCheckPort()
     {
-        // @todo: Implement after checkPort() validation implemented
+        $uri = new Uri($this->mock['test_uri'][0]);
+
+        $validPorts = [
+            80, 443, 8080, 9200, 9987, 10011, 10022,
+        ];
+        foreach ($validPorts as $port) {
+            $this->assertTrue($uri->checkPort($port));
+        }
+
+        $invalidPorts = [
+            -443, -1.5, -1, 0, 0.5, 65536,
+        ];
+        foreach ($invalidPorts as $port) {
+            $this->assertFalse($uri->checkPort($port));
+        }
     }
 
     /**

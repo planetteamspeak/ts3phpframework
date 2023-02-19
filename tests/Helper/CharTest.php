@@ -258,6 +258,9 @@ class CharTest extends TestCase
         );
     }
 
+    /**
+     * @throws HelperException
+     */
     // @ToDo: Enable tests after updating TeamSpeak3_Helper_Char Unicode Support
     /*
     public function testUnicode2Bytes() {

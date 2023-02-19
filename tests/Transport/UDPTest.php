@@ -130,6 +130,8 @@ class UDPTest extends TestCase
         );
         $transport->connect();
         $this->assertIsResource($transport->getStream());
+        $transport->disconnect();
+        $this->assertNull($transport->getStream());
     }
 
     /**
@@ -140,6 +142,7 @@ class UDPTest extends TestCase
         $transport = new UDP(
             ['host' => 'test', 'port' => 12345]
         );
+        $this->assertNull($transport->getStream());
         $transport->disconnect();
     }
 

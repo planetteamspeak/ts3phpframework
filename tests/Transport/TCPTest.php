@@ -127,11 +127,24 @@ class TCPTest extends TestCase
     /**
      * @throws TransportException
      */
+    public function testDisconnect()
+    {
+        $transport = new TCP(
+            ['host' => '127.0.0.1', 'port' => 12345]
+        );
+        $transport->disconnect();
+        $this->assertNull($transport->getStream());
+    }
+
+    /**
+     * @throws TransportException
+     */
     public function testDisconnectNoConnection()
     {
         $transport = new TCP(
             ['host' => 'test', 'port' => 12345]
         );
+        $this->assertNull($transport->getStream());
         $transport->disconnect();
     }
 
