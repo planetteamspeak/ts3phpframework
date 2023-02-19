@@ -48,25 +48,23 @@ class Convert
         // force calculation with positive numbers only
         $bytes = floatval(abs($bytes));
 
-        $unit_conversions = array(
-            0 => array("UNIT" => "B", "VALUE" => pow(1024, 0)),
-            1 => array("UNIT" => "KiB", "VALUE" => pow(1024, 1)),
-            2 => array("UNIT" => "MiB", "VALUE" => pow(1024, 2)),
-            3 => array("UNIT" => "GiB", "VALUE" => pow(1024, 3)),
-            4 => array("UNIT" => "TiB", "VALUE" => pow(1024, 4)),
-            5 => array("UNIT" => "PiB", "VALUE" => pow(1024, 5)),
-            6 => array("UNIT" => "EiB", "VALUE" => pow(1024, 6)),
-            7 => array("UNIT" => "ZiB", "VALUE" => pow(1024, 7)),
-            8 => array("UNIT" => "YiB", "VALUE" => pow(1024, 8)),
-        );
+        $unit_conversions = [
+            0 => ["UNIT" => "B", "VALUE" => pow(1024, 0)],
+            1 => ["UNIT" => "KiB", "VALUE" => pow(1024, 1)],
+            2 => ["UNIT" => "MiB", "VALUE" => pow(1024, 2)],
+            3 => ["UNIT" => "GiB", "VALUE" => pow(1024, 3)],
+            4 => ["UNIT" => "TiB", "VALUE" => pow(1024, 4)],
+            5 => ["UNIT" => "PiB", "VALUE" => pow(1024, 5)],
+            6 => ["UNIT" => "EiB", "VALUE" => pow(1024, 6)],
+            7 => ["UNIT" => "ZiB", "VALUE" => pow(1024, 7)],
+            8 => ["UNIT" => "YiB", "VALUE" => pow(1024, 8)],
+        ];
 
         // Sort from the biggest defined unit to smallest to get the best human readable format.
         krsort($unit_conversions);
 
-        foreach($unit_conversions as $conversion)
-        {
-            if($bytes >= $conversion["VALUE"])
-            {
+        foreach ($unit_conversions as $conversion) {
+            if ($bytes >= $conversion["VALUE"]) {
                 $result = $bytes / $conversion["VALUE"];
                 $result = strval(round($result, $precision)) . " " . $conversion["UNIT"];
                 return ($negative) ? '-' . $result : $result;
