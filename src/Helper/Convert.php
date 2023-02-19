@@ -40,30 +40,40 @@ class Convert
      * @param integer $bytes
      * @return string
      */
-    public static function bytes(int $bytes): string
+    public static function bytes(int $bytes, int $precision = 10): string
     {
-        // @todo: Fix precision lost from multiple rounding
-        $kbytes = sprintf("%.02f", $bytes / 1024);
-        $mbytes = sprintf("%.02f", $kbytes / 1024);
-        $gbytes = sprintf("%.02f", $mbytes / 1024);
-        $tbytes = sprintf("%.02f", $gbytes / 1024);
+        // Identify if its a negative or positive number
+        $negative = (str_starts_with($bytes, '-')) ? true : false;
 
-        // @todo: Fix assuming non-negative $bytes value, without validation
-        // Recommend something like: if( (float)$xbytes != 0 )
-        if ($tbytes >= 1) {
-            return $tbytes . " TB";
-        }
-        if ($gbytes >= 1) {
-            return $gbytes . " GB";
-        }
-        if ($mbytes >= 1) {
-            return $mbytes . " MB";
-        }
-        if ($kbytes >= 1) {
-            return $kbytes . " KB";
+        // force calculation with positive numbers only
+        $bytes = floatval(abs($bytes));
+
+        $unit_conversions = array(
+            0 => array("UNIT" => "B", "VALUE" => pow(1024, 0)),
+            1 => array("UNIT" => "KiB", "VALUE" => pow(1024, 1)),
+            2 => array("UNIT" => "MiB", "VALUE" => pow(1024, 2)),
+            3 => array("UNIT" => "GiB", "VALUE" => pow(1024, 3)),
+            4 => array("UNIT" => "TiB", "VALUE" => pow(1024, 4)),
+            5 => array("UNIT" => "PiB", "VALUE" => pow(1024, 5)),
+            6 => array("UNIT" => "EiB", "VALUE" => pow(1024, 6)),
+            7 => array("UNIT" => "ZiB", "VALUE" => pow(1024, 7)),
+            8 => array("UNIT" => "YiB", "VALUE" => pow(1024, 8)),
+        );
+
+        // Sort from the biggest defined unit to smallest to get the best human readable format.
+        krsort($unit_conversions);
+
+        foreach($unit_conversions as $conversion)
+        {
+            if($bytes >= $conversion["VALUE"])
+            {
+                $result = $bytes / $conversion["VALUE"];
+                $result = strval(round($result, $precision)) . " " . $conversion["UNIT"];
+                return ($negative) ? '-' . $result : $result;
+            }
         }
 
-        return $bytes . " B";
+        return ($negative) ? '-' . $bytes . " B" : $bytes . " B";
     }
 
     /**

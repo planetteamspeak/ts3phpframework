@@ -7,86 +7,124 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Convert;
 
 class ConvertTest extends TestCase
 {
-    public function testConvertBytesToHumanReadable()
+    public function testConvertBytesToHumanReadableWithFactor1000()
     {
         $output = Convert::bytes(0);
         $this->assertEquals('0 B', $output);
         $this->assertIsString($output);
 
+        $output = Convert::bytes(1000);
+        $this->assertEquals('1000 B', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1000*1000);
+        $this->assertEquals('976.5625 KiB', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1000*1000*1000);
+        $this->assertEquals('953.6743164063 MiB', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1000*1000*1000*1000);
+        $this->assertEquals('931.3225746155 GiB', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1000*1000*1000*1000*1000);
+        $this->assertEquals('909.4947017729 TiB', $output);
+        $this->assertIsString($output);
+    }
+
+    public function testConvertBytesToHumanReadableWithFactor1024()
+    {
+        $output = Convert::bytes(0);
+        $this->assertEquals('0 B', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1024);
+        $this->assertEquals('1 KiB', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1024*1024);
+        $this->assertEquals('1 MiB', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1024*1024*1024);
+        $this->assertEquals('1 GiB', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1024*1024*1024*1024);
+        $this->assertEquals('1 TiB', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::bytes(1024*1024*1024*1024*1024);
+        $this->assertEquals('1 PiB', $output);
+        $this->assertIsString($output);
+    }
+
+    public function testConvertBytesToHumanReadableWithOddNumbers()
+    {
         $output = Convert::bytes(1);
         $this->assertEquals('1 B', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1018);
-        $this->assertEquals('1018 B', $output);
+        $output = Convert::bytes(1024+256);
+        $this->assertEquals('1.25 KiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1019);
-        $this->assertEquals('1.00 KB', $output);
+        $output = Convert::bytes(1024*1024+256);
+        $this->assertEquals('1.0002441406 MiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024);
-        $this->assertEquals('1.00 KB', $output);
+        $output = Convert::bytes(1024*1024*1024+256);
+        $this->assertEquals('1.0000002384 GiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1029);
-        $this->assertEquals('1.00 KB', $output);
+        $output = Convert::bytes(1024*1024*1024*1024+256);
+        $this->assertEquals('1.0000000002 TiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1030);
-        $this->assertEquals('1.01 KB', $output);
+        $output = Convert::bytes(1024*1024*1024*1024*1024+(256*1024*1024*1024));
+        $this->assertEquals('1.0002441406 PiB', $output);
+        $this->assertIsString($output);
+    }
+
+    public function testConvertBytesToHumanReadableWithNegativeNumbers()
+    {
+        $output = Convert::bytes(0);
+        $this->assertEquals('0 B', $output);
         $this->assertIsString($output);
 
-        // Note: Strange offset is due to ::bytes() rounding imprecision
-        $output = Convert::bytes((1024**2 - (5*1024) - 118));
-        $this->assertEquals('1018.88 KB', $output);
+        $output = Convert::bytes(-1000);
+        $this->assertEquals('-1000 B', $output);
         $this->assertIsString($output);
 
-        // Note: Strange offset is due to ::bytes() rounding imprecision
-        $output = Convert::bytes((1024**2 - (5*1024) - 117));
-        $this->assertEquals('1.00 MB', $output);
+        $output = Convert::bytes(-1024);
+        $this->assertEquals('-1 KiB', $output);
         $this->assertIsString($output);
 
-        // Note: Strange offset is due to ::bytes() rounding imprecision
-        $output = Convert::bytes(
-            (1024**3 - (5*(1024**2)) - 1024*117-774)
-        );
-        $this->assertEquals('1018.88 MB', $output);
+        $output = Convert::bytes(-1000*1000);
+        $this->assertEquals('-976.5625 KiB', $output);
         $this->assertIsString($output);
 
-        // Note: Strange offset is due to ::bytes() rounding imprecision
-        $output = Convert::bytes(
-            (1024**3 - (5*(1024**2)) - 1024*117-773)
-        );
-        $this->assertEquals('1.00 GB', $output);
+        $output = Convert::bytes(-1000*1000*1000);
+        $this->assertEquals('-953.6743164063 MiB', $output);
         $this->assertIsString($output);
 
-        // Note: Strange offset is due to ::bytes() rounding imprecision
-        $output = Convert::bytes(
-            (1024**4 - (5*(1024**3)) - (1024**2)*117-1024*773 - 118)
-        );
-        $this->assertEquals('1018.88 GB', $output);
+        $output = Convert::bytes(-1024*1024);
+        $this->assertEquals('-1 MiB', $output);
         $this->assertIsString($output);
 
-        // Note: Strange offset is due to ::bytes() rounding imprecision
-        $output = Convert::bytes(
-            (1024**4 - (5*(1024**3)) - (1024**2)*117-1024*773 - 117)
-        );
-        $this->assertEquals('1.00 TB', $output);
+        $output = Convert::bytes(-1024*1024*1024);
+        $this->assertEquals('-1 GiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(-1);
-        $this->assertEquals('-1 B', $output);
+        $output = Convert::bytes(-1024*1024*1024*1024);
+        $this->assertEquals('-1 TiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(-1023);
-        $this->assertEquals('-1023 B', $output);
+        $output = Convert::bytes(-1024*1024*1024*1024-256);
+        $this->assertEquals('-1.0000000002 TiB', $output);
         $this->assertIsString($output);
-
-        // @todo: Enable once ::bytes() can handle negatives values >= 1024
-    //$output = Convert::bytes(-1024);
-    //$this->assertEquals('-1.00 KB', $output);
-    //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
     }
 
     public function testConvertSecondsToHumanReadable()
@@ -136,9 +174,9 @@ class ConvertTest extends TestCase
         $this->assertIsString($output);
 
         // @todo: Enable after ::seconds() can handle negative integers
-    //$output = Convert::seconds(-1);
-    //$this->assertEquals('-0D 00:00:01', $output);
-    //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        //$output = Convert::seconds(-1);
+        //$this->assertEquals('-0D 00:00:01', $output);
+        //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
     }
 
     public function testConvertCodecIDToHumanReadable()
@@ -170,8 +208,8 @@ class ConvertTest extends TestCase
     {
         // @todo: Implement matching integration test for testing real log entries
         $mock_data = [
-      '2017-06-26 21:55:30.307009|INFO    |Query         |   |query from 47 [::1]:62592 issued: login with account "serveradmin"(serveradmin)'
-    ];
+            '2017-06-26 21:55:30.307009|INFO    |Query         |   |query from 47 [::1]:62592 issued: login with account "serveradmin"(serveradmin)'
+        ];
 
         foreach ($mock_data as $entry) {
             $entryParsed = Convert::logEntry($entry);
@@ -212,8 +250,8 @@ class ConvertTest extends TestCase
         $this->assertEquals(
             'image/gif',
             Convert::imageMimeType(
-            base64_decode('R0lGODdhAQABAIAAAPxqbAAAACwAAAAAAQABAAACAkQBADs=')
-        )
+                base64_decode('R0lGODdhAQABAIAAAPxqbAAAACwAAAAAAQABAAACAkQBADs=')
+            )
         );
     }
 }
