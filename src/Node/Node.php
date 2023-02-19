@@ -491,7 +491,7 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
     /**
      * @ignore
      */
-    public function getChildren() : null|RecursiveIterator
+    public function getChildren(): null|RecursiveIterator
     {
         $this->verifyNodeList();
 
@@ -521,7 +521,7 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
     /**
      * @ignore
      */
-    public function key() : string|int|null
+    public function key(): string|int|null
     {
         $this->verifyNodeList();
 

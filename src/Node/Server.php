@@ -238,8 +238,7 @@ class Server extends Node
         int    $align = TeamSpeak3::SPACER_ALIGN_REPEAT,
         int    $order = null,
         int    $maxclients = 0
-    ): int
-    {
+    ): int {
         $properties = [
             "channel_name_phonetic" => "channel spacer",
             "channel_codec" => TeamSpeak3::CODEC_OPUS_VOICE,
@@ -1376,7 +1375,7 @@ class Server extends Node
             foreach ($perms as $permsid => $perm) {
                 if (in_array($permsid, array_keys($profiles[$sgid]))) {
                     $profiles[$sgid][$permsid] = $perm["permvalue"];
-                } else if (StringHelper::factory($permsid)->startsWith("i_needed_modify_power_")) {
+                } elseif (StringHelper::factory($permsid)->startsWith("i_needed_modify_power_")) {
                     if (!$grant || $perm["permvalue"] > $grant) {
                         continue;
                     }
@@ -1406,8 +1405,7 @@ class Server extends Node
     public function serverGroupIdentify(
         int $mode = TeamSpeak3::GROUP_IDENTIFIY_STRONGEST,
         int $type = TeamSpeak3::GROUP_DBTYPE_REGULAR
-    ): ServerGroup
-    {
+    ): ServerGroup {
         $profiles = $this->serverGroupGetProfiles($type);
 
         $best_guess_profile = ($mode == TeamSpeak3::GROUP_IDENTIFIY_STRONGEST) ? array_shift($profiles) : array_pop($profiles);
@@ -1741,8 +1739,7 @@ class Server extends Node
         string $cpw = "",
         bool   $overwrite = false,
         bool   $resume = false
-    ): array
-    {
+    ): array {
         $upload = $this->execute("ftinitupload", ["clientftfid" => $clientftfid, "cid" => $cid, "name" => $name, "cpw" => $cpw, "size" => $size, "overwrite" => $overwrite, "resume" => $resume])
             ->toList();
 
@@ -1847,8 +1844,9 @@ class Server extends Node
                 $iconid = $iconid->toInt();
             }
 
-            if ($this->iconIsLocal("virtualserver_icon_id") || $iconid == 0)
+            if ($this->iconIsLocal("virtualserver_icon_id") || $iconid == 0) {
                 return;
+            }
             $name = $this->iconGetName("virtualserver_icon_id");
         }
 
@@ -2121,8 +2119,7 @@ class Server extends Node
         int $type = TeamSpeak3::TOKEN_SERVERGROUP,
         string $description = null,
         array $customset = null
-    ): StringHelper
-    {
+    ): StringHelper {
         return $this->privilegeKeyCreate($id1, $id2, $type, $description, $customset);
     }
 
@@ -2143,8 +2140,7 @@ class Server extends Node
         int    $type = TeamSpeak3::TOKEN_SERVERGROUP,
         string $description = null,
         string $customset = null
-    ): StringHelper
-    {
+    ): StringHelper {
         $token = $this->execute("privilegekeyadd", ["tokentype" => $type, "tokenid1" => $id1, "tokenid2" => $id2, "tokendescription" => $description, "tokencustomset" => $customset])
             ->toList();
 
@@ -2713,7 +2709,7 @@ class Server extends Node
     {
         if ($this["virtualserver_clientsonline"] - $this["virtualserver_queryclientsonline"] >= $this["virtualserver_maxclients"]) {
             return "server_full";
-        } else if ($this["virtualserver_flag_password"]) {
+        } elseif ($this["virtualserver_flag_password"]) {
             return "server_pass";
         } else {
             return "server_open";

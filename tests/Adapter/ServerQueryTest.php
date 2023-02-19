@@ -1,8 +1,6 @@
 <?php
 
-
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Adapter;
-
 
 use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\MockServerQuery;
@@ -11,7 +9,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 
 class ServerQueryTest extends TestCase
 {
-    const S_ERROR_OK = 'error id=0 msg=ok';
+    public const S_ERROR_OK = 'error id=0 msg=ok';
 
     /**
      * @throws AdapterException
@@ -24,8 +22,8 @@ class ServerQueryTest extends TestCase
     /**
      * @throws ServerQueryException
      */
-    public function testRequestIllegalCharakterException() {
-
+    public function testRequestIllegalCharakterException()
+    {
         $query = "Hello\nWorld\r";
 
         $this->expectException(AdapterException::class);
@@ -38,7 +36,8 @@ class ServerQueryTest extends TestCase
      * @throws AdapterException
      * @throws ServerQueryException
      */
-    public function testLogin() {
+    public function testLogin()
+    {
         $query = "login serveradmin secret";
         $serverQuery = $this->createMockServerQuery();
         $reply = $serverQuery->request($query);
