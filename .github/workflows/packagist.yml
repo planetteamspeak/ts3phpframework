@@ -1,0 +1,21 @@
+name: "Packagist Update"
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - dev
+  pull_request:
+  schedule:
+    - cron: '0 15 * * 2'
+
+jobs:
+  packagist-update:
+    name: Packagist Update
+    steps:
+    - uses: mnavarrocarter/packagist-update@v1.0
+      with:
+        username: "ronindesign"
+        api_token: ${{ secrets.packagist_api_token }}
+        package_name: planetteamspeak/ts3phpframework
