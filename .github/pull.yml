@@ -1,0 +1,8 @@
+version: "1"
+rules:
+  - base: upstream-master
+    upstream: planetteamspeak:master
+    mergeMethod: hardreset
+  - base: dev
+    upstream: planetteamspeak:dev
+    mergeMethod: hardreset
