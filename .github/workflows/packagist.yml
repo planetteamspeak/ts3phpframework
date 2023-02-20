@@ -16,7 +16,7 @@ jobs:
     name: Packagist Update
     runs-on: ubuntu-latest
     steps:
-    - uses: mnavarrocarter/packagist-update@v1.0
+    - uses: mnavarrocarter/packagist-update@v1.0.0
       with:
         username: "ronindesign"
         api_token: ${{ secrets.packagist_api_token }}
