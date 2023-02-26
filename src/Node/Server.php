@@ -782,6 +782,25 @@ class Server extends Node
     }
 
     /**
+     * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Client object matching the given IP address.
+     *
+     * @param string $ip_address
+     * @return Client
+     * @throws AdapterException
+     * @throws ServerQueryException
+     */
+    public function clientGetByIpAddress(string $ip_address): Client
+    {
+        foreach ($this->clientList() as $client) {
+            if ($client["connection_client_ip"] == $ip_address) {
+                return $client;
+            }
+        }
+
+        throw new ServerQueryException("invalid clientID", 0x200);
+    }
+
+    /**
      * Returns the PlanetTeamSpeak\TeamSpeak3Framework\Node\Client object matching the given unique identifier.
      *
      * @param string $uid
