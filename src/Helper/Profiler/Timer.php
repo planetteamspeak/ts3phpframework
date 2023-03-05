@@ -90,7 +90,7 @@ class Timer
         $this->data["realmem_start"] = memory_get_usage(true);
         $this->data["emalloc_start"] = memory_get_usage();
 
-        $this->started = microtime(true);
+        $this->started = intval(microtime(true));
         $this->running = true;
     }
 
@@ -105,7 +105,7 @@ class Timer
             return;
         }
 
-        $this->data["runtime"] += microtime(true) - $this->started;
+        $this->data["runtime"] += intval(microtime(true)) - $this->started;
         $this->data["realmem"] += memory_get_usage(true) - $this->data["realmem_start"];
         $this->data["emalloc"] += memory_get_usage() - $this->data["emalloc_start"];
 
