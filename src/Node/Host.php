@@ -641,6 +641,8 @@ class Host extends Node
      */
     public function permissionTree(): array
     {
+        $permissionList = $this->permissionList();
+
         $permtree = [];
 
         foreach ($this->permissionCats() as $val) {
@@ -659,7 +661,7 @@ class Host extends Node
                 $permtree[$val]["permcatname"] = $permtree[$val]["permcatname"]->section("/", 1)->trim();
             }
 
-            foreach ($this->permissionList() as $permission) {
+            foreach ($permissionList as $permission) {
                 if ($permission["permid"]["permcatid"] == $val) {
                     $permtree[$val]["permcatcount"]++;
                 }
