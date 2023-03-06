@@ -662,6 +662,9 @@ class Host extends Node
             }
 
             foreach ($permissionList as $permission) {
+                if ((! array_key_exists("permid", $permission)) or (! array_key_exists("permcatid", $permission["permid"]))) {
+                    continue;
+                }
                 if ($permission["permid"]["permcatid"] == $val) {
                     $permtree[$val]["permcatcount"]++;
                 }
