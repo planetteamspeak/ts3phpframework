@@ -405,10 +405,7 @@ class Channel extends Node
      */
     public function iconDownload()
     {
-        $iconid = $this['channel_icon_id'];
-        if (!is_int($iconid)) {
-            $iconid = $iconid->toInt();
-        }
+        $iconid = floatval($this['channel_icon_id']);
 
         if ($this->iconIsLocal("channel_icon_id") || $iconid == 0) {
             return;

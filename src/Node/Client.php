@@ -411,10 +411,7 @@ class Client extends Node
      */
     public function iconDownload()
     {
-        $iconid = $this['client_icon_id'];
-        if (!is_int($iconid)) {
-            $iconid = $iconid->toInt();
-        }
+        $iconid = floatval($this['client_icon_id']);
 
         if ($this->iconIsLocal("client_icon_id") || $iconid == 0) {
             return;

@@ -142,10 +142,7 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
      */
     public function iconIsLocal(string $key): bool
     {
-        $iconid = $this[$key];
-        if (!is_int($iconid)) {
-            $iconid = $iconid->toInt();
-        }
+        $iconid = floatval($this[$key]);
 
         return $iconid > 0 && $iconid < 1000;
     }
@@ -158,10 +155,7 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
      */
     public function iconGetName(string $key): StringHelper
     {
-        $iconid = $this[$key];
-        if (!is_int($iconid)) {
-            $iconid = $iconid->toInt();
-        }
+        $iconid = floatval($this[$key]);
 
         $iconid = ($iconid < 0) ? (pow(2, 32)) - ($iconid * -1) : $iconid;
 
