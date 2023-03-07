@@ -218,7 +218,7 @@ abstract class Transport
         if ($this->adapter instanceof Adapter) {
             $string = StringHelper::factory(get_class($this->adapter));
 
-            return $string->substr($string->findLast("_"))->replace(["_", " "], "")->toString();
+            return $string->substr($string->findLast("\\"))->replace(["\\", " "], "")->toString();
         }
 
         return "Unknown";
