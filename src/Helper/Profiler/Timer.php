@@ -114,11 +114,11 @@ class Timer
     }
 
     /**
-     * Return the timer runtime.
+     * Return the timer runtime in microseconds.
      *
-     * @return mixed
+     * @return float
      */
-    public function getRuntime(): mixed
+    public function getRuntime(): float
     {
         if ($this->isRunning()) {
             $this->stop();
