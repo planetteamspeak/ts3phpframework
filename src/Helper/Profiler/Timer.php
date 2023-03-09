@@ -40,11 +40,11 @@ class Timer
     protected bool $running = false;
 
     /**
-     * Stores the timestamp when the timer was last started.
+     * Stores the timestamp in microseconds when the timer was last started.
      *
-     * @var integer
+     * @var float
      */
-    protected int $started = 0;
+    protected float $started = 0;
 
     /**
      * Stores the timer name.
@@ -114,11 +114,11 @@ class Timer
     }
 
     /**
-     * Return the timer runtime.
+     * Return the timer runtime in microseconds.
      *
-     * @return mixed
+     * @return float
      */
-    public function getRuntime(): mixed
+    public function getRuntime(): float
     {
         if ($this->isRunning()) {
             $this->stop();
