@@ -250,11 +250,11 @@ class ServerQuery extends Adapter
     }
 
     /**
-     * Returns the total runtime of all queries.
+     * Returns the total runtime in microseconds of all queries.
      *
-     * @return mixed
+     * @return float
      */
-    public function getQueryRuntime(): mixed
+    public function getQueryRuntime(): float
     {
         return $this->getProfiler()->getRuntime();
     }
