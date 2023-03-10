@@ -158,8 +158,6 @@ class TCP extends Transport
             if ($data === false) {
                 if ($line->count()) {
                     $line->append($token);
-                } else {
-                    throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
                 }
             } else {
                 $line->append($data);
