@@ -180,7 +180,7 @@ class StringTest extends TestCase
 
     public function testIsUtf8()
     {
-        $string = new StringHelper(utf8_encode("Äpfel"));
+        $string = new StringHelper(mb_convert_encoding("Äpfel", 'UTF-8', mb_list_encodings()));
         $this->assertTrue($string->isUtf8());
 
         // Well-formed UTF-8 Byte Sequences
@@ -258,11 +258,11 @@ class StringTest extends TestCase
     {
         $notUtf8 = utf8_decode("Äpfel");
         $stringNotUtf8 = new StringHelper($notUtf8);
-        $this->assertEquals(utf8_encode($notUtf8), $stringNotUtf8->toUtf8()->toString());
+        $this->assertEquals(mb_convert_encoding($notUtf8, 'UTF-8', mb_list_encodings()), $stringNotUtf8->toUtf8()->toString());
 
         $notUtf8 = utf8_decode("¶");
         $stringNotUtf8 = new StringHelper($notUtf8);
-        $this->assertEquals(utf8_encode($notUtf8), $stringNotUtf8->toUtf8()->toString());
+        $this->assertEquals(mb_convert_encoding($notUtf8, 'UTF-8', mb_list_encodings()), $stringNotUtf8->toUtf8()->toString());
     }
 
     public function testToBase64()
