@@ -256,11 +256,11 @@ class StringTest extends TestCase
 
     public function testToUft8()
     {
-        $notUtf8 = utf8_decode("Äpfel");
+        $notUtf8 = mb_convert_encoding("Äpfel", 'ISO-8859-1', 'UTF-8');
         $stringNotUtf8 = new StringHelper($notUtf8);
         $this->assertEquals(mb_convert_encoding($notUtf8, 'UTF-8', mb_list_encodings()), $stringNotUtf8->toUtf8()->toString());
 
-        $notUtf8 = utf8_decode("¶");
+        $notUtf8 = mb_convert_encoding("¶", 'ISO-8859-1', 'UTF-8');
         $stringNotUtf8 = new StringHelper($notUtf8);
         $this->assertEquals(mb_convert_encoding($notUtf8, 'UTF-8', mb_list_encodings()), $stringNotUtf8->toUtf8()->toString());
     }
