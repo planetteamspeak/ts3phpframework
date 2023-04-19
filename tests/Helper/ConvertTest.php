@@ -173,6 +173,10 @@ class ConvertTest extends TestCase
         $this->assertEquals('1D 23:59:59', $output);
         $this->assertIsString($output);
 
+        $output = Convert::seconds(90.083);
+        $this->assertEquals('0D 00:01:30', $output);
+        $this->assertIsString($output);
+
         // @todo: Enable after ::seconds() can handle negative integers
         //$output = Convert::seconds(-1);
         //$this->assertEquals('-0D 00:00:01', $output);
