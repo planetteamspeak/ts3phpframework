@@ -297,7 +297,7 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
                 } elseif ($key->contains("_bandwidth_")) {
                     $info[$key->toString()] = Convert::bytes($val) . "/s";
                 } elseif ($key->contains("_packets_")) {
-                    $info[$key->toString()] = number_format($val, null, null, ".");
+                    $info[$key->toString()] = number_format($val, 0, null, ".");
                 } elseif ($key->contains("_packetloss_")) {
                     $info[$key->toString()] = sprintf("%01.2f", floatval($val instanceof StringHelper ? $val->toString() : strval($val)) * 100) . "%";
                 } elseif ($key->endsWith("_uptime")) {
