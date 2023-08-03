@@ -399,15 +399,15 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Returns the integer value of the string.
      *
-     * @return float|int
+     * @return int
      */
-    public function toInt(): float|int
+    public function toInt(): int
     {
-        if ($this->string == pow(2, 63) || $this->string == pow(2, 64)) {
+        if ($this->string == pow(2, 63) || $this->string == pow(2, 64) || $this->string > pow(2, 31)) {
             return -1;
         }
 
-        return ($this->string > pow(2, 31)) ? floatval($this->string) : intval($this->string);
+        return intval($this->string);
     }
 
     /**
