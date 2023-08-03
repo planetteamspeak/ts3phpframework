@@ -24,6 +24,7 @@
 
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Helper;
 
+use DateTime;
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 /**
@@ -85,13 +86,16 @@ class Convert
      * @todo: Handle negative integer $seconds, or invalidate
      *
      */
-    public static function seconds(int $seconds, bool $is_ms = false, string $format = "%dD %02d:%02d:%02d"): string
+    public static function seconds(int $seconds, bool $is_ms = false, string $format = "%aD %H:%I:%S"): string
     {
         if ($is_ms) {
             $seconds = $seconds / 1000;
         }
 
-        return sprintf($format, $seconds / 60 / 60 / 24, ($seconds / 60 / 60) % 24, ($seconds / 60) % 60, $seconds % 60);
+        $current_datetime = new DateTime("@0");
+        $seconds_datetime = new DateTime("@$seconds");
+
+        return $current_datetime->diff($seconds_datetime)->format($format);
     }
 
     /**
