@@ -53,10 +53,12 @@ class ReplyTest extends TestCase
      */
     public function testConstructor()
     {
-        $reply = new Reply([
-      new StringHelper(static::$S_SERVERLIST),
-      new StringHelper(static::$S_ERROR_OK)
-    ]);
+      $reply = new Reply([
+        new StringHelper(static::$S_SERVERLIST),
+        new StringHelper(static::$S_ERROR_OK)
+      ]);
+
+      $this->assertInstanceOf(Reply::class, $reply);
     }
 
     /**
