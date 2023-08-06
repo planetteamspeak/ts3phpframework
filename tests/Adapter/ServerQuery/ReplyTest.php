@@ -53,12 +53,12 @@ class ReplyTest extends TestCase
      */
     public function testConstructor()
     {
-      $reply = new Reply([
-        new StringHelper(static::$S_SERVERLIST),
-        new StringHelper(static::$S_ERROR_OK)
-      ]);
+        $reply = new Reply([
+          new StringHelper(static::$S_SERVERLIST),
+          new StringHelper(static::$S_ERROR_OK)
+        ]);
 
-      $this->assertInstanceOf(Reply::class, $reply);
+        $this->assertInstanceOf(Reply::class, $reply);
     }
 
     /**
@@ -67,12 +67,12 @@ class ReplyTest extends TestCase
      */
     public function testToString()
     {
-      $reply = new Reply([
-        new StringHelper(static::$S_SERVERLIST),
-        new StringHelper(static::$S_ERROR_OK)
-      ]);
+        $reply = new Reply([
+          new StringHelper(static::$S_SERVERLIST),
+          new StringHelper(static::$S_ERROR_OK)
+        ]);
 
-      $this->assertEquals(static::$E_SERVERLIST, (string) $reply->toString());
+        $this->assertEquals(static::$E_SERVERLIST, (string) $reply->toString());
     }
 
     public function testToLines()
@@ -87,21 +87,21 @@ class ReplyTest extends TestCase
      */
     public function testToArray()
     {
-      $reply = new Reply([
-        new StringHelper(static::$S_CLIENTLIST_EXTENDED_SINGLE),
-        new StringHelper(static::$S_ERROR_OK)
-      ]);
+        $reply = new Reply([
+          new StringHelper(static::$S_CLIENTLIST_EXTENDED_SINGLE),
+          new StringHelper(static::$S_ERROR_OK)
+        ]);
 
-      $clientlist_array = $reply->toArray('clid')[0];
+        $clientlist_array = $reply->toArray('clid')[0];
 
-      $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLID, (string) $clientlist_array['clid']);
-      $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_NICKNAME, (string) $clientlist_array['client_nickname']);
-      $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_AWAY_MESSAGE, (string) $clientlist_array['client_away_message']);
-      $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_FLAG_TALKING, (string) $clientlist_array['client_flag_talking']);
-      $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_UNIQUE_IDENTIFIER, (string) $clientlist_array['client_unique_identifier']);
-      $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_SERVERGROUPS, (string) $clientlist_array['client_servergroups']);
-      $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_VERSION, (string) $clientlist_array['client_version']);
-      $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_BADGES, (string) $clientlist_array['client_badges']);
+        $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLID, (string) $clientlist_array['clid']);
+        $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_NICKNAME, (string) $clientlist_array['client_nickname']);
+        $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_AWAY_MESSAGE, (string) $clientlist_array['client_away_message']);
+        $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_FLAG_TALKING, (string) $clientlist_array['client_flag_talking']);
+        $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_UNIQUE_IDENTIFIER, (string) $clientlist_array['client_unique_identifier']);
+        $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_SERVERGROUPS, (string) $clientlist_array['client_servergroups']);
+        $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_VERSION, (string) $clientlist_array['client_version']);
+        $this->assertEquals(static::$E_CLIENTLIST_EXTENDED_SINGLE_CLIENT_BADGES, (string) $clientlist_array['client_badges']);
     }
 
     public function testToAssocArray()
