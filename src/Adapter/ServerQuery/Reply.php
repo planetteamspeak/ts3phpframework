@@ -203,7 +203,7 @@ class Reply
             if (isset($node[$ident])) {
                 $array[(is_object($node[$ident])) ? $node[$ident]->toString() : $node[$ident]] = $node;
             } else {
-                throw new ServerQueryException("invalid parameter", 0x602);
+                throw new ServerQueryException("invalid parameter. ident '$ident' does not exist in node '".json_encode($node)."'", 0x602);
             }
         }
 
