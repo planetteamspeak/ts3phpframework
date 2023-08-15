@@ -321,7 +321,7 @@ class Uri
         }
 
         switch ($host) {
-            case filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4|FILTER_FLAG_IPV6):
+            case filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6):
                 // Valid IPv4 or IPv6 address
                 break;
             case !preg_match("/^(([0-9]{1,3})\.){3}([0-9]{1,3})$/", $host) and preg_match("/^(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])$/i", $host):

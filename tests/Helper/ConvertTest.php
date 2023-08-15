@@ -17,19 +17,19 @@ class ConvertTest extends TestCase
         $this->assertEquals('1000 B', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1000*1000);
+        $output = Convert::bytes(1000 * 1000);
         $this->assertEquals('976.5625 KiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1000*1000*1000);
+        $output = Convert::bytes(1000 * 1000 * 1000);
         $this->assertEquals('953.6743164063 MiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1000*1000*1000*1000);
+        $output = Convert::bytes(1000 * 1000 * 1000 * 1000);
         $this->assertEquals('931.3225746155 GiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1000*1000*1000*1000*1000);
+        $output = Convert::bytes(1000 * 1000 * 1000 * 1000 * 1000);
         $this->assertEquals('909.4947017729 TiB', $output);
         $this->assertIsString($output);
     }
@@ -44,19 +44,19 @@ class ConvertTest extends TestCase
         $this->assertEquals('1 KiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024*1024);
+        $output = Convert::bytes(1024 * 1024);
         $this->assertEquals('1 MiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024*1024*1024);
+        $output = Convert::bytes(1024 * 1024 * 1024);
         $this->assertEquals('1 GiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024*1024*1024*1024);
+        $output = Convert::bytes(1024 * 1024 * 1024 * 1024);
         $this->assertEquals('1 TiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024*1024*1024*1024*1024);
+        $output = Convert::bytes(1024 * 1024 * 1024 * 1024 * 1024);
         $this->assertEquals('1 PiB', $output);
         $this->assertIsString($output);
     }
@@ -67,23 +67,23 @@ class ConvertTest extends TestCase
         $this->assertEquals('1 B', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024+256);
+        $output = Convert::bytes(1024 + 256);
         $this->assertEquals('1.25 KiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024*1024+256);
+        $output = Convert::bytes(1024 * 1024 + 256);
         $this->assertEquals('1.0002441406 MiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024*1024*1024+256);
+        $output = Convert::bytes(1024 * 1024 * 1024 + 256);
         $this->assertEquals('1.0000002384 GiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024*1024*1024*1024+256);
+        $output = Convert::bytes(1024 * 1024 * 1024 * 1024 + 256);
         $this->assertEquals('1.0000000002 TiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(1024*1024*1024*1024*1024+(256*1024*1024*1024));
+        $output = Convert::bytes(1024 * 1024 * 1024 * 1024 * 1024 + (256 * 1024 * 1024 * 1024));
         $this->assertEquals('1.0002441406 PiB', $output);
         $this->assertIsString($output);
     }
@@ -102,27 +102,27 @@ class ConvertTest extends TestCase
         $this->assertEquals('-1 KiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(-1000*1000);
+        $output = Convert::bytes(-1000 * 1000);
         $this->assertEquals('-976.5625 KiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(-1000*1000*1000);
+        $output = Convert::bytes(-1000 * 1000 * 1000);
         $this->assertEquals('-953.6743164063 MiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(-1024*1024);
+        $output = Convert::bytes(-1024 * 1024);
         $this->assertEquals('-1 MiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(-1024*1024*1024);
+        $output = Convert::bytes(-1024 * 1024 * 1024);
         $this->assertEquals('-1 GiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(-1024*1024*1024*1024);
+        $output = Convert::bytes(-1024 * 1024 * 1024 * 1024);
         $this->assertEquals('-1 TiB', $output);
         $this->assertIsString($output);
 
-        $output = Convert::bytes(-1024*1024*1024*1024-256);
+        $output = Convert::bytes(-1024 * 1024 * 1024 * 1024 - 256);
         $this->assertEquals('-1.0000000002 TiB', $output);
         $this->assertIsString($output);
     }
@@ -146,29 +146,29 @@ class ConvertTest extends TestCase
         $this->assertIsString($output);
 
 
-        $output = Convert::seconds((59*60) + 59);
+        $output = Convert::seconds((59 * 60) + 59);
         $this->assertEquals('0D 00:59:59', $output);
         $this->assertIsString($output);
 
-        $output = Convert::seconds((59*60) + 60);
+        $output = Convert::seconds((59 * 60) + 60);
         $this->assertEquals('0D 01:00:00', $output);
         $this->assertIsString($output);
 
         $output = Convert::seconds(
-            (23*(60**2)) + (59*60) + 59
+            (23 * (60 ** 2)) + (59 * 60) + 59
         );
         $this->assertEquals('0D 23:59:59', $output);
         $this->assertIsString($output);
 
         $output = Convert::seconds(
-            (23*(60**2)) + (59*60) + 60
+            (23 * (60 ** 2)) + (59 * 60) + 60
         );
         $this->assertEquals('1D 00:00:00', $output);
         $this->assertIsString($output);
 
 
         $output = Convert::seconds(
-            (47*(60**2)) + (59*60) + 59
+            (47 * (60 ** 2)) + (59 * 60) + 59
         );
         $this->assertEquals('1D 23:59:59', $output);
         $this->assertIsString($output);
