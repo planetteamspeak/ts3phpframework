@@ -246,7 +246,7 @@ abstract class Transport
      */
     public function isConnected(): bool
     {
-        return is_resource($this->stream);
+        return ($this->getStream() === null) ? false : true;
     }
 
     /**
