@@ -100,6 +100,11 @@ class ServerQuery extends Adapter
      */
     public function __destruct()
     {
+        // do not disconnect, when acting as bot in non-blocking mode
+        if (! $this->getTransport()->getConfig("blocking")) {
+            return;
+        }
+
         if ($this->getTransport() instanceof Transport && $this->transport->isConnected()) {
             try {
                 $this->request("quit");
