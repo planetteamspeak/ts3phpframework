@@ -3,6 +3,7 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Transport;
 
 use PHPUnit\Framework\TestCase;
+use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\MockServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\TCP;
@@ -89,6 +90,25 @@ class TCPTest extends TestCase
             ['host' => 'test', 'port' => 12345]
         );
         $this->assertNull($transport->getStream());
+    }
+
+    /**
+     * @throws AdapterException
+     */
+    protected function createMockServerQuery(): MockServerQuery
+    {
+        return new MockServerQuery(['host' => '0.0.0.0', 'port' => 9987]);
+    }
+
+    /**
+     * Tests if the connection status gets properly returned.
+     */
+    public function testConnectionStatus()
+    {
+        $mockServerQuery = $this->createMockServerQuery();
+        $this->assertTrue($mockServerQuery->getTransport()->isConnected());
+        $mockServerQuery->getTransport()->disconnect();
+        $this->assertFalse($mockServerQuery->getTransport()->isConnected());
     }
 
     /**

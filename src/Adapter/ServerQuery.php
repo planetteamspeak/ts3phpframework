@@ -100,6 +100,11 @@ class ServerQuery extends Adapter
      */
     public function __destruct()
     {
+        // do not disconnect, when acting as bot in non-blocking mode
+        if (! $this->getTransport()->getConfig("blocking")) {
+            return;
+        }
+
         if ($this->getTransport() instanceof Transport && $this->transport->isConnected()) {
             try {
                 $this->request("quit");
@@ -137,6 +142,9 @@ class ServerQuery extends Adapter
         $rpl = [];
 
         do {
+            if (! $this->getTransport()->isConnected()) {
+                break;
+            }
             $str = $this->getTransport()->readLine();
             $rpl[] = $str;
         } while ($str->section(TeamSpeak3::SEPARATOR_CELL) != TeamSpeak3::ERROR);
@@ -163,6 +171,9 @@ class ServerQuery extends Adapter
         }
 
         do {
+            if (! $this->getTransport()->isConnected()) {
+                break;
+            }
             $evt = $this->getTransport()->readLine();
         } while (!$evt->section(TeamSpeak3::SEPARATOR_CELL)->startsWith(TeamSpeak3::EVENT));
 
