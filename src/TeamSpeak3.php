@@ -79,7 +79,7 @@ class TeamSpeak3
     /**
      * TeamSpeak 3 PHP Framework version.
      */
-    public const LIB_VERSION = "1.1.35";
+    public const LIB_VERSION = "1.2.2";
 
     /*@
      * TeamSpeak 3 protocol separators.
