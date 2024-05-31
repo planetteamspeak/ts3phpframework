@@ -44,20 +44,39 @@ class UriTest extends TestCase
             'use_offline_as_virtual',
             'clients_before_channels'
         ],
-        'test_uri' => [
+        'test_uri' => 'serverquery://username:password@127.0.0.1:10011/?server_port=9987&blocking=0#no_query_clients',
+        'valid_uris' => [
+            'serverquery://127.0.0.1:10011',
+            'serverquery://127.0.0.1:10011/',
+            'serverquery://127.0.0.1:10011?server_port=9987',
+            'serverquery://127.0.0.1:10011/?server_port=9987',
+            'serverquery://127.0.0.1:10011/?server_port=9987&blocking=0',
+            'serverquery://127.0.0.1:10011/?server_port=9987&blocking=0#no_query_clients',
+            'serverquery://127.0.0.1:10011/#no_query_clients',
+            'serverquery://127.0.0.1:10011#no_query_clients',
             'serverquery://username:password@127.0.0.1:10011',
+            'serverquery://username:password@127.0.0.1:10011/',
+            'serverquery://username:password@127.0.0.1:10011?server_port=9987',
             'serverquery://username:password@127.0.0.1:10011/?server_port=9987',
             'serverquery://username:password@127.0.0.1:10011/?server_port=9987&blocking=0',
-            'serverquery://username:password@127.0.0.1:10011/?server_port=9987&blocking=0#no_query_clients'
-        ]
+            'serverquery://username:password@127.0.0.1:10011/?server_port=9987&blocking=0#no_query_clients',
+            'serverquery://username:password@127.0.0.1:10011/#no_query_clients',
+            'serverquery://username:password@127.0.0.1:10011#no_query_clients',
+        ],
+        'invalid_uris' => [
+            'serverquery://127.0.0.1', // port missing
+            'serverquery://127.0.0.1/', // port missing
+            'serverquery://127.0.0.1:10011/#no_query_clients?server_port=9987', # fragment must be after query
+            'serverquery://username:password@127.0.0.1', // port missing
+            'serverquery://username:password@127.0.0.1/', // port missing
+            'serverquery://username:password@127.0.0.1:10011/#no_query_clients?server_port=9987', # fragment must be after query
+        ],
     ];
 
     public function testConstructEmptyURI()
     {
         $this->expectException(HelperException::class);
-        $this->expectExceptionMessage('invalid URI scheme');
-
-        // Uri should throw exception on non-alphanumeric in <scheme> of URI
+        $this->expectExceptionMessage('no URI supplied');
         new Uri('');
     }
 
@@ -70,7 +89,7 @@ class UriTest extends TestCase
         new Uri(str_replace(
             'serverquery',
             'server&&&&query', // non-alphanumeric
-            $this->mock['test_uri'][0]
+            $this->mock['test_uri']
         ));
     }
 
@@ -84,7 +103,7 @@ class UriTest extends TestCase
      */
     public function testCheckUser()
     {
-        $uri = new Uri($this->mock['test_uri'][0]);
+        $uri = new Uri($this->mock['test_uri']);
 
         $ASCIIValid = [
             48, 57, 65, 90, 97, 122, 45, 95, 46, 33, 126, 42, 39, 40, 41, 91, 93, 59, 58, 38, 61, 43, 36, 44
@@ -114,7 +133,7 @@ class UriTest extends TestCase
      */
     public function testCheckPass()
     {
-        $uri = new Uri($this->mock['test_uri'][0]);
+        $uri = new Uri($this->mock['test_uri']);
 
         $ASCIIValid = [
             48, 57, 65, 90, 97, 122, 45, 95, 46, 33, 126, 42, 39, 40, 41, 91, 93, 59, 58, 38, 61, 43, 36, 44
@@ -141,7 +160,7 @@ class UriTest extends TestCase
 
     public function testCheckHost()
     {
-        $uri = new Uri($this->mock['test_uri'][0]);
+        $uri = new Uri($this->mock['test_uri']);
 
         $validHosts = [
             // Private IPv4 addresses
@@ -188,7 +207,7 @@ class UriTest extends TestCase
 
     public function testCheckPort()
     {
-        $uri = new Uri($this->mock['test_uri'][0]);
+        $uri = new Uri($this->mock['test_uri']);
 
         $validPorts = [
             80, 443, 8080, 9200, 9987, 10011, 10022,
@@ -210,7 +229,7 @@ class UriTest extends TestCase
      */
     public function testCheckPath()
     {
-        $uri = new Uri($this->mock['test_uri'][1]);
+        $uri = new Uri($this->mock['test_uri']);
 
         // NOTE: Similar, but different valid characters than previous tests.
         // '0-9A-Za-z-_.!~*'()[]:@&=+$,;/' and url escaped hex '%XX'
@@ -246,7 +265,7 @@ class UriTest extends TestCase
      */
     public function testCheckQuery()
     {
-        $uri = new Uri($this->mock['test_uri'][1]);
+        $uri = new Uri($this->mock['test_uri']);
 
         // NOTE: Similar, but different valid characters than previous tests.
         // '0-9A-Za-z-_.!~*'()[]:@&=+$,;/#' and url escaped hex '%XX'
@@ -273,7 +292,7 @@ class UriTest extends TestCase
      */
     public function testCheckFragment()
     {
-        $uri = new Uri($this->mock['test_uri'][1]);
+        $uri = new Uri($this->mock['test_uri']);
 
         // NOTE: Similar, but different valid characters than previous tests.
         // '0-9A-Za-z-_.!~*'()[]:@&=+$,;/#' and url escaped hex '%XX'
@@ -298,9 +317,44 @@ class UriTest extends TestCase
     /**
      * @throws HelperException
      */
+    public function testUriIsValid(): void
+    {
+        foreach ($this->mock['valid_uris'] as $valid_uri) {
+            $uri = new Uri($valid_uri);
+            $this->assertTrue($uri->isValid());
+
+            $this->assertEquals('serverquery', $uri->getScheme());
+
+            $this->assertEquals('127.0.0.1', $uri->getHost());
+            $this->assertInstanceOf(
+                StringHelper::class,
+                $uri->getHost()
+            );
+
+            $this->assertEquals(10011, $uri->getPort());
+            $this->assertIsInt($uri->getPort());
+        }
+    }
+
+    /**
+     * @throws HelperException
+     */
+    public function testUriIsNotValid(): void
+    {
+        foreach ($this->mock['invalid_uris'] as $invalid_uri) {
+            $this->expectException(HelperException::class);
+            $this->expectExceptionMessage('invalid URI supplied');
+            $uri = new Uri($invalid_uri);
+            $this->assertFalse($uri->isValid());
+        }
+    }
+
+    /**
+     * @throws HelperException
+     */
     public function testIsValid(): Uri
     {
-        $uri = new Uri($this->mock['test_uri'][3]);
+        $uri = new Uri($this->mock['test_uri']);
 
         $this->assertTrue($uri->isValid());
 

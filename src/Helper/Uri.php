@@ -105,13 +105,8 @@ class Uri
      */
     public function __construct(string $uri)
     {
-        $uri = explode(":", $uri, 2);
-
-        $this->scheme = strtolower($uri[0]);
-        $uriString = $uri[1] ?? "";
-
-        if (!ctype_alnum($this->scheme)) {
-            throw new HelperException("invalid URI scheme '" . $this->scheme . "' supplied");
+        if (!strlen($uri)) {
+            throw new HelperException("no URI supplied");
         }
 
         /* grammar rules for validation */
@@ -124,9 +119,7 @@ class Uri
         $this->regex["path"] = "(?:\/" . $this->regex["segment"] . "?)+";
         $this->regex["uric"] = "(?:" . $this->regex["reserved"] . "|" . $this->regex["unreserved"] . "|" . $this->regex["escaped"] . ")";
 
-        if (strlen($uriString) > 0) {
-            $this->parseUri($uriString);
-        }
+        $this->parseUri($uri);
 
         if (!$this->isValid()) {
             throw new HelperException("invalid URI supplied");
@@ -142,24 +135,31 @@ class Uri
      */
     protected function parseUri(string $uriString = ''): void
     {
-        $status = @preg_match("~^//(?P<user>.*):(?P<password>.*)@(?P<host>.*):(?P<port>[0-9]{2,5})(?:/(?P<path>.*?))?(?:\?(?P<query>.*?))?(?:#(?P<fragment>.*))?$~", $uriString, $matches);
+        $components = parse_url($uriString, -1);
 
-        if ($status === false) {
+        if ($components === false) {
             throw new HelperException("URI scheme-specific decomposition failed");
         }
 
-        if (!$status) {
-            return;
+        $this->scheme = StringHelper::factory(isset($components["scheme"]) ? $components["scheme"] : "");
+
+        if (empty(trim($this->scheme)) or !ctype_alnum($this->scheme->toString())) {
+            throw new HelperException("invalid URI scheme '" . $this->scheme . "' supplied");
         }
 
-        $this->user = StringHelper::factory($matches[1] ?? "");
-        $this->pass = StringHelper::factory($matches[2] ?? "");
-        $this->host = StringHelper::factory($matches[3] ?? "");
-        $this->port = StringHelper::factory($matches[4] ?? "");
+        $this->host = StringHelper::factory(isset($components["host"]) ? $components["host"] : "");
+        $this->port = StringHelper::factory(isset($components["port"]) ? $components["port"] : "");
 
-        $this->path = StringHelper::factory((isset($matches[5])) ? $matches[5] : "");
-        $this->query = StringHelper::factory((isset($matches[6])) ? $matches[6] : "");
-        $this->fragment = StringHelper::factory((isset($matches[7])) ? $matches[7] : "");
+        $this->user = StringHelper::factory(isset($components["user"]) ? $components["user"] : "");
+        $this->pass = StringHelper::factory(isset($components["pass"]) ? $components["pass"] : "");
+
+        $this->path = StringHelper::factory((isset($components["path"])) ? $components["path"] : "");
+        $this->query = StringHelper::factory((isset($components["query"])) ? $components["query"] : "");
+        $this->fragment = StringHelper::factory((isset($components["fragment"])) ? $components["fragment"] : "");
+
+        if (str_contains($this->fragment, "?")) {
+            throw new HelperException("invalid URI fragment '" . $this->fragment . "' supplied (fragment must be after query)");
+        }
     }
 
     /**
@@ -222,7 +222,7 @@ class Uri
     public function checkUser(string $username = null): bool
     {
         if ($username === null) {
-            $username = $this->user;
+            $username = $this->user->toString();
         }
 
         if (strlen($username) == 0) {
@@ -270,7 +270,7 @@ class Uri
     public function checkPass(StringHelper|string $password = null): bool
     {
         if ($password === null) {
-            $password = $this->pass;
+            $password = $this->pass->toString();
         }
 
         if (strlen($password) == 0) {
@@ -368,7 +368,11 @@ class Uri
     public function checkPort(int $port = null): bool
     {
         if ($port === null) {
-            $port = intval($this->port->toString());
+            if ($this->port instanceof StringHelper) {
+                $port = intval($this->port->toString());
+            } else {
+                $port = intval($this->port);
+            }
         }
 
         switch ($port) {
@@ -413,7 +417,7 @@ class Uri
     public function checkPath(string $path = null): bool
     {
         if ($path === null) {
-            $path = $this->path;
+            $path = $this->path->toString();
         }
 
         if (strlen($path) == 0) {
