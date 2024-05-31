@@ -26,6 +26,8 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework;
 
 use Exception;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\Adapter;
+use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\FileTransfer;
+use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\MockServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\HelperException;
@@ -33,6 +35,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Uri;
+use PlanetTeamSpeak\TeamSpeak3Framework\Node\Host;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Server;
 
 /**
@@ -333,13 +336,13 @@ class TeamSpeak3
      *   - filetransfer://127.0.0.1:30011/
      *
      * @param string $uri
-     * @return Server
+     * @return Host|Server|ServerQuery|MockServerQuery|FileTransfer
      * @throws AdapterException
      * @throws HelperException
      * @throws ServerQueryException
      * @throws Exception
      */
-    public static function factory(string $uri): Server
+    public static function factory(string $uri): Host|Server|ServerQuery|MockServerQuery|FileTransfer
     {
         self::init();
 
