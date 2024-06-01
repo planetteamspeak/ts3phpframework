@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         php_versions: [
-          '8.1', # PHP 8.2 is currently not (fully) supported by PHP-CS-Fixer
+          '8.3',
         ]
     name: PHP ${{ matrix.php_versions }}
     runs-on: ubuntu-latest
