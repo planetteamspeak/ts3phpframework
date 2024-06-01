@@ -31,7 +31,7 @@ Speed up new development and reduce maintenance costs by using this nifty piece 
 
 **Requirements**
 
-* PHP 8.0.x, 8.1.x or 8.2.x
+* PHP 8.1.x, 8.2.x or 8.3.x,
 * TeamSpeak Server - v3.4.0 (build >= 1536564584) or higher.
 
 **Often used with...**
