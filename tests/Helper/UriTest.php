@@ -449,7 +449,6 @@ class UriTest extends TestCase
      */
     public function testGetQuery(Uri $uri)
     {
-        // NOTE: getPath() is never used in framework, add tests for consistency.
         $this->assertEquals(
             ['server_port' => '9987', 'blocking' => '0'],
             $uri->getQuery()
