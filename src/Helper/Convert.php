@@ -86,7 +86,7 @@ class Convert
      * @todo: Handle negative integer $seconds, or invalidate
      *
      */
-    public static function seconds(float $seconds, bool $is_ms = false, string $format = "%aD %H:%I:%S"): string
+    public static function seconds(float $seconds, bool $is_ms = false, string $format = "%r%aD %H:%I:%S"): string
     {
         if ($is_ms) {
             $seconds = intval($seconds) / 1000;

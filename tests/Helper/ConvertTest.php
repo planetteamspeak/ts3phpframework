@@ -181,10 +181,51 @@ class ConvertTest extends TestCase
         $this->assertEquals('0D 00:01:30', $output);
         $this->assertIsString($output);
 
-        // @todo: Enable after ::seconds() can handle negative integers
-        //$output = Convert::seconds(-1);
-        //$this->assertEquals('-0D 00:00:01', $output);
-        //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $output = Convert::seconds(-0);
+        $this->assertEquals('0D 00:00:00', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(-1);
+        $this->assertEquals('-0D 00:00:01', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(-59);
+        $this->assertEquals('-0D 00:00:59', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(-60);
+        $this->assertEquals('-0D 00:01:00', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(((59 * 60) + 59) * -1);
+        $this->assertEquals('-0D 00:59:59', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(((59 * 60) + 60) * -1);
+        $this->assertEquals('-0D 01:00:00', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(
+            ((23 * (60 ** 2)) + (59 * 60) + 59) * -1
+        );
+        $this->assertEquals('-0D 23:59:59', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(
+            ((23 * (60 ** 2)) + (59 * 60) + 60) * -1
+        );
+        $this->assertEquals('-1D 00:00:00', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(
+            ((47 * (60 ** 2)) + (59 * 60) + 59) * -1
+        );
+        $this->assertEquals('-1D 23:59:59', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(-90.083);
+        $this->assertEquals('-0D 00:01:30', $output);
+        $this->assertIsString($output);
     }
 
     public function testConvertCodecIDToHumanReadable()
