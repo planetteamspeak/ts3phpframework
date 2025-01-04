@@ -7,6 +7,10 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Convert;
 
 class ConvertTest extends TestCase
 {
+    public function setUp(): void
+    {
+        date_default_timezone_set("UTC");
+    }
     public function testConvertBytesToHumanReadableWithFactor1000()
     {
         $output = Convert::bytes(0);
@@ -236,7 +240,7 @@ class ConvertTest extends TestCase
     {
         $this->assertEquals(
             '3.0.13.6 (2016-11-08 08:48:33)',
-            Convert::version('3.0.13.6 [Build: 1478594913]')
+            Convert::version('3.0.13.6 [Build: 1478594913]')->toString()
         );
     }
 
