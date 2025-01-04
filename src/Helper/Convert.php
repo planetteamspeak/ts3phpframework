@@ -79,17 +79,19 @@ class Convert
      * Converts seconds/milliseconds to a human-readable value.
      *
      * Note: Assumes non-negative integer, but no validation
-     * @param integer $seconds
+     * @param float $seconds
      * @param boolean $is_ms
      * @param string $format
      * @return string
      * @todo: Handle negative integer $seconds, or invalidate
      *
      */
-    public static function seconds(int $seconds, bool $is_ms = false, string $format = "%aD %H:%I:%S"): string
+    public static function seconds(float $seconds, bool $is_ms = false, string $format = "%r%aD %H:%I:%S"): string
     {
         if ($is_ms) {
-            $seconds = $seconds / 1000;
+            $seconds = intval($seconds) / 1000;
+        } else {
+            $seconds = intval($seconds);
         }
 
         $current_datetime = new DateTime("@0");

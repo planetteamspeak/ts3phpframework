@@ -265,6 +265,23 @@ class StringTest extends TestCase
         $this->assertEquals(mb_convert_encoding($notUtf8, 'UTF-8', mb_list_encodings()), $stringNotUtf8->toUtf8()->toString());
     }
 
+    public function testPreventConvertIntToUtf8()
+    {
+        //first convert issue begins at int = 11
+        $int = 11;
+        $intStringHelper = new StringHelper($int);
+        $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
+
+        //last convert issue end at int = 93
+        $int = 93;
+        $intStringHelper = new StringHelper($int);
+        $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
+
+        $int = 99999;
+        $intStringHelper = new StringHelper($int);
+        $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
+    }
+
     public function testToBase64()
     {
         $string = new StringHelper("Hello world!");
