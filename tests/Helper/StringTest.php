@@ -267,6 +267,7 @@ class StringTest extends TestCase
 
     public function testPreventConvertIntToUtf8()
     {
+        //first convert issue begins at int = 11
         $int = 11;
         $intStringHelper = new StringHelper($int);
         $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
