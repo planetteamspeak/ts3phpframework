@@ -272,6 +272,11 @@ class StringTest extends TestCase
         $intStringHelper = new StringHelper($int);
         $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
 
+        //last convert issue end at int = 93
+        $int = 93;
+        $intStringHelper = new StringHelper($int);
+        $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
+
         $int = 99999;
         $intStringHelper = new StringHelper($int);
         $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
