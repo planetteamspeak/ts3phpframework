@@ -3,11 +3,35 @@
                           Copyright Planet TeamSpeak
                         http://www.planetteamspeak.com
 ===============================================================================
-   + Added feature or noticable improvement
+   + Added feature or noticeable improvement
    - Bug fix or something removed
    * Changed or Information
    ! Important - Take note!
 ===============================================================================
+
+=== Release 1.2.1 - 17 Aug 2023 ===
+ + Add further PHPUnit tests
+ + Improve `permissionTree()` function in `src/Node/Host.php`
+ - Fix existing PHPUnit tests
+ - Fix callbacks for events, which were never excuted
+ - Fix float to int conversion error
+ - Fix deprecated `utf8_encode()` and `utf8_decode()` functions
+ - Remove throwing `TransportException` on `readLine()`
+ - Fix incompatible float to int conversion
+ - Fix deprecated `number_format()` parameter usage
+ - Fix `toInt()` function, which did not only return `int`
+ - Fix high CPU utilization after disconnects / connection losses
+ * Change license type to MIT
+ * Add ServerQuery Reply tests and improve exception message
+ * Implement and apply PHP-CS-Fixer code style
+ ! For the detailed changelog please check the Github release notes: https://github.com/planetteamspeak/ts3phpframework/releases/tag/1.2.1
+
+=== Release 1.2.0 - 16 Feb 2023 ===
+ + added full support for PHP 8.0, 8.1, 8.2
+ + refactoring for PHP8
+ - fixed PHPUnit tests
+ - updated deprecated code
+ - removed TravisCI support
 
 === Release 1.1.35 - 03 Aug 2022 ===
  ! upgrading your servers to 3.12.1 (build >= 1585305527) is mandatory
