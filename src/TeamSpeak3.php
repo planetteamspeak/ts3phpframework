@@ -70,6 +70,16 @@ class TeamSpeak3
     public const TEA_MOTD_PREFIX = "Welcome";
 
     /**
+     * GreenTeaSpeak protocol welcome message.
+     */
+    public const GREENTEA_PROTO_IDENT = "GreenTeaSpeak";
+
+    /**
+     * GreenTeaSpeak protocol greeting message prefix.
+     */
+    public const GREENTEA_MOTD_PREFIX = "Welcome";
+
+    /**
      * TeamSpeak 3 protocol error message prefix.
      */
     public const ERROR = "error";

@@ -300,7 +300,7 @@ class Reply
     protected function fetchReply(array $rpl): void
     {
         foreach ($rpl as $key => $val) {
-            if ($val->startsWith(TeamSpeak3::TS3_MOTD_PREFIX) || $val->startsWith(TeamSpeak3::TEA_MOTD_PREFIX) || (defined("CUSTOM_MOTD_PREFIX") && $val->startsWith(CUSTOM_MOTD_PREFIX))) {
+            if ($val->startsWith(TeamSpeak3::TS3_MOTD_PREFIX) || $val->startsWith(TeamSpeak3::TEA_MOTD_PREFIX) || $val->startsWith(TeamSpeak3::GREENTEA_MOTD_PREFIX) || (defined("CUSTOM_MOTD_PREFIX") && $val->startsWith(CUSTOM_MOTD_PREFIX))) {
                 unset($rpl[$key]);
             } elseif ($val->startsWith(TeamSpeak3::EVENT)) {
                 $this->evt[] = new Event($val, $this->con);
