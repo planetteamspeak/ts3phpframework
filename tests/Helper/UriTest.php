@@ -83,6 +83,21 @@ class UriTest extends TestCase
         new Uri('');
     }
 
+    public function testParameterHelpersPreserveFalsyValues(): void
+    {
+        $_REQUEST['uri_test_zero'] = '0';
+        $_SERVER['uri_test_false'] = false;
+        $_SESSION['uri_test_empty'] = [];
+
+        try {
+            $this->assertSame('0', Uri::getUserParam('uri_test_zero', 'default'));
+            $this->assertFalse(Uri::getHostParam('uri_test_false', true));
+            $this->assertSame([], Uri::getSessParam('uri_test_empty', ['default']));
+        } finally {
+            unset($_REQUEST['uri_test_zero'], $_SERVER['uri_test_false'], $_SESSION['uri_test_empty']);
+        }
+    }
+
     public function testConstructInvalidScheme()
     {
         $this->expectException(HelperException::class);
