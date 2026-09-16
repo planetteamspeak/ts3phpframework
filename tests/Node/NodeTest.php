@@ -60,6 +60,13 @@ class NodeTest extends TestCase
 
         $this->assertSame("* root\n\\-* child\n", $node->getViewer(new Text()));
     }
+
+    public function testFilterExcludesNodesWithoutTheRequestedProperty(): void
+    {
+        $node = new TestNode(1, ['name' => 'root']);
+
+        $this->assertSame([], $node->filterForTest([$node], ['missing' => 'value']));
+    }
 }
 
 class TestNode extends Node
@@ -89,5 +96,10 @@ class TestNode extends Node
     public function __toString(): string
     {
         return $this->nodeInfo['name'] ?? 'unnamed';
+    }
+
+    public function filterForTest(array $nodes, array $rules): array
+    {
+        return $this->filterList($nodes, $rules);
     }
 }
