@@ -129,13 +129,13 @@ class TCP extends Transport
         while (!$line->endsWith($token)) {
             $this->waitForReadyRead();
 
-            $data = @fgets($this->stream, 4096);
+            $data = $this->readLineChunk();
 
             Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
             if ($data === false) {
-                if ($line->count()) {
-                    $line->append($token);
+                if (feof($this->stream)) {
+                    throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
                 }
             } else {
                 $line->append($data);
@@ -143,6 +143,21 @@ class TCP extends Transport
         }
 
         return $line->trim();
+    }
+
+    /**
+     * Reads the next available part of a line from the stream.
+     *
+     * A non-blocking SSH stream can return false after returning a partial
+     * line, even though the remainder of that line arrives shortly after.
+     * Keeping this operation separate also allows transports to specialize
+     * how chunks are retrieved.
+     *
+     * @return string|false
+     */
+    protected function readLineChunk(): string|false
+    {
+        return @fgets($this->stream, 4096);
     }
 
     /**
