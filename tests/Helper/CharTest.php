@@ -263,6 +263,15 @@ class CharTest extends TestCase
         //
         $this->assertEquals(-1, Char::fromHex('80')->toUnicode());
         $this->assertEquals(-1, Char::fromHex('C1')->toUnicode());
+
+        //
+        // 2-BYTE UTF-8 (U+0080 – U+07FF)
+        // Example: '¢' (U+00A2) → C2 A2
+        //
+        $this->assertEquals(
+            static::calculateUTF8Ordinal("\xC2\xA2"),
+            Char::fromHex('C2A2')->toUnicode()
+        );
     }
 
     public function testFromHexRejectsMalformedInput(): void

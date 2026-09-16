@@ -27,7 +27,7 @@ class Char
      */
     public function __construct(string $char)
     {
-        if (strlen($char) != 1) {
+        if (mb_strlen($char, 'UTF-8') !== 1) {
             throw new HelperException("char parameter may not contain more or less than one character");
         }
 
@@ -199,11 +199,18 @@ class Char
      */
     public static function fromHex(string $hex): Char
     {
-        if (strlen($hex) != 2 || !ctype_xdigit($hex)) {
-            throw new HelperException("given parameter '" . $hex . "' is not a valid hexadecimal number");
+        // Check: only even numbers of hex characters allowed, all must be valid
+        if (strlen($hex) % 2 !== 0 || ! ctype_xdigit($hex)) {
+            throw new HelperException("given parameter '".$hex."' is not a valid hexadecimal number");
         }
 
-        return new self(hex2bin($hex));
+        // Hex → Binary string (UTF-8 compatible)
+        $bytes = hex2bin($hex);
+        if ($bytes === false) {
+            throw new HelperException("given parameter '".$hex."' could not be converted to binary data");
+        }
+
+        return new self($bytes);
     }
 
     /**
