@@ -75,6 +75,17 @@ class ReplyTest extends TestCase
         $this->assertEquals(static::$E_SERVERLIST, (string) $reply->toString());
     }
 
+    public function testToStringDoesNotChangeSubsequentParsing(): void
+    {
+        $reply = new Reply([
+            new StringHelper('virtualserver_name=TeamSpeak\\sServer'),
+            new StringHelper(static::$S_ERROR_OK),
+        ]);
+
+        $this->assertSame('virtualserver_name=TeamSpeak Server', $reply->toString()->toString());
+        $this->assertSame('TeamSpeak Server', $reply->toArray()[0]['virtualserver_name']->toString());
+    }
+
     public function testToLines()
     {
         $reply = new Reply([new StringHelper(static::$S_CLIENTLIST), new StringHelper(static::$S_ERROR_OK)]);

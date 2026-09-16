@@ -38,6 +38,9 @@ class UDPTest extends TestCase
         $this->assertArrayHasKey('timeout', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('timeout'));
 
+        $this->assertArrayHasKey('tls_verify', $adapter->getConfig());
+        $this->assertSame(0, $adapter->getConfig('tls_verify'));
+
         $this->assertArrayHasKey('blocking', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('blocking'));
     }
@@ -68,7 +71,7 @@ class UDPTest extends TestCase
         );
 
         $this->assertIsArray($adapter->getConfig());
-        $this->assertCount(4, $adapter->getConfig());
+        $this->assertCount(5, $adapter->getConfig());
         $this->assertArrayHasKey('host', $adapter->getConfig());
         $this->assertEquals('test', $adapter->getConfig()['host']);
         $this->assertEquals('test', $adapter->getConfig('host'));
@@ -152,6 +155,23 @@ class UDPTest extends TestCase
         $transport->disconnect();
     }
 
+    public function testDisconnectClosesRetainedStream(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends UDP {
+            public function setStreamForTest($stream): void
+            {
+                $this->stream = $stream;
+            }
+        };
+        $stream = fopen('php://temp', 'r+');
+        $transport->setStreamForTest($stream);
+
+        $transport->disconnect();
+
+        $this->assertFalse(is_resource($stream));
+        $this->assertNull($transport->getStream());
+    }
+
     /**
      * @throws TransportException
      */
@@ -186,5 +206,21 @@ class UDPTest extends TestCase
             $this->expectExceptionMessage("getaddrinfo for $host failed");
         }
         $transport->send('test.send');
+    }
+
+    public function testSendRejectsPartialDatagrams(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends UDP {
+            public function connect(): void
+            {
+                $this->stream = true;
+            }
+            protected function sendTo(string $data): int|false
+            {
+                return 1;
+            }
+        };
+        $this->expectException(TransportException::class);
+        $transport->send('ab');
     }
 }

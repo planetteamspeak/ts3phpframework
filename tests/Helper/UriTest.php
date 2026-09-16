@@ -19,6 +19,8 @@ class UriTest extends TestCase
         'options' => [
             'timeout',
             'blocking',
+            'tls',
+            'tls_verify',
             'nickname',
             'no_query_clients',
             'use_offline_as_virtual',
@@ -79,6 +81,29 @@ class UriTest extends TestCase
         $this->expectException(HelperException::class);
         $this->expectExceptionMessage('no URI supplied');
         new Uri('');
+    }
+
+    public function testParameterHelpersPreserveFalsyValues(): void
+    {
+        $_REQUEST['uri_test_zero'] = '0';
+        $_SERVER['uri_test_false'] = false;
+        $_SESSION['uri_test_empty'] = [];
+
+        try {
+            $this->assertSame('0', Uri::getUserParam('uri_test_zero', 'default'));
+            $this->assertFalse(Uri::getHostParam('uri_test_false', true));
+            $this->assertSame([], Uri::getSessParam('uri_test_empty', ['default']));
+        } finally {
+            unset($_REQUEST['uri_test_zero'], $_SERVER['uri_test_false'], $_SESSION['uri_test_empty']);
+        }
+    }
+
+    public function testEncodedQueryVariableNamesAreHandledConsistently(): void
+    {
+        $uri = new Uri('serverquery://127.0.0.1:10011/?tls%5Fverify=1');
+
+        $this->assertTrue($uri->hasQueryVar('tls_verify'));
+        $this->assertSame(1, $uri->getQueryVar('tls_verify'));
     }
 
     public function testConstructInvalidScheme()

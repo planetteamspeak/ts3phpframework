@@ -258,6 +258,13 @@ class CharTest extends TestCase
         );
     }
 
+    public function testFromHexRejectsMalformedInput(): void
+    {
+        $this->expectException(HelperException::class);
+
+        Char::fromHex('zz');
+    }
+
     /**
      * @throws HelperException
      */

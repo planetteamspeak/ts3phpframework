@@ -199,11 +199,11 @@ class Char
      */
     public static function fromHex(string $hex): Char
     {
-        if (strlen($hex) != 2) {
+        if (strlen($hex) != 2 || !ctype_xdigit($hex)) {
             throw new HelperException("given parameter '" . $hex . "' is not a valid hexadecimal number");
         }
 
-        return new self(chr(hexdec($hex)));
+        return new self(hex2bin($hex));
     }
 
     /**

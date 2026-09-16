@@ -92,6 +92,7 @@ class ServerQuery extends Adapter
     {
         // do not disconnect, when acting as bot in non-blocking mode
         if (! $this->getTransport()->getConfig("blocking")) {
+            Profiler::remove(spl_object_hash($this));
             return;
         }
 
@@ -99,9 +100,11 @@ class ServerQuery extends Adapter
             try {
                 $this->request("quit");
             } catch (AdapterException) {
-                return;
+                // The transport destructor will close an unavailable connection.
             }
         }
+
+        Profiler::remove(spl_object_hash($this));
     }
 
     /**

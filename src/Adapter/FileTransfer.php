@@ -38,6 +38,8 @@ class FileTransfer extends Adapter
         if ($this->getTransport() instanceof Transport && $this->getTransport()->isConnected()) {
             $this->getTransport()->disconnect();
         }
+
+        Profiler::remove(spl_object_hash($this));
     }
 
     /**
@@ -105,54 +107,55 @@ class FileTransfer extends Adapter
      */
     public function download(string $ftkey, int $size, bool $passthru = false)
     {
-        $this->init($ftkey);
-
         if ($passthru) {
-            $this->passthru($size);
+            $this->downloadTo($ftkey, $size, static function (StringHelper $data): void {
+                echo $data;
+            });
             return;
         }
 
         $buff = new StringHelper("");
-        $pack = 4096;
-
-        Signal::getInstance()->emit("filetransferDownloadStarted", $ftkey, count($buff), $size);
-
-        for ($seek = 0; $seek < $size;) {
-            $rest = $size - $seek;
-            $pack = min($rest, $pack);
-            $data = $this->getTransport()->read(min($rest, $pack));
-            $seek = $seek + $pack;
-
+        $this->downloadTo($ftkey, $size, static function (StringHelper $data) use ($buff): void {
             $buff->append($data);
-
-            Signal::getInstance()->emit("filetransferDownloadProgress", $ftkey, count($buff), $size);
-        }
-
-        $this->getProfiler()->stop();
-
-        Signal::getInstance()->emit("filetransferDownloadFinished", $ftkey, count($buff), $size);
-
-        if (strlen($buff) != $size) {
-            throw new FileTransferException("incomplete file download (" . count($buff) . " of " . $size . " bytes)");
-        }
+        });
 
         return $buff;
     }
 
     /**
-     * Outputs all remaining data on a TeamSpeak 3 file transfer stream using PHP's fpassthru()
-     * function.
+     * Downloads a file and passes each received chunk to the given consumer.
      *
+     * @param string $ftkey
      * @param integer $size
+     * @param callable $consumer
      * @return void
      * @throws FileTransferException
      */
-    protected function passthru(int $size): void
+    public function downloadTo(string $ftkey, int $size, callable $consumer): void
     {
-        $buff_size = fpassthru($this->getTransport()->getStream());
+        $this->init($ftkey);
+        $pack = 4096;
+        $seek = 0;
 
-        if ($buff_size != $size) {
-            throw new FileTransferException("incomplete file download (" . $buff_size . " of " . $size . " bytes)");
+        Signal::getInstance()->emit("filetransferDownloadStarted", $ftkey, $seek, $size);
+
+        try {
+            while ($seek < $size) {
+                $data = $this->getTransport()->read(min($size - $seek, $pack));
+
+                if (count($data) === 0) {
+                    throw new FileTransferException("incomplete file download (" . $seek . " of " . $size . " bytes)");
+                }
+
+                $consumer($data);
+                $seek += count($data);
+
+                Signal::getInstance()->emit("filetransferDownloadProgress", $ftkey, $seek, $size);
+            }
+        } finally {
+            $this->getProfiler()->stop();
         }
+
+        Signal::getInstance()->emit("filetransferDownloadFinished", $ftkey, $seek, $size);
     }
 }

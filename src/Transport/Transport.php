@@ -68,6 +68,10 @@ abstract class Transport
             $config["blocking"] = 1;
         }
 
+        if (!array_key_exists("tls_verify", $config)) {
+            $config["tls_verify"] = 0;
+        }
+
         $this->config = $config;
         return $this;
     }
@@ -154,9 +158,9 @@ abstract class Transport
      *
      * @param string|null $key
      * @param mixed|null $default
-     * @return array|string
+     * @return mixed
      */
-    public function getConfig(string $key = null, mixed $default = null): array|string|int
+    public function getConfig(string $key = null, mixed $default = null): mixed
     {
         if ($key !== null) {
             return array_key_exists($key, $this->config) ? $this->config[$key] : $default;
@@ -240,16 +244,20 @@ abstract class Transport
             return;
         }
 
-        do {
-            $read = [$this->stream];
-            $null = null;
+        $read = [$this->stream];
+        $null = null;
+        $result = @stream_select($read, $null, $null, $this->config["timeout"]);
 
-            if ($time) {
-                Signal::getInstance()
-                    ->emit(strtolower($this->getAdapterType()) . "WaitTimeout", $time, $this->getAdapter());
-            }
+        if ($result === false) {
+            throw new TransportException("unable to wait for data from server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+        }
 
-            $time = $time + $this->config["timeout"];
-        } while (@stream_select($read, $null, $null, $this->config["timeout"]) == 0);
+        if ($result === 0) {
+            $time = $time ?: $this->config["timeout"];
+            Signal::getInstance()
+                ->emit(strtolower($this->getAdapterType()) . "WaitTimeout", $time, $this->getAdapter());
+
+            throw new TransportException("timed out waiting for data from server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+        }
     }
 }

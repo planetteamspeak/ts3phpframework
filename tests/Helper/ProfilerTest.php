@@ -38,4 +38,13 @@ class ProfilerTest extends TestCase
         Profiler::stop('created-on-stop');
         $this->assertInstanceOf(Timer::class, Profiler::get('created-on-stop'));
     }
+
+    public function testProfilerRemovesTimers(): void
+    {
+        Profiler::init('removed');
+        Profiler::remove('removed');
+
+        $property = new \ReflectionProperty(Profiler::class, 'timers');
+        $this->assertArrayNotHasKey('removed', $property->getValue());
+    }
 }

@@ -110,6 +110,16 @@ class StringTest extends TestCase
         }
     }
 
+    public function testToIntSupportsValuesAboveSignedThirtyTwoBitRange(): void
+    {
+        if (PHP_INT_SIZE < 8) {
+            $this->markTestSkipped('Requires a 64-bit PHP integer.');
+        }
+
+        $this->assertSame(2147483648, (new StringHelper('2147483648'))->toInt());
+        $this->assertSame(-1, (new StringHelper('9223372036854775808'))->toInt());
+    }
+
     public function testFactory()
     {
         $string = StringHelper::factory("hello world");
@@ -232,8 +242,13 @@ class StringTest extends TestCase
                     return $mb_string;
                 }
             ));
-            $this->assertTrue($upperUtf8MultibyteChar->isUtf8());
+            $this->assertSame(
+                $boundary[1][0] !== 0xF0,
+                $upperUtf8MultibyteChar->isUtf8()
+            );
         }
+
+        $this->assertFalse((new StringHelper("\xC2\x80\xFF"))->isUtf8());
 
         foreach ($unicodeBoundariesMalformed as $boundary) {
             $lowerUtf8MultibyteChar = new StringHelper(array_reduce(
@@ -296,6 +311,13 @@ class StringTest extends TestCase
         $this->assertEquals("Hello world!", $string->toString());
     }
 
+    public function testFromBase64RejectsMalformedInput(): void
+    {
+        $this->expectException(HelperException::class);
+
+        StringHelper::fromBase64('not valid base64!');
+    }
+
     /**
      * @throws Exception
      */
@@ -313,6 +335,13 @@ class StringTest extends TestCase
     {
         $string = StringHelper::fromHex("48656C6C6F");
         $this->assertEquals("Hello", $string->toString());
+    }
+
+    public function testFromHexRejectsMalformedInput(): void
+    {
+        $this->expectException(HelperException::class);
+
+        StringHelper::fromHex('zz');
     }
 
     public function testTransliterate()

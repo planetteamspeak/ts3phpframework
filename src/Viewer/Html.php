@@ -400,7 +400,7 @@ class Html implements ViewerInterface
         if ($this->currObj["virtualserver_icon_id"]) {
             if (!$this->currObj->iconIsLocal("virtualserver_icon_id") && $this->ftclient) {
                 if (!isset($this->cacheIcon[$this->currObj["virtualserver_icon_id"]])) {
-                    $download = $this->currObj->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->currObj->iconGetName("virtualserver_icon_id"));
+                    $download = $this->currObj->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $this->currObj->iconGetName("virtualserver_icon_id"));
 
                     if ($this->ftclient == "data:image") {
                         $download = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
@@ -460,7 +460,7 @@ class Html implements ViewerInterface
         if ($this->currObj["channel_icon_id"]) {
             if (!$this->currObj->iconIsLocal("channel_icon_id") && $this->ftclient) {
                 if (!isset($this->cacheIcon[$this->currObj["channel_icon_id"]])) {
-                    $download = $this->currObj->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->currObj->iconGetName("channel_icon_id"));
+                    $download = $this->currObj->getParent()->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $this->currObj->iconGetName("channel_icon_id"));
 
                     if ($this->ftclient == "data:image") {
                         $download = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
@@ -522,7 +522,7 @@ class Html implements ViewerInterface
 
             if (!$group->iconIsLocal("iconid") && $this->ftclient) {
                 if (!isset($this->cacheIcon[$group["iconid"]])) {
-                    $download = $group->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $group->iconGetName("iconid"));
+                    $download = $group->getParent()->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $group->iconGetName("iconid"));
 
                     if ($this->ftclient == "data:image") {
                         $download = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
@@ -546,7 +546,7 @@ class Html implements ViewerInterface
         if ($this->currObj["client_icon_id"]) {
             if (!$this->currObj->iconIsLocal("client_icon_id") && $this->ftclient) {
                 if (!isset($this->cacheIcon[$this->currObj["client_icon_id"]])) {
-                    $download = $this->currObj->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->currObj->iconGetName("client_icon_id"));
+                    $download = $this->currObj->getParent()->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $this->currObj->iconGetName("client_icon_id"));
 
                     if ($this->ftclient == "data:image") {
                         $download = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"])->download($download["ftkey"], $download["size"]);
@@ -611,6 +611,9 @@ class Html implements ViewerInterface
             $src = $this->flagpath;
         }
 
-        return "<img src='" . $src . $name . "' title='" . $text . "' alt='' align='top' />";
+        $src = htmlspecialchars($src . $name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $text = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+        return "<img src='" . $src . "' title='" . $text . "' alt='' align='top' />";
     }
 }

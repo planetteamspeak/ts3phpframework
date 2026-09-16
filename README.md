@@ -143,10 +143,10 @@ $uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10022/?ssh=1"
 
 #### SSL/TLS Connections ([TeaSpeak Server](https://www.teaspeak.de) only)
 
-Secure ServerQuery connections can be established using the optional `tls` parameter:
+Secure TeaSpeak ServerQuery connections can be established using the optional `tls` parameter. Certificate verification remains disabled by default for compatibility with self-signed deployments. Enable `tls_verify` only when the server certificate is trusted by PHP and matches the hostname:
 
 ```php
-$uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10011/?tls=1";
+$uri = "serverquery://username:password@teaspeak.example.com:10011/?tls=1&tls_verify=1";
 ```
 
 #### Custom Protocol Welcome Message and/or MOTD ([TeaSpeak Server](https://www.teaspeak.de) only)

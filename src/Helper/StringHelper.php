@@ -381,8 +381,13 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function toInt(): int
     {
-        if ($this->string == pow(2, 63) || $this->string == pow(2, 64) || $this->string > pow(2, 31)) {
-            return -1;
+        if (ctype_digit($this->string)) {
+            $value = ltrim($this->string, "0") ?: "0";
+            $max = (string)PHP_INT_MAX;
+
+            if (strlen($value) > strlen($max) || (strlen($value) === strlen($max) && strcmp($value, $max) > 0)) {
+                return -1;
+            }
         }
 
         return intval($this->string);
@@ -426,21 +431,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function isUtf8(): bool
     {
-        if (preg_match('/\\A[\\x00-\\x7F]*\\z/', $this->string)) {
-            return true;
-        }
-
-        $pattern = [];
-
-        $pattern[] = "[\xC2-\xDF][\x80-\xBF]";            // non-overlong 2-byte
-        $pattern[] = "\xE0[\xA0-\xBF][\x80-\xBF]";        // excluding overlongs
-        $pattern[] = "[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}"; // straight 3-byte
-        $pattern[] = "\xED[\x80-\x9F][\x80-\xBF]";        // excluding surrogates
-        $pattern[] = "\xF0[\x90-\xBF][\x80-\xBF]{2}";     // planes 1-3
-        $pattern[] = "[\xF1-\xF3][\x80-\xBF]{3}";         // planes 4-15
-        $pattern[] = "\xF4[\x80-\x8F][\x80-\xBF]{2}";     // plane 16
-
-        return (bool)preg_match("%(?:" . implode("|", $pattern) . ")+%xs", $this->string);
+        return mb_check_encoding($this->string, 'UTF-8');
     }
 
     /**
@@ -472,10 +463,17 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @param string $base64
      * @return self
+     * @throws HelperException
      */
     public static function fromBase64(string $base64): StringHelper
     {
-        return new self(base64_decode($base64));
+        $string = base64_decode($base64, true);
+
+        if ($string === false) {
+            throw new HelperException("given parameter is not valid base64 data");
+        }
+
+        return new self($string);
     }
 
     /**
@@ -485,13 +483,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function toHex(): string
     {
-        $hex = "";
-
-        foreach ($this as $char) {
-            $hex .= $char->toHex();
-        }
-
-        return $hex;
+        return strtoupper(bin2hex($this->string));
     }
 
     /**
@@ -503,17 +495,11 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public static function fromHex(string $hex): StringHelper
     {
-        $string = "";
-
-        if (strlen($hex) % 2 == 1) {
+        if (strlen($hex) % 2 == 1 || ($hex !== "" && !ctype_xdigit($hex))) {
             throw new HelperException("given parameter '" . $hex . "' is not a valid hexadecimal number");
         }
 
-        foreach (str_split($hex, 2) as $chunk) {
-            $string .= chr(hexdec($chunk));
-        }
-
-        return new self($string);
+        return new self(hex2bin($hex));
     }
 
     /**

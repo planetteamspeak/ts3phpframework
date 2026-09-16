@@ -27,4 +27,12 @@ class TeamSpeak3Test extends TestCase
         $this->assertStringContainsString("array(1)", $dump);
         $this->assertStringContainsString("<tag>", $dump);
     }
+
+    public function testTransferClientIdIsWithinProtocolRange(): void
+    {
+        $id = TeamSpeak3::generateTransferClientId();
+
+        $this->assertGreaterThanOrEqual(0, $id);
+        $this->assertLessThanOrEqual(0xFFFF, $id);
+    }
 }

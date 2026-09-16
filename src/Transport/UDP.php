@@ -69,6 +69,10 @@ class UDP extends Transport
             return;
         }
 
+        if (is_resource($this->stream)) {
+            @fclose($this->stream);
+        }
+
         $this->stream = null;
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");
@@ -108,8 +112,22 @@ class UDP extends Transport
     {
         $this->connect();
 
-        @stream_socket_sendto($this->stream, $data);
+        $written = $this->sendTo($data);
+
+        if ($written === false || $written !== strlen($data)) {
+            throw new TransportException("failed to write to server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+        }
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
+    }
+
+    /**
+     * Sends a datagram through the underlying stream.
+     *
+     * @return int|false
+     */
+    protected function sendTo(string $data): int|false
+    {
+        return @stream_socket_sendto($this->stream, $data);
     }
 }
