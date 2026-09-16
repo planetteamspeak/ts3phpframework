@@ -2621,8 +2621,19 @@ class Server extends Node
             return 0;
         }
 
-        if ($a->getProperty("sortid", 0) != $b->getProperty("sortid", 0) && $a->getProperty("sortid", 0) != 0 && $b->getProperty("sortid", 0) != 0) {
-            return ($a->getProperty("sortid", 0) < $b->getProperty("sortid", 0)) ? -1 : 1;
+        $aSortId = $a->getProperty("sortid", 0);
+        $bSortId = $b->getProperty("sortid", 0);
+
+        if ($aSortId instanceof StringHelper) {
+            $aSortId = $aSortId->toInt();
+        }
+
+        if ($bSortId instanceof StringHelper) {
+            $bSortId = $bSortId->toInt();
+        }
+
+        if ($aSortId != $bSortId && $aSortId != 0 && $bSortId != 0) {
+            return ($aSortId < $bSortId) ? -1 : 1;
         }
 
         return ($a->getId() < $b->getId()) ? -1 : 1;
