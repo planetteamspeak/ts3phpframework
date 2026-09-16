@@ -2565,7 +2565,14 @@ class Server extends Node
 
         foreach ($this->channelList() as $channel) {
             if ($channel["pid"] == 0) {
-                $this->nodeList[] = $channel;
+                try {
+                    $channel->count();
+                    $this->nodeList[] = $channel;
+                } catch (ServerQueryException $e) {
+                    if ($e->getCode() != 0xA08) {
+                        throw $e;
+                    }
+                }
             }
         }
     }

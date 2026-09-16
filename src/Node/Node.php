@@ -152,7 +152,7 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
      * @param string $prefix
      * @return string
      */
-    public function getClass(string $prefix = "ts3_"): string
+    public function getClass(?string $prefix = "ts3_"): string
     {
         if ($this instanceof Channel && $this->isSpacer()) {
             return $prefix . "spacer";
@@ -160,7 +160,9 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
             return $prefix . "query";
         }
 
-        return $prefix . StringHelper::factory(get_class($this))->section("_", 2)->toLower();
+        $class = StringHelper::factory(str_replace("\\", "/", get_class($this)))->split("/");
+
+        return $prefix . array_pop($class)->toLower();
     }
 
     /**

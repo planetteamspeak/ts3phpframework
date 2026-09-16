@@ -179,9 +179,15 @@ class TCPTest extends TestCase
      */
     public function testConnectHostRefuseConnection()
     {
-        $transport = new TCP(
-            ['host' => '127.0.0.1', 'port' => 12345]
-        );
+        $transport = new class (['host' => '127.0.0.1', 'port' => 12345]) extends TCP {
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+            {
+                $errno = 111;
+                $errstr = 'Connection refused';
+
+                return false;
+            }
+        };
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage('Connection refused');
         $transport->connect();

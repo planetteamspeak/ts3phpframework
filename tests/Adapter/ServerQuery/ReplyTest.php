@@ -77,11 +77,20 @@ class ReplyTest extends TestCase
 
     public function testToLines()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_CLIENTLIST), new StringHelper(static::$S_ERROR_OK)]);
+
+        $lines = $reply->toLines();
+        $this->assertCount(3, $lines);
+        $this->assertSame('clid=1 cid=1 client_database_id=1 client_nickname=serveradmin from [::1]:59642 client_type=1', $lines[0]->toString());
     }
     public function testToTable()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_CLIENTLIST), new StringHelper(static::$S_ERROR_OK)]);
+
+        $table = $reply->toTable();
+        $this->assertCount(3, $table);
+        $this->assertSame('clid=1', $table[0][0]->toString());
+        $this->assertSame('client_nickname=serveradmin from [::1]:59642', $table[0][3]->toString());
     }
 
     /**
@@ -108,39 +117,58 @@ class ReplyTest extends TestCase
 
     public function testToAssocArray()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_CLIENTLIST), new StringHelper(static::$S_ERROR_OK)]);
+
+        $clients = $reply->toAssocArray('clid');
+        $this->assertSame(2, $clients[2]['clid']);
+        $this->assertSame('Unknown from [::1]:59766', $clients[3]['client_nickname']->toString());
     }
     public function testToList()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_CLIENTLIST_EXTENDED_SINGLE), new StringHelper(static::$S_ERROR_OK)]);
+
+        $this->assertSame(63, $reply->toList()['clid']);
     }
     public function testToObjectArray()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_CLIENTLIST_EXTENDED_SINGLE), new StringHelper(static::$S_ERROR_OK)]);
+
+        $objects = $reply->toObjectArray();
+        $this->assertCount(1, $objects);
+        $this->assertSame(63, $objects[0]->clid);
     }
     public function testGetCommandString()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_SERVERLIST), new StringHelper(static::$S_ERROR_OK)], 'serverlist');
+
+        $this->assertSame('serverlist', $reply->getCommandString()->toString());
     }
     public function testGetNotifyEvents()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_SERVERLIST), new StringHelper(static::$S_ERROR_OK)]);
+
+        $this->assertSame([], $reply->getNotifyEvents());
     }
     public function testGetErrorProperty()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_SERVERLIST), new StringHelper('error id=256 msg=failed extra_msg=details return_code=return')], '', null, false);
+
+        $this->assertSame(256, $reply->getErrorProperty('id'));
+        $this->assertSame('failed', $reply->getErrorProperty('msg')->toString());
+        $this->assertSame('fallback', $reply->getErrorProperty('missing', 'fallback'));
     }
     public function testFetchError()
     {
-        $this->expectNotToPerformAssertions();
-        //$this->assertInstanceOf(\TeamSpeak3_Adapter_ServerQuery_Reply::class, $reply);
-        //$this->assertInternalType(PHPUnit_IsType::TYPE_INT, $reply->getErrorProperty('id'));
-        //$this->assertEquals(0, $reply->getErrorProperty('id'));
-        //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $reply->getErrorProperty('msg'));
-        //$this->assertEquals('ok', $reply->getErrorProperty('msg'));
+        $this->expectException(ServerQueryException::class);
+        $this->expectExceptionCode(256);
+        $this->expectExceptionMessage('failed (details)');
+
+        new Reply([new StringHelper(static::$S_SERVERLIST), new StringHelper('error id=256 msg=failed extra_msg=details')]);
     }
     public function testFetchReply()
     {
-        $this->expectNotToPerformAssertions();
+        $reply = new Reply([new StringHelper(static::$S_WELCOME_L1), new StringHelper(static::$S_SERVERLIST), new StringHelper(static::$S_ERROR_OK)]);
+
+        $this->assertSame(static::$E_SERVERLIST, $reply->toString()->toString());
     }
 }

@@ -9,6 +9,16 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 class UDPTest extends TestCase
 {
+    private function createConnectedTransport(): UDP
+    {
+        return new class (['host' => '127.0.0.1', 'port' => 12345]) extends UDP {
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout): mixed
+            {
+                return fopen('php://temp', 'r+');
+            }
+        };
+    }
+
     /**
      * @throws TransportException
      */
@@ -95,9 +105,7 @@ class UDPTest extends TestCase
      */
     public function testConnect()
     {
-        $transport = new UDP(
-            ['host' => '127.0.0.1', 'port' => 12345]
-        );
+        $transport = $this->createConnectedTransport();
         $transport->connect();
         $this->assertIsResource($transport->getStream());
     }
@@ -125,9 +133,7 @@ class UDPTest extends TestCase
      */
     public function testDisconnect()
     {
-        $transport = new UDP(
-            ['host' => '127.0.0.1', 'port' => 12345]
-        );
+        $transport = $this->createConnectedTransport();
         $transport->connect();
         $this->assertIsResource($transport->getStream());
         $transport->disconnect();
