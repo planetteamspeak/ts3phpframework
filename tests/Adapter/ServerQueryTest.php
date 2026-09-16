@@ -89,4 +89,15 @@ class ServerQueryTest extends TestCase
         $this->assertSame('0.0.0.0', $serverQuery->getTransportHost());
         $this->assertSame('9987', $serverQuery->getTransportPort());
     }
+
+    public function testAcceptsGreenTeaSpeakProtocolGreeting(): void
+    {
+        $serverQuery = new MockServerQuery([
+            'host' => '0.0.0.0',
+            'port' => 9987,
+            'welcome' => 'GreenTeaSpeak ServerQuery',
+        ]);
+
+        $this->assertTrue($serverQuery->getTransport()->isConnected());
+    }
 }
