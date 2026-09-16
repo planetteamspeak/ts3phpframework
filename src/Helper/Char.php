@@ -219,7 +219,7 @@ class Char
      */
     public function toHex(): string
     {
-        return strtoupper(dechex($this->toAscii()));
+        return strtoupper(bin2hex($this->char));
     }
 
     /**
