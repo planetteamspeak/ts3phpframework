@@ -110,6 +110,16 @@ class StringTest extends TestCase
         }
     }
 
+    public function testToIntSupportsValuesAboveSignedThirtyTwoBitRange(): void
+    {
+        if (PHP_INT_SIZE < 8) {
+            $this->markTestSkipped('Requires a 64-bit PHP integer.');
+        }
+
+        $this->assertSame(2147483648, (new StringHelper('2147483648'))->toInt());
+        $this->assertSame(-1, (new StringHelper('9223372036854775808'))->toInt());
+    }
+
     public function testFactory()
     {
         $string = StringHelper::factory("hello world");

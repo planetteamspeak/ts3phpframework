@@ -381,8 +381,13 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function toInt(): int
     {
-        if ($this->string == pow(2, 63) || $this->string == pow(2, 64) || $this->string > pow(2, 31)) {
-            return -1;
+        if (ctype_digit($this->string)) {
+            $value = ltrim($this->string, "0") ?: "0";
+            $max = (string)PHP_INT_MAX;
+
+            if (strlen($value) > strlen($max) || (strlen($value) === strlen($max) && strcmp($value, $max) > 0)) {
+                return -1;
+            }
         }
 
         return intval($this->string);
