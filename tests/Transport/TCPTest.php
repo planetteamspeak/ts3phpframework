@@ -274,6 +274,25 @@ class TCPTest extends TestCase
         $transport->send('testsend');
     }
 
+    public function testSendRetriesPartialWritesAndRejectsFailedWrites(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends TCP {
+            public array $writes = [];
+            private array $results = [2, 3];
+            public function connect(): void
+            {
+                $this->stream = true;
+            }
+            protected function write(string $data): int|false
+            {
+                $this->writes[] = $data;
+                return array_shift($this->results);
+            }
+        };
+        $transport->send('hello');
+        $this->assertSame(['hello', 'llo'], $transport->writes);
+    }
+
     /**
      * @throws ServerQueryException
      * @throws TransportException

@@ -187,4 +187,20 @@ class UDPTest extends TestCase
         }
         $transport->send('test.send');
     }
+
+    public function testSendRejectsPartialDatagrams(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends UDP {
+            public function connect(): void
+            {
+                $this->stream = true;
+            }
+            protected function sendTo(string $data): int|false
+            {
+                return 1;
+            }
+        };
+        $this->expectException(TransportException::class);
+        $transport->send('ab');
+    }
 }

@@ -185,9 +185,30 @@ class TCP extends Transport
     {
         $this->connect();
 
-        @fwrite($this->stream, $data);
+        $length = strlen($data);
+        $written = 0;
+
+        while ($written < $length) {
+            $result = $this->write(substr($data, $written));
+
+            if ($result === false || $result === 0) {
+                throw new TransportException("failed to write to server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+            }
+
+            $written += $result;
+        }
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
+    }
+
+    /**
+     * Writes a chunk to the underlying stream.
+     *
+     * @return int|false
+     */
+    protected function write(string $data): int|false
+    {
+        return @fwrite($this->stream, $data);
     }
 
     /**
@@ -203,6 +224,11 @@ class TCP extends Transport
     {
         $size = strlen($data);
         $pack = 4096;
+
+        if ($size === 0) {
+            $this->send($separator);
+            return;
+        }
 
         for ($seek = 0; $seek < $size;) {
             $rest = $size - $seek;
