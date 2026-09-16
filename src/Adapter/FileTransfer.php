@@ -38,6 +38,8 @@ class FileTransfer extends Adapter
         if ($this->getTransport() instanceof Transport && $this->getTransport()->isConnected()) {
             $this->getTransport()->disconnect();
         }
+
+        Profiler::remove(spl_object_hash($this));
     }
 
     /**
@@ -121,7 +123,12 @@ class FileTransfer extends Adapter
             $rest = $size - $seek;
             $pack = min($rest, $pack);
             $data = $this->getTransport()->read(min($rest, $pack));
-            $seek = $seek + $pack;
+
+            if (count($data) === 0) {
+                throw new FileTransferException("incomplete file download (" . count($buff) . " of " . $size . " bytes)");
+            }
+
+            $seek = $seek + count($data);
 
             $buff->append($data);
 
