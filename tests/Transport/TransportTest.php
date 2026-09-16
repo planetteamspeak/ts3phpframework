@@ -4,6 +4,7 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Transport;
 
 use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\MockServerQuery;
+use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\Transport;
 
 class TransportTest extends TestCase
@@ -28,5 +29,20 @@ class TransportTest extends TestCase
 
         // The Signal class combines the lowered class name with an additional string for the `emit()` function
         $this->assertEquals("mockserverquery", strtolower($mockServerQuery->getTransport()->getAdapterType()));
+    }
+
+    public function testDestructorDisconnectsBeforeDestroyingAdapter(): void
+    {
+        $mockServerQuery = $this->createMockServerQuery();
+        $commands = [];
+        $callback = static function (string $command) use (&$commands): void {
+            $commands[] = $command;
+        };
+
+        Signal::getInstance()->subscribe("mockserverqueryDataSend", $callback);
+        $mockServerQuery->getTransport()->__destruct();
+        Signal::getInstance()->unsubscribe("mockserverqueryDataSend", $callback);
+
+        $this->assertEmpty($commands);
     }
 }
