@@ -173,6 +173,16 @@ class Signal
     }
 
     /**
+     * Clears all registered signal handlers.
+     *
+     * @return void
+     */
+    public function clearAllHandlers(): void
+    {
+        $this->sigslots = [];
+    }
+
+    /**
      * Returns a singleton instance of PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal.
      *
      * @return Signal|null

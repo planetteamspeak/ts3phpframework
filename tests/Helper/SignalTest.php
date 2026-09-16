@@ -31,6 +31,17 @@ class SignalTest extends TestCase
         $this->assertEmpty(Signal::getInstance()->getSignals());
     }
 
+    public function testClearAllHandlers(): void
+    {
+        $signal = Signal::getInstance();
+        $signal->subscribe(static::$signal, static::$callback);
+        $signal->subscribe('anotherSignal', static::$callback);
+
+        $signal->clearAllHandlers();
+
+        $this->assertSame([], $signal->getSignals());
+    }
+
     /**
      * @throws HelperException
      */
