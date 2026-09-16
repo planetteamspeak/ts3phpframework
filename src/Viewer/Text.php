@@ -20,6 +20,16 @@ class Text implements ViewerInterface
     protected string $pattern = "%0%1 %2\n";
 
     /**
+     * The node currently being rendered.
+     */
+    protected ?Node $currObj = null;
+
+    /**
+     * The current node's ancestor sibling state.
+     */
+    protected array $currSib = [];
+
+    /**
      * Returns the code needed to display a node in a TeamSpeak 3 viewer.
      *
      * @param Node $node

@@ -6,6 +6,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Convert;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Channel;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\ChannelGroup;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Client;
+use PlanetTeamSpeak\TeamSpeak3Framework\Node\Host;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Node;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\Server;
 use PlanetTeamSpeak\TeamSpeak3Framework\Node\ServerGroup;
@@ -291,7 +292,7 @@ class Json implements ViewerInterface
     {
         $props = new stdClass();
 
-        if (is_a($this->currObj, Node::class)) {
+        if (is_a($this->currObj, Host::class)) {
             $this->id = 0;
             $this->icon = 0;
             $props->version = $this->currObj->version("version")->toString();
