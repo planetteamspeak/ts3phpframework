@@ -511,7 +511,7 @@ class Uri
             return $default;
         }
 
-        parse_str(rawurldecode($this->query), $queryArray);
+        parse_str($this->query, $queryArray);
 
         if (array_key_exists($key, $queryArray)) {
             $val = $queryArray[$key];

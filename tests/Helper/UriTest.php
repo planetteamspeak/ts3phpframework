@@ -98,6 +98,14 @@ class UriTest extends TestCase
         }
     }
 
+    public function testEncodedQueryVariableNamesAreHandledConsistently(): void
+    {
+        $uri = new Uri('serverquery://127.0.0.1:10011/?tls%5Fverify=1');
+
+        $this->assertTrue($uri->hasQueryVar('tls_verify'));
+        $this->assertSame(1, $uri->getQueryVar('tls_verify'));
+    }
+
     public function testConstructInvalidScheme()
     {
         $this->expectException(HelperException::class);
