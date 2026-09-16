@@ -232,8 +232,13 @@ class StringTest extends TestCase
                     return $mb_string;
                 }
             ));
-            $this->assertTrue($upperUtf8MultibyteChar->isUtf8());
+            $this->assertSame(
+                $boundary[1][0] !== 0xF0,
+                $upperUtf8MultibyteChar->isUtf8()
+            );
         }
+
+        $this->assertFalse((new StringHelper("\xC2\x80\xFF"))->isUtf8());
 
         foreach ($unicodeBoundariesMalformed as $boundary) {
             $lowerUtf8MultibyteChar = new StringHelper(array_reduce(

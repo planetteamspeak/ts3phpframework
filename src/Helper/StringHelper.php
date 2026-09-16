@@ -426,21 +426,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function isUtf8(): bool
     {
-        if (preg_match('/\\A[\\x00-\\x7F]*\\z/', $this->string)) {
-            return true;
-        }
-
-        $pattern = [];
-
-        $pattern[] = "[\xC2-\xDF][\x80-\xBF]";            // non-overlong 2-byte
-        $pattern[] = "\xE0[\xA0-\xBF][\x80-\xBF]";        // excluding overlongs
-        $pattern[] = "[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}"; // straight 3-byte
-        $pattern[] = "\xED[\x80-\x9F][\x80-\xBF]";        // excluding surrogates
-        $pattern[] = "\xF0[\x90-\xBF][\x80-\xBF]{2}";     // planes 1-3
-        $pattern[] = "[\xF1-\xF3][\x80-\xBF]{3}";         // planes 4-15
-        $pattern[] = "\xF4[\x80-\x8F][\x80-\xBF]{2}";     // plane 16
-
-        return (bool)preg_match("%(?:" . implode("|", $pattern) . ")+%xs", $this->string);
+        return mb_check_encoding($this->string, 'UTF-8');
     }
 
     /**
@@ -485,13 +471,7 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function toHex(): string
     {
-        $hex = "";
-
-        foreach ($this as $char) {
-            $hex .= $char->toHex();
-        }
-
-        return $hex;
+        return strtoupper(bin2hex($this->string));
     }
 
     /**
