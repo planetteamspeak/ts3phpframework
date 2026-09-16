@@ -326,6 +326,16 @@ class CharTest extends TestCase
         $this->assertSame(-1, Char::fromHex('C2')->toUnicode());
     }
 
+    /**
+     * @throws HelperException
+     */
+    public function testFromHexToHexRoundTripsMultibyteUtf8Characters(): void
+    {
+        $this->assertSame('C2A2', Char::fromHex('C2A2')->toHex());
+        $this->assertSame('E282AC', (new Char('€'))->toHex());
+        $this->assertSame('F09F9880', (new Char('😀'))->toHex());
+    }
+
     public function testFromHexRejectsMalformedInput(): void
     {
         $this->expectException(HelperException::class);
