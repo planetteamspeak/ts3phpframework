@@ -31,15 +31,31 @@ class UDP extends Transport
 
         $address = "udp://" . (str_contains($host, ":") ? "[" . $host . "]" : $host) . ":" . $port;
         $timeout = (int)$this->config["timeout"];
+        $errno = 0;
+        $errstr = '';
 
-        $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout);
+        $this->stream = $this->openSocket($address, $errno, $errstr, $timeout);
 
         if ($this->stream === false) {
-            throw new TransportException(StringHelper::factory($errstr)->toUtf8()->toString(), $errno);
+            $message = $errstr ?: "failed to connect to server '$host:$port'";
+            throw new TransportException(StringHelper::factory($message)->toUtf8()->toString(), $errno);
         }
 
         @stream_set_timeout($this->stream, $timeout);
         @stream_set_blocking($this->stream, $this->config["blocking"] ? 1 : 0);
+    }
+
+    /**
+     * Opens the datagram socket.
+     *
+     * Kept separate from connect() so transports can specialize connection
+     * creation without duplicating configuration and stream setup.
+     *
+     * @return mixed
+     */
+    protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout): mixed
+    {
+        return @stream_socket_client($address, $errno, $errstr, $timeout);
     }
 
     /**

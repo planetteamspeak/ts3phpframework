@@ -36,11 +36,14 @@ class TCP extends Transport
         if (empty($this->config["ssh"])) {
             $address = "tcp://" . (str_contains($host, ":") ? "[" . $host . "]" : $host) . ":" . $port;
             $options = empty($this->config["tls"]) ? [] : ["ssl" => ["allow_self_signed" => true, "verify_peer" => false, "verify_peer_name" => false]];
+            $errno = 0;
+            $errstr = '';
 
-            $this->stream = @stream_socket_client($address, $errno, $errstr, $this->config["timeout"], STREAM_CLIENT_CONNECT, stream_context_create($options));
+            $this->stream = $this->openSocket($address, $errno, $errstr, $this->config["timeout"], $options);
 
             if ($this->stream === false) {
-                throw new TransportException(StringHelper::factory($errstr)->toUtf8()->toString(), $errno);
+                $message = $errstr ?: "failed to connect to server '$host:$port'";
+                throw new TransportException(StringHelper::factory($message)->toUtf8()->toString(), $errno);
             }
 
             if (!empty($this->config["tls"])) {
@@ -66,6 +69,16 @@ class TCP extends Transport
 
         @stream_set_timeout($this->stream, $timeout);
         @stream_set_blocking($this->stream, $blocking ? 1 : 0);
+    }
+
+    /**
+     * Opens the TCP socket.
+     *
+     * @return mixed
+     */
+    protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+    {
+        return @stream_socket_client($address, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, stream_context_create($options));
     }
 
     /**
