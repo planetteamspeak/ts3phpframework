@@ -1828,7 +1828,7 @@ class Server extends Node
             $name = $this->iconGetName("virtualserver_icon_id");
         }
 
-        $download = $this->transferInitDownload(rand(0x0000, 0xFFFF), 0, $name);
+        $download = $this->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $name);
         $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
         return $transfer->download($download["ftkey"], $download["size"]);
@@ -1848,7 +1848,7 @@ class Server extends Node
         $crc = crc32($data);
         $size = strlen($data);
 
-        $upload = $this->transferInitUpload(rand(0x0000, 0xFFFF), 0, "/icon_" . $crc, $size);
+        $upload = $this->transferInitUpload(TeamSpeak3::generateTransferClientId(), 0, "/icon_" . $crc, $size);
         $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($upload["host"], ":") ? "[" . $upload["host"] . "]" : $upload["host"]) . ":" . $upload["port"]);
 
         $transfer->upload($upload["ftkey"], $upload["seekpos"], $data);

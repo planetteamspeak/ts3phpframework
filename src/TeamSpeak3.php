@@ -50,6 +50,17 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Node\Server;
 class TeamSpeak3
 {
     /**
+     * Generates a client-side identifier for a file transfer.
+     *
+     * @return int
+     * @throws \Random\RandomException
+     */
+    public static function generateTransferClientId(): int
+    {
+        return random_int(0x0000, 0xFFFF);
+    }
+
+    /**
      * TeamSpeak 3 protocol welcome message.
      */
     public const TS3_PROTO_IDENT = "TS3";

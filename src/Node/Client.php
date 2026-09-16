@@ -304,7 +304,7 @@ class Client extends Node
             return;
         }
 
-        $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->avatarGetName());
+        $download = $this->getParent()->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $this->avatarGetName());
         $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
         return $transfer->download($download["ftkey"], $download["size"]);
@@ -398,7 +398,7 @@ class Client extends Node
             return;
         }
 
-        $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("client_icon_id"));
+        $download = $this->getParent()->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $this->iconGetName("client_icon_id"));
         $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
         return $transfer->download($download["ftkey"], $download["size"]);
