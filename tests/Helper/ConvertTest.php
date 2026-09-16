@@ -230,26 +230,31 @@ class ConvertTest extends TestCase
 
     public function testConvertCodecIDToHumanReadable()
     {
+        $this->expectNotToPerformAssertions();
         // @todo: Find logical / comprehensive test for checking codec names
     }
 
     public function testConvertGroupTypeIDToHumanReadable()
     {
+        $this->expectNotToPerformAssertions();
         // @todo: Find logical / comprehensive test for checking codec names
     }
 
     public function testConvertPermTypeIDToHumanReadable()
     {
+        $this->expectNotToPerformAssertions();
         // @todo: Find logical / comprehensive test for checking codec names
     }
 
     public function testConvertPermCategoryIDToHumanReadable()
     {
+        $this->expectNotToPerformAssertions();
         // @todo: Find logical / comprehensive test for checking codec names
     }
 
     public function testConvertLogLevelIDToHumanReadable()
     {
+        $this->expectNotToPerformAssertions();
         // @todo: Find logical / comprehensive test for checking codec names
     }
 

@@ -40,13 +40,14 @@ class Signal
      */
     public function emit(string $signal, mixed $params = null): mixed
     {
+        $args = func_get_args();
+
         if (!$this->hasHandlers($signal)) {
             return null;
         }
 
         if (!is_array($params)) {
-            $params = func_get_args();
-            $params = array_slice($params, 1);
+            $params = array_slice($args, 1);
         }
 
         foreach ($this->sigslots[$signal] as $slot) {
