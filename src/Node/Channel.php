@@ -124,7 +124,7 @@ class Channel extends Node
             throw new ServerQueryException("invalid clientID", 0x200);
         }
 
-        return $this->clientList[$clid];
+        return $this->clientList()[$clid];
     }
 
     /**
