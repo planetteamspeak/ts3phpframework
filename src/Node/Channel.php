@@ -71,7 +71,7 @@ class Channel extends Node
             throw new ServerQueryException("invalid channelID", 0x300);
         }
 
-        return $this->channelList[$cid];
+        return $this->subChannelList()[$cid];
     }
 
     /**
@@ -81,7 +81,7 @@ class Channel extends Node
      * @return Channel
      * @throws ServerQueryException
      */
-    public function subChannelGetByName(int $name): Channel
+    public function subChannelGetByName(string $name): Channel
     {
         foreach ($this->subChannelList() as $channel) {
             if ($channel["channel_name"] == $name) {
@@ -134,7 +134,7 @@ class Channel extends Node
      * @return Client
      * @throws ServerQueryException
      */
-    public function clientGetByName(int $name): Client
+    public function clientGetByName(string $name): Client
     {
         foreach ($this->clientList() as $client) {
             if ($client["client_nickname"] == $name) {
