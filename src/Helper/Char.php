@@ -163,21 +163,53 @@ class Char
      */
     public function toUnicode(): int
     {
+        $length = strlen($this->char);
         $h = ord($this->char[0]);
 
         if ($h <= 0x7F) {
-            return $h;
+            return $length === 1 ? $h : -1;
         } elseif ($h < 0xC2) {
             return -1;
         } elseif ($h <= 0xDF) {
+            if ($length !== 2 || !$this->isContinuationByte(1)) {
+                return -1;
+            }
+
             return ($h & 0x1F) << 6 | (ord($this->char[1]) & 0x3F);
         } elseif ($h <= 0xEF) {
+            if ($length !== 3 || !$this->isContinuationByte(1) || !$this->isContinuationByte(2)) {
+                return -1;
+            }
+
             return ($h & 0x0F) << 12 | (ord($this->char[1]) & 0x3F) << 6 | (ord($this->char[2]) & 0x3F);
         } elseif ($h <= 0xF4) {
-            return ($h & 0x0F) << 18 | (ord($this->char[1]) & 0x3F) << 12 | (ord($this->char[2]) & 0x3F) << 6 | (ord($this->char[3]) & 0x3F);
+            if (
+                $length !== 4
+                || !$this->isContinuationByte(1)
+                || !$this->isContinuationByte(2)
+                || !$this->isContinuationByte(3)
+            ) {
+                return -1;
+            }
+
+            return ($h & 0x07) << 18
+                | (ord($this->char[1]) & 0x3F) << 12
+                | (ord($this->char[2]) & 0x3F) << 6
+                | (ord($this->char[3]) & 0x3F);
         } else {
             return -1;
         }
+    }
+
+    private function isContinuationByte(int $offset): bool
+    {
+        if (!isset($this->char[$offset])) {
+            return false;
+        }
+
+        $byte = ord($this->char[$offset]);
+
+        return $byte >= 0x80 && $byte <= 0xBF;
     }
 
     /**
