@@ -363,13 +363,30 @@ class CharTest extends TestCase
      */
     private static function calculateUTF8Ordinal(string $char): int
     {
-        $charString = mb_substr($char, 0, 1, 'utf-8');
-        $charLength = strlen($charString);
-        $ordinal    = ord($charString[0]) & (0xFF >> $charLength);
-        //Merge other characters into the value
-        for ($i = 1; $i < $charLength; $i++) {
-            $ordinal = $ordinal << 6 | (ord($charString[$i]) & 127);
+        $bytes = array_map('ord', str_split($char));
+        $length = strlen($char);
+
+        if ($length === 1) {
+            // 1-byte (ASCII)
+            return $bytes[0];
+        } elseif ($length === 2) {
+            // 2-byte
+            return (($bytes[0] & 0x1F) << 6) |
+                ($bytes[1] & 0x3F);
+        } elseif ($length === 3) {
+            // 3-byte
+            return (($bytes[0] & 0x0F) << 12) |
+                (($bytes[1] & 0x3F) << 6) |
+                ($bytes[2] & 0x3F);
+        } elseif ($length === 4) {
+            // 4-byte
+            return (($bytes[0] & 0x07) << 18) |
+                (($bytes[1] & 0x3F) << 12) |
+                (($bytes[2] & 0x3F) << 6) |
+                ($bytes[3] & 0x3F);
         }
-        return $ordinal;
+
+        // invalid UTF-8 (longer than 4 bytes)
+        return -1;
     }
 }
