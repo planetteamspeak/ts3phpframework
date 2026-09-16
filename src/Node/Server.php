@@ -1828,7 +1828,7 @@ class Server extends Node
             $name = $this->iconGetName("virtualserver_icon_id");
         }
 
-        $download = $this->transferInitDownload(rand(0x0000, 0xFFFF), 0, $name);
+        $download = $this->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $name);
         $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
         return $transfer->download($download["ftkey"], $download["size"]);
@@ -1848,7 +1848,7 @@ class Server extends Node
         $crc = crc32($data);
         $size = strlen($data);
 
-        $upload = $this->transferInitUpload(rand(0x0000, 0xFFFF), 0, "/icon_" . $crc, $size);
+        $upload = $this->transferInitUpload(TeamSpeak3::generateTransferClientId(), 0, "/icon_" . $crc, $size);
         $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($upload["host"], ":") ? "[" . $upload["host"] . "]" : $upload["host"]) . ":" . $upload["port"]);
 
         $transfer->upload($upload["ftkey"], $upload["seekpos"], $data);
@@ -2565,7 +2565,14 @@ class Server extends Node
 
         foreach ($this->channelList() as $channel) {
             if ($channel["pid"] == 0) {
-                $this->nodeList[] = $channel;
+                try {
+                    $channel->count();
+                    $this->nodeList[] = $channel;
+                } catch (ServerQueryException $e) {
+                    if ($e->getCode() != 0xA08) {
+                        throw $e;
+                    }
+                }
             }
         }
     }
@@ -2621,8 +2628,19 @@ class Server extends Node
             return 0;
         }
 
-        if ($a->getProperty("sortid", 0) != $b->getProperty("sortid", 0) && $a->getProperty("sortid", 0) != 0 && $b->getProperty("sortid", 0) != 0) {
-            return ($a->getProperty("sortid", 0) < $b->getProperty("sortid", 0)) ? -1 : 1;
+        $aSortId = $a->getProperty("sortid", 0);
+        $bSortId = $b->getProperty("sortid", 0);
+
+        if ($aSortId instanceof StringHelper) {
+            $aSortId = $aSortId->toInt();
+        }
+
+        if ($bSortId instanceof StringHelper) {
+            $bSortId = $bSortId->toInt();
+        }
+
+        if ($aSortId != $bSortId && $aSortId != 0 && $bSortId != 0) {
+            return ($aSortId < $bSortId) ? -1 : 1;
         }
 
         return ($a->getId() < $b->getId()) ? -1 : 1;

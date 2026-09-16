@@ -51,7 +51,7 @@ abstract class Group extends Node
             return;
         }
 
-        $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("iconid"));
+        $download = $this->getParent()->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $this->iconGetName("iconid"));
         $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
         return $transfer->download($download["ftkey"], $download["size"]);

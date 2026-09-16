@@ -152,7 +152,7 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
      * @param string $prefix
      * @return string
      */
-    public function getClass(string $prefix = "ts3_"): string
+    public function getClass(?string $prefix = "ts3_"): string
     {
         if ($this instanceof Channel && $this->isSpacer()) {
             return $prefix . "spacer";
@@ -160,7 +160,9 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
             return $prefix . "query";
         }
 
-        return $prefix . StringHelper::factory(get_class($this))->section("_", 2)->toLower();
+        $class = StringHelper::factory(str_replace("\\", "/", get_class($this)))->split("/");
+
+        return $prefix . array_pop($class)->toLower();
     }
 
     /**
@@ -225,23 +227,28 @@ abstract class Node implements RecursiveIterator, ArrayAccess, Countable
     protected function filterList(array $nodes = [], array $rules = []): array
     {
         if (!empty($rules)) {
-            foreach ($nodes as $node) {
+            foreach ($nodes as $nodeKey => $node) {
                 if (!$node instanceof Node) {
                     continue;
                 }
 
                 $props = $node->getInfo(false);
-                $props = array_intersect_key($props, $rules);
 
-                foreach ($props as $key => $val) {
+                foreach ($rules as $key => $rule) {
+                    if (!array_key_exists($key, $props)) {
+                        unset($nodes[$nodeKey]);
+                        break;
+                    }
+
+                    $val = $props[$key];
                     if ($val instanceof StringHelper) {
-                        $match = $val->contains($rules[$key], true);
+                        $match = $val->contains($rule, true);
                     } else {
-                        $match = $val == $rules[$key];
+                        $match = $val == $rule;
                     }
 
                     if ($match === false) {
-                        unset($nodes[$node->getId()]);
+                        unset($nodes[$nodeKey]);
                     }
                 }
             }

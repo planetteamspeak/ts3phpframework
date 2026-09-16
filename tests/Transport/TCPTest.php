@@ -4,13 +4,56 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Transport;
 
 use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\MockServerQuery;
-use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\TCP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 class TCPTest extends TestCase
 {
+    public function testReadLineWaitsForRemainingNonBlockingChunk(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'blocking' => 0]) extends TCP {
+            private array $chunks = ['cldbid=42 client_nickname=Some', false, "|body\\sname=Other\n"];
+
+            public function setStreamForTest(): void
+            {
+                $this->stream = fopen('php://temp', 'r+');
+            }
+
+            protected function waitForReadyRead(int $time = 0): void
+            {
+            }
+
+            protected function readLineChunk(): string|false
+            {
+                return array_shift($this->chunks);
+            }
+        };
+
+        $transport->setStreamForTest();
+
+        $this->assertSame(
+            'cldbid=42 client_nickname=Some|body\\sname=Other',
+            $transport->readLine()->toString()
+        );
+    }
+
+    public function testReadLineThrowsWhenConnectionIsClosed(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends TCP {
+            public function setStreamForTest(): void
+            {
+                $this->stream = fopen('php://temp', 'r');
+            }
+        };
+
+        $transport->setStreamForTest();
+
+        $this->expectException(TransportException::class);
+        $this->expectExceptionMessage("connection to server 'test:12345' lost");
+        $transport->readLine();
+    }
+
     /**
      * @throws TransportException
      */
@@ -29,6 +72,9 @@ class TCPTest extends TestCase
 
         $this->assertArrayHasKey('timeout', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('timeout'));
+
+        $this->assertArrayHasKey('tls_verify', $adapter->getConfig());
+        $this->assertSame(0, $adapter->getConfig('tls_verify'));
 
         $this->assertArrayHasKey('blocking', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('blocking'));
@@ -60,10 +106,12 @@ class TCPTest extends TestCase
         );
 
         $this->assertIsArray($adapter->getConfig());
-        $this->assertCount(4, $adapter->getConfig());
+        $this->assertCount(5, $adapter->getConfig());
         $this->assertArrayHasKey('host', $adapter->getConfig());
         $this->assertEquals('test', $adapter->getConfig()['host']);
         $this->assertEquals('test', $adapter->getConfig('host'));
+        $this->assertNull($adapter->getConfig('missing'));
+        $this->assertFalse($adapter->getConfig('missing', false));
     }
 
     /**
@@ -75,7 +123,7 @@ class TCPTest extends TestCase
             ['host' => 'test', 'port' => 12345]
         );
         // Mocking adaptor since `stream_socket_client()` depends on running server
-        $adaptor = $this->createMock(ServerQuery::class);
+        $adaptor = $this->createMockServerQuery();
         $transport->setAdapter($adaptor);
 
         $this->assertSame($adaptor, $transport->getAdapter());
@@ -136,9 +184,15 @@ class TCPTest extends TestCase
      */
     public function testConnectHostRefuseConnection()
     {
-        $transport = new TCP(
-            ['host' => '127.0.0.1', 'port' => 12345]
-        );
+        $transport = new class (['host' => '127.0.0.1', 'port' => 12345]) extends TCP {
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+            {
+                $errno = 111;
+                $errstr = 'Connection refused';
+
+                return false;
+            }
+        };
         $this->expectException(TransportException::class);
         $this->expectExceptionMessage('Connection refused');
         $transport->connect();
@@ -166,6 +220,38 @@ class TCPTest extends TestCase
         );
         $this->assertNull($transport->getStream());
         $transport->disconnect();
+    }
+
+    public function testDisconnectClosesRetainedStream(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends TCP {
+            public function setStreamForTest($stream): void
+            {
+                $this->stream = $stream;
+            }
+        };
+        $stream = fopen('php://temp', 'r+');
+        $transport->setStreamForTest($stream);
+
+        $transport->disconnect();
+
+        $this->assertFalse(is_resource($stream));
+        $this->assertNull($transport->getStream());
+    }
+
+    public function testReadThrowsWhenStreamReachedEndOfFile(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends TCP {
+            public function setStreamForTest($stream): void
+            {
+                $this->stream = $stream;
+            }
+        };
+        $transport->setStreamForTest(fopen('php://temp', 'r'));
+
+        $this->expectException(TransportException::class);
+        $this->expectExceptionMessage("connection to server 'test:12345' lost");
+        $transport->read();
     }
 
     /**
@@ -225,6 +311,25 @@ class TCPTest extends TestCase
         $transport->send('testsend');
     }
 
+    public function testSendRetriesPartialWritesAndRejectsFailedWrites(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends TCP {
+            public array $writes = [];
+            private array $results = [2, 3];
+            public function connect(): void
+            {
+                $this->stream = true;
+            }
+            protected function write(string $data): int|false
+            {
+                $this->writes[] = $data;
+                return array_shift($this->results);
+            }
+        };
+        $transport->send('hello');
+        $this->assertSame(['hello', 'llo'], $transport->writes);
+    }
+
     /**
      * @throws ServerQueryException
      * @throws TransportException
@@ -242,5 +347,94 @@ class TCPTest extends TestCase
             $this->expectExceptionMessage("getaddrinfo for $host failed");
         }
         $transport->sendLine('test.sendLine');
+    }
+
+    public function testNonBlockingReadTimesOut(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'blocking' => 0, 'timeout' => 0]) extends TCP {
+            private $peer;
+
+            public function connectForTest(): void
+            {
+                [$this->stream, $this->peer] = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+            }
+
+            public function waitForReadForTest(): void
+            {
+                $this->waitForReadyRead();
+            }
+        };
+
+        $transport->connectForTest();
+
+        $this->expectException(TransportException::class);
+        $this->expectExceptionMessage("timed out waiting for data from server 'test:12345'");
+        $transport->waitForReadForTest();
+    }
+
+    public function testTlsVerificationIsDisabledByDefault(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'tls' => 1]) extends TCP {
+            public array $contextOptions;
+
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+            {
+                $this->contextOptions = $options;
+                return fopen('php://temp', 'r+');
+            }
+
+            protected function enableCrypto(): bool
+            {
+                return true;
+            }
+        };
+
+        $transport->connect();
+
+        $this->assertSame(['allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false], $transport->contextOptions['ssl']);
+    }
+
+    public function testTlsVerificationCanBeEnabled(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'tls' => 1, 'tls_verify' => 1]) extends TCP {
+            public array $contextOptions;
+
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+            {
+                $this->contextOptions = $options;
+                return fopen('php://temp', 'r+');
+            }
+
+            protected function enableCrypto(): bool
+            {
+                return true;
+            }
+        };
+
+        $transport->connect();
+
+        $this->assertSame(['allow_self_signed' => false, 'verify_peer' => true, 'verify_peer_name' => true], $transport->contextOptions['ssl']);
+    }
+
+    public function testFailedTlsNegotiationDisconnectsTransport(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'tls' => 1]) extends TCP {
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+            {
+                return fopen('php://temp', 'r+');
+            }
+
+            protected function enableCrypto(): bool
+            {
+                return false;
+            }
+        };
+
+        try {
+            $transport->connect();
+            $this->fail('Expected TLS negotiation to fail.');
+        } catch (TransportException) {
+            $this->assertNull($transport->getStream());
+        }
     }
 }

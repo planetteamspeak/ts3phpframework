@@ -41,7 +41,7 @@ Speed up new development and reduce maintenance costs by using this nifty piece 
 
 Note that the majority of TS3 PHP Framework development and deployment is done on nginx, so there is more community experience and testing performed on Apache than on other web servers.
 
-You can install the TS3 PHP Framework by [manually downloading](https://github.com/planetteamspeak/ts3phpframework/archive/refs/heads/master.zip) it or using Composer.
+Install the TS3 PHP Framework with [Composer](https://getcomposer.org/). Composer generates the PSR-4 autoloader required by the framework.
 
 Install the latest available release:
 
@@ -143,10 +143,10 @@ $uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10022/?ssh=1"
 
 #### SSL/TLS Connections ([TeaSpeak Server](https://www.teaspeak.de) only)
 
-Secure ServerQuery connections can be established using the optional `tls` parameter:
+Secure TeaSpeak ServerQuery connections can be established using the optional `tls` parameter. Certificate verification remains disabled by default for compatibility with self-signed deployments. Enable `tls_verify` only when the server certificate is trusted by PHP and matches the hostname:
 
 ```php
-$uri = "serverquery://username:password@[fe80::250:56ff:fe16:1447]:10011/?tls=1";
+$uri = "serverquery://username:password@teaspeak.example.com:10011/?tls=1&tls_verify=1";
 ```
 
 #### Custom Protocol Welcome Message and/or MOTD ([TeaSpeak Server](https://www.teaspeak.de) only)
@@ -187,7 +187,7 @@ Additional:
 * [RFC 2396 - Section 3](https://tools.ietf.org/html/rfc2396#section-3.4) - Valid URI syntax (specifically, components of)
 * [PHP.net - rawurlencode](http://us2.php.net/manual/en/function.rawurlencode.php)
 
-#### Usual PHP Code (`require` solution)
+#### Usual PHP Code
 Usual PHP code means a simple created `file.php`, where you start writing your code like this:
 
 ```php
@@ -200,9 +200,12 @@ When you use this solution, you'll probably start using the TS3 PHP  Framework l
 
 ```php
 <?php
-// load framework files
-require_once("libraries/TeamSpeak3/TeamSpeak3.php");
-  
+// load Composer dependencies and the framework's PSR-4 classes
+require_once __DIR__ . "/vendor/autoload.php";
+
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TeamSpeak3Exception;
+use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
+
 try
 {
   // IPv4 connection URI
@@ -214,7 +217,7 @@ try
   // spawn an object for the channel using a specified name
   $ts3_Channel = $ts3_VirtualServer->channelGetByName("I do not exist");
 }
-catch(TeamSpeak3_Exception $e)
+catch(TeamSpeak3Exception $e)
 {
   // print the error message returned by the server
   echo "Error " . $e->getCode() . ": " . $e->getMessage();
@@ -229,7 +232,7 @@ When you use a MVC based software like Symfony, CakePHP, Laravel or something si
 <?php
 
 use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
-use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3_Exception;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TeamSpeak3Exception;
 
 class TeamspeakController extends Controller
 {
@@ -240,16 +243,13 @@ class TeamspeakController extends Controller
       // IPv4 connection URI
       $uri = "serverquery://username:password@127.0.0.1:10011/?server_port=9987";
       
-      // Create new object of TS3 PHP Framework class
-      $TS3PHPFramework = new TeamSpeak3();
-      
       // connect to above specified server, authenticate and spawn an object for the virtual server on port 9987
-      $ts3_VirtualServer = $TS3PHPFramework->factory($uri);
+      $ts3_VirtualServer = TeamSpeak3::factory($uri);
       
       // spawn an object for the channel using a specified name
       $ts3_Channel = $ts3_VirtualServer->channelGetByName("I do not exist");
     }
-    catch(TeamSpeak3_Exception $e)
+    catch(TeamSpeak3Exception $e)
     {
       // print the error message returned by the server
       return "Error " . $e->getCode() . ": " . $e->getMessage();

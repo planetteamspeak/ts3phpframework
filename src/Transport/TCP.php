@@ -35,16 +35,23 @@ class TCP extends Transport
 
         if (empty($this->config["ssh"])) {
             $address = "tcp://" . (str_contains($host, ":") ? "[" . $host . "]" : $host) . ":" . $port;
-            $options = empty($this->config["tls"]) ? [] : ["ssl" => ["allow_self_signed" => true, "verify_peer" => false, "verify_peer_name" => false]];
+            $verify = !empty($this->config["tls_verify"]);
+            $options = empty($this->config["tls"]) ? [] : ["ssl" => ["allow_self_signed" => !$verify, "verify_peer" => $verify, "verify_peer_name" => $verify]];
+            $errno = 0;
+            $errstr = '';
 
-            $this->stream = @stream_socket_client($address, $errno, $errstr, $this->config["timeout"], STREAM_CLIENT_CONNECT, stream_context_create($options));
+            $this->stream = $this->openSocket($address, $errno, $errstr, $this->config["timeout"], $options);
 
             if ($this->stream === false) {
-                throw new TransportException(StringHelper::factory($errstr)->toUtf8()->toString(), $errno);
+                $message = $errstr ?: "failed to connect to server '$host:$port'";
+                throw new TransportException(StringHelper::factory($message)->toUtf8()->toString(), $errno);
             }
 
             if (!empty($this->config["tls"])) {
-                stream_socket_enable_crypto($this->stream, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
+                if (!$this->enableCrypto()) {
+                    $this->disconnect();
+                    throw new TransportException("failed to enable TLS for server '$host:$port'");
+                }
             }
         } else {
             $this->session = @ssh2_connect($host, $port);
@@ -69,6 +76,26 @@ class TCP extends Transport
     }
 
     /**
+     * Opens the TCP socket.
+     *
+     * @return mixed
+     */
+    protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+    {
+        return @stream_socket_client($address, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, stream_context_create($options));
+    }
+
+    /**
+     * Enables TLS encryption on the connected stream.
+     *
+     * @return bool
+     */
+    protected function enableCrypto(): bool
+    {
+        return stream_socket_enable_crypto($this->stream, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
+    }
+
+    /**
      * Disconnects from a remote server.
      *
      * @return void
@@ -79,11 +106,17 @@ class TCP extends Transport
             return;
         }
 
+        if (is_resource($this->stream)) {
+            @fclose($this->stream);
+        }
+
         $this->stream = null;
 
         if (is_resource($this->session)) {
             @ssh2_disconnect($this->session);
         }
+
+        $this->session = null;
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");
     }
@@ -105,7 +138,8 @@ class TCP extends Transport
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
-        if ($data === false) {
+        if ($data === false || ($data === "" && feof($this->stream))) {
+            $this->disconnect();
             throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
         }
 
@@ -129,13 +163,13 @@ class TCP extends Transport
         while (!$line->endsWith($token)) {
             $this->waitForReadyRead();
 
-            $data = @fgets($this->stream, 4096);
+            $data = $this->readLineChunk();
 
             Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
             if ($data === false) {
-                if ($line->count()) {
-                    $line->append($token);
+                if (feof($this->stream)) {
+                    throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
                 }
             } else {
                 $line->append($data);
@@ -143,6 +177,21 @@ class TCP extends Transport
         }
 
         return $line->trim();
+    }
+
+    /**
+     * Reads the next available part of a line from the stream.
+     *
+     * A non-blocking SSH stream can return false after returning a partial
+     * line, even though the remainder of that line arrives shortly after.
+     * Keeping this operation separate also allows transports to specialize
+     * how chunks are retrieved.
+     *
+     * @return string|false
+     */
+    protected function readLineChunk(): string|false
+    {
+        return @fgets($this->stream, 4096);
     }
 
     /**
@@ -157,9 +206,30 @@ class TCP extends Transport
     {
         $this->connect();
 
-        @fwrite($this->stream, $data);
+        $length = strlen($data);
+        $written = 0;
+
+        while ($written < $length) {
+            $result = $this->write(substr($data, $written));
+
+            if ($result === false || $result === 0) {
+                throw new TransportException("failed to write to server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+            }
+
+            $written += $result;
+        }
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
+    }
+
+    /**
+     * Writes a chunk to the underlying stream.
+     *
+     * @return int|false
+     */
+    protected function write(string $data): int|false
+    {
+        return @fwrite($this->stream, $data);
     }
 
     /**
@@ -175,6 +245,11 @@ class TCP extends Transport
     {
         $size = strlen($data);
         $pack = 4096;
+
+        if ($size === 0) {
+            $this->send($separator);
+            return;
+        }
 
         for ($seek = 0; $seek < $size;) {
             $rest = $size - $seek;

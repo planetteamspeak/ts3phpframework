@@ -340,10 +340,10 @@ class Uri
     /**
      * Returns TRUE if the port is valid.
      *
-     * @param integer|null $port
+     * @param mixed|null $port
      * @return boolean
      */
-    public function checkPort(int $port = null): bool
+    public function checkPort(mixed $port = null): bool
     {
         if ($port === null) {
             if ($this->port instanceof StringHelper) {
@@ -353,15 +353,9 @@ class Uri
             }
         }
 
-        switch ($port) {
-            case str_starts_with($port, '-'):
-            case $port < 0:
-            case !is_int($port):
-            case !filter_var($port, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 65535]]):
-                return false;
-        }
-
-        return true;
+        return is_int($port)
+            && $port > 0
+            && filter_var($port, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 65535]]) !== false;
     }
 
     /**
@@ -517,7 +511,7 @@ class Uri
             return $default;
         }
 
-        parse_str(rawurldecode($this->query), $queryArray);
+        parse_str($this->query, $queryArray);
 
         if (array_key_exists($key, $queryArray)) {
             $val = $queryArray[$key];
@@ -591,7 +585,7 @@ class Uri
      */
     public static function getUserParam(string $key, mixed $default = null): mixed
     {
-        return (array_key_exists($key, $_REQUEST) && !empty($_REQUEST[$key])) ? self::stripslashesRecursive($_REQUEST[$key]) : $default;
+        return array_key_exists($key, $_REQUEST) ? self::stripslashesRecursive($_REQUEST[$key]) : $default;
     }
 
     /**
@@ -603,7 +597,7 @@ class Uri
      */
     public static function getHostParam(string $key, mixed $default = null): mixed
     {
-        return (array_key_exists($key, $_SERVER) && !empty($_SERVER[$key])) ? $_SERVER[$key] : $default;
+        return array_key_exists($key, $_SERVER) ? $_SERVER[$key] : $default;
     }
 
     /**
@@ -615,7 +609,7 @@ class Uri
      */
     public static function getSessParam(string $key, mixed $default = null): mixed
     {
-        return (array_key_exists($key, $_SESSION) && !empty($_SESSION[$key])) ? $_SESSION[$key] : $default;
+        return array_key_exists($key, $_SESSION) ? $_SESSION[$key] : $default;
     }
 
     /**

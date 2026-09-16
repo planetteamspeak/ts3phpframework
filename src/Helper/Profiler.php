@@ -31,6 +31,17 @@ class Profiler
     }
 
     /**
+     * Removes a timer which is no longer associated with a live adapter.
+     *
+     * @param string $name
+     * @return void
+     */
+    public static function remove(string $name): void
+    {
+        unset(self::$timers[$name]);
+    }
+
+    /**
      * Starts a timer.
      *
      * @param string $name

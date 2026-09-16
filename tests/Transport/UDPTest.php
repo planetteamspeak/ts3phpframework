@@ -3,12 +3,22 @@
 namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Transport;
 
 use PHPUnit\Framework\TestCase;
-use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
+use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\MockServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\UDP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 class UDPTest extends TestCase
 {
+    private function createConnectedTransport(): UDP
+    {
+        return new class (['host' => '127.0.0.1', 'port' => 12345]) extends UDP {
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout): mixed
+            {
+                return fopen('php://temp', 'r+');
+            }
+        };
+    }
+
     /**
      * @throws TransportException
      */
@@ -27,6 +37,9 @@ class UDPTest extends TestCase
 
         $this->assertArrayHasKey('timeout', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('timeout'));
+
+        $this->assertArrayHasKey('tls_verify', $adapter->getConfig());
+        $this->assertSame(0, $adapter->getConfig('tls_verify'));
 
         $this->assertArrayHasKey('blocking', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('blocking'));
@@ -58,7 +71,7 @@ class UDPTest extends TestCase
         );
 
         $this->assertIsArray($adapter->getConfig());
-        $this->assertCount(4, $adapter->getConfig());
+        $this->assertCount(5, $adapter->getConfig());
         $this->assertArrayHasKey('host', $adapter->getConfig());
         $this->assertEquals('test', $adapter->getConfig()['host']);
         $this->assertEquals('test', $adapter->getConfig('host'));
@@ -73,7 +86,7 @@ class UDPTest extends TestCase
             ['host' => 'test', 'port' => 12345]
         );
         // Mocking adaptor since `stream_socket_client()` depends on running server
-        $adaptor = $this->createMock(ServerQuery::class);
+        $adaptor = new MockServerQuery(['host' => '0.0.0.0', 'port' => 9987]);
         $transport->setAdapter($adaptor);
 
         $this->assertSame($adaptor, $transport->getAdapter());
@@ -95,9 +108,7 @@ class UDPTest extends TestCase
      */
     public function testConnect()
     {
-        $transport = new UDP(
-            ['host' => '127.0.0.1', 'port' => 12345]
-        );
+        $transport = $this->createConnectedTransport();
         $transport->connect();
         $this->assertIsResource($transport->getStream());
     }
@@ -125,9 +136,7 @@ class UDPTest extends TestCase
      */
     public function testDisconnect()
     {
-        $transport = new UDP(
-            ['host' => '127.0.0.1', 'port' => 12345]
-        );
+        $transport = $this->createConnectedTransport();
         $transport->connect();
         $this->assertIsResource($transport->getStream());
         $transport->disconnect();
@@ -144,6 +153,23 @@ class UDPTest extends TestCase
         );
         $this->assertNull($transport->getStream());
         $transport->disconnect();
+    }
+
+    public function testDisconnectClosesRetainedStream(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends UDP {
+            public function setStreamForTest($stream): void
+            {
+                $this->stream = $stream;
+            }
+        };
+        $stream = fopen('php://temp', 'r+');
+        $transport->setStreamForTest($stream);
+
+        $transport->disconnect();
+
+        $this->assertFalse(is_resource($stream));
+        $this->assertNull($transport->getStream());
     }
 
     /**
@@ -180,5 +206,21 @@ class UDPTest extends TestCase
             $this->expectExceptionMessage("getaddrinfo for $host failed");
         }
         $transport->send('test.send');
+    }
+
+    public function testSendRejectsPartialDatagrams(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends UDP {
+            public function connect(): void
+            {
+                $this->stream = true;
+            }
+            protected function sendTo(string $data): int|false
+            {
+                return 1;
+            }
+        };
+        $this->expectException(TransportException::class);
+        $transport->send('ab');
     }
 }

@@ -4,9 +4,14 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Helper;
 
 use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Convert;
+use PlanetTeamSpeak\TeamSpeak3Framework\TeamSpeak3;
 
 class ConvertTest extends TestCase
 {
+    public function setUp(): void
+    {
+        date_default_timezone_set("UTC");
+    }
     public function testConvertBytesToHumanReadableWithFactor1000()
     {
         $output = Convert::bytes(0);
@@ -177,35 +182,104 @@ class ConvertTest extends TestCase
         $this->assertEquals('0D 00:01:30', $output);
         $this->assertIsString($output);
 
-        // @todo: Enable after ::seconds() can handle negative integers
-        //$output = Convert::seconds(-1);
-        //$this->assertEquals('-0D 00:00:01', $output);
-        //$this->assertInternalType(PHPUnit_IsType::TYPE_STRING, $output);
+        $output = Convert::seconds(-0);
+        $this->assertEquals('0D 00:00:00', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(-1);
+        $this->assertEquals('-0D 00:00:01', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(-59);
+        $this->assertEquals('-0D 00:00:59', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(-60);
+        $this->assertEquals('-0D 00:01:00', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(((59 * 60) + 59) * -1);
+        $this->assertEquals('-0D 00:59:59', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(((59 * 60) + 60) * -1);
+        $this->assertEquals('-0D 01:00:00', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(
+            ((23 * (60 ** 2)) + (59 * 60) + 59) * -1
+        );
+        $this->assertEquals('-0D 23:59:59', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(
+            ((23 * (60 ** 2)) + (59 * 60) + 60) * -1
+        );
+        $this->assertEquals('-1D 00:00:00', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(
+            ((47 * (60 ** 2)) + (59 * 60) + 59) * -1
+        );
+        $this->assertEquals('-1D 23:59:59', $output);
+        $this->assertIsString($output);
+
+        $output = Convert::seconds(-90.083);
+        $this->assertEquals('-0D 00:01:30', $output);
+        $this->assertIsString($output);
     }
 
     public function testConvertCodecIDToHumanReadable()
     {
-        // @todo: Find logical / comprehensive test for checking codec names
+        foreach ([
+            TeamSpeak3::CODEC_SPEEX_NARROWBAND => 'Speex Narrowband', TeamSpeak3::CODEC_SPEEX_WIDEBAND => 'Speex Wideband',
+            TeamSpeak3::CODEC_SPEEX_ULTRAWIDEBAND => 'Speex Ultra-Wideband', TeamSpeak3::CODEC_CELT_MONO => 'CELT Mono',
+            TeamSpeak3::CODEC_OPUS_VOICE => 'Opus Voice', TeamSpeak3::CODEC_OPUS_MUSIC => 'Opus Music',
+        ] as $codec => $name) {
+            $this->assertSame($name, Convert::codec($codec));
+        }
+        $this->assertSame('Unknown', Convert::codec(-1));
     }
 
     public function testConvertGroupTypeIDToHumanReadable()
     {
-        // @todo: Find logical / comprehensive test for checking codec names
+        foreach ([TeamSpeak3::GROUP_DBTYPE_TEMPLATE => 'Template', TeamSpeak3::GROUP_DBTYPE_REGULAR => 'Regular', TeamSpeak3::GROUP_DBTYPE_SERVERQUERY => 'ServerQuery'] as $type => $name) {
+            $this->assertSame($name, Convert::groupType($type));
+        }
+        $this->assertSame('Unknown', Convert::groupType(-1));
     }
 
     public function testConvertPermTypeIDToHumanReadable()
     {
-        // @todo: Find logical / comprehensive test for checking codec names
+        foreach ([TeamSpeak3::PERM_TYPE_SERVERGROUP => 'Server Group', TeamSpeak3::PERM_TYPE_CLIENT => 'Client', TeamSpeak3::PERM_TYPE_CHANNEL => 'Channel', TeamSpeak3::PERM_TYPE_CHANNELGROUP => 'Channel Group', TeamSpeak3::PERM_TYPE_CHANNELCLIENT => 'Channel Client'] as $type => $name) {
+            $this->assertSame($name, Convert::permissionType($type));
+        }
+        $this->assertSame('Unknown', Convert::permissionType(-1));
     }
 
     public function testConvertPermCategoryIDToHumanReadable()
     {
-        // @todo: Find logical / comprehensive test for checking codec names
+        foreach ([
+            TeamSpeak3::PERM_CAT_GLOBAL => 'Global', TeamSpeak3::PERM_CAT_GLOBAL_INFORMATION => 'Global / Information', TeamSpeak3::PERM_CAT_GLOBAL_SERVER_MGMT => 'Global / Virtual Server Management', TeamSpeak3::PERM_CAT_GLOBAL_ADM_ACTIONS => 'Global / Administration', TeamSpeak3::PERM_CAT_GLOBAL_SETTINGS => 'Global / Settings',
+            TeamSpeak3::PERM_CAT_SERVER => 'Virtual Server', TeamSpeak3::PERM_CAT_SERVER_INFORMATION => 'Virtual Server / Information', TeamSpeak3::PERM_CAT_SERVER_ADM_ACTIONS => 'Virtual Server / Administration', TeamSpeak3::PERM_CAT_SERVER_SETTINGS => 'Virtual Server / Settings',
+            TeamSpeak3::PERM_CAT_CHANNEL => 'Channel', TeamSpeak3::PERM_CAT_CHANNEL_INFORMATION => 'Channel / Information', TeamSpeak3::PERM_CAT_CHANNEL_CREATE => 'Channel / Create', TeamSpeak3::PERM_CAT_CHANNEL_MODIFY => 'Channel / Modify', TeamSpeak3::PERM_CAT_CHANNEL_DELETE => 'Channel / Delete', TeamSpeak3::PERM_CAT_CHANNEL_ACCESS => 'Channel / Access',
+            TeamSpeak3::PERM_CAT_GROUP => 'Group', TeamSpeak3::PERM_CAT_GROUP_INFORMATION => 'Group / Information', TeamSpeak3::PERM_CAT_GROUP_CREATE => 'Group / Create', TeamSpeak3::PERM_CAT_GROUP_MODIFY => 'Group / Modify', TeamSpeak3::PERM_CAT_GROUP_DELETE => 'Group / Delete',
+            TeamSpeak3::PERM_CAT_CLIENT => 'Client', TeamSpeak3::PERM_CAT_CLIENT_INFORMATION => 'Client / Information', TeamSpeak3::PERM_CAT_CLIENT_ADM_ACTIONS => 'Client / Admin', TeamSpeak3::PERM_CAT_CLIENT_BASICS => 'Client / Basics', TeamSpeak3::PERM_CAT_CLIENT_MODIFY => 'Client / Modify', TeamSpeak3::PERM_CAT_FILETRANSFER => 'File Transfer', TeamSpeak3::PERM_CAT_NEEDED_MODIFY_POWER => 'Grant',
+        ] as $category => $name) {
+            $this->assertSame($name, Convert::permissionCategory($category));
+        }
+        $this->assertSame('Unknown', Convert::permissionCategory(-1));
     }
 
     public function testConvertLogLevelIDToHumanReadable()
     {
-        // @todo: Find logical / comprehensive test for checking codec names
+        foreach ([TeamSpeak3::LOGLEVEL_CRITICAL => 'CRITICAL', TeamSpeak3::LOGLEVEL_ERROR => 'ERROR', TeamSpeak3::LOGLEVEL_DEBUG => 'DEBUG', TeamSpeak3::LOGLEVEL_WARNING => 'WARNING', TeamSpeak3::LOGLEVEL_INFO => 'INFO'] as $level => $name) {
+            $this->assertSame($name, Convert::logLevel($level));
+            $this->assertEquals($level, Convert::logLevel(strtolower($name)));
+        }
+        $this->assertSame('DEVELOP', Convert::logLevel(-1));
+        $this->assertEquals(TeamSpeak3::LOGLEVEL_ERROR, Convert::logLevel('error'));
+        $this->assertEquals(TeamSpeak3::LOGLEVEL_DEVEL, Convert::logLevel('unexpected'));
     }
 
     public function testConvertLogEntryToArray()
@@ -236,7 +310,7 @@ class ConvertTest extends TestCase
     {
         $this->assertEquals(
             '3.0.13.6 (2016-11-08 08:48:33)',
-            Convert::version('3.0.13.6 [Build: 1478594913]')
+            Convert::version('3.0.13.6 [Build: 1478594913]')->toString()
         );
     }
 

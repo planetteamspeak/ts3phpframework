@@ -25,7 +25,7 @@ class MockTCP extends TCP
             return;
         }
 
-        $this->reply = sprintf("%s\n%s\n", self::S_WELCOME_L0, self::S_WELCOME_L1);
+        $this->reply = sprintf("%s\n%s\n", $this->config['welcome'] ?? self::S_WELCOME_L0, self::S_WELCOME_L1);
         $this->stream = true;
     }
 

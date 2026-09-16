@@ -64,11 +64,23 @@ class ServerQuery extends Adapter
 
         $rdy = $this->getTransport()->readLine();
 
-        if (!$rdy->startsWith(TeamSpeak3::TS3_PROTO_IDENT) && !$rdy->startsWith(TeamSpeak3::TEA_PROTO_IDENT) && !(defined("CUSTOM_PROTO_IDENT") && $rdy->startsWith(CUSTOM_PROTO_IDENT))) {
-            throw new AdapterException("invalid reply from the server (" . $rdy . ")");
-        }
+        $this->validateProtocolGreeting($rdy);
 
         Signal::getInstance()->emit("serverqueryConnected", $this);
+    }
+
+    /**
+     * Validates a ServerQuery protocol greeting.
+     *
+     * @param StringHelper $greeting
+     * @return void
+     * @throws AdapterException
+     */
+    protected function validateProtocolGreeting(StringHelper $greeting): void
+    {
+        if (!$greeting->startsWith(TeamSpeak3::TS3_PROTO_IDENT) && !$greeting->startsWith(TeamSpeak3::TEA_PROTO_IDENT) && !$greeting->startsWith(TeamSpeak3::GREENTEA_PROTO_IDENT) && !(defined("CUSTOM_PROTO_IDENT") && $greeting->startsWith(CUSTOM_PROTO_IDENT))) {
+            throw new AdapterException("invalid reply from the server (" . $greeting . ")");
+        }
     }
 
     /**
@@ -80,6 +92,7 @@ class ServerQuery extends Adapter
     {
         // do not disconnect, when acting as bot in non-blocking mode
         if (! $this->getTransport()->getConfig("blocking")) {
+            Profiler::remove(spl_object_hash($this));
             return;
         }
 
@@ -87,9 +100,11 @@ class ServerQuery extends Adapter
             try {
                 $this->request("quit");
             } catch (AdapterException) {
-                return;
+                // The transport destructor will close an unavailable connection.
             }
         }
+
+        Profiler::remove(spl_object_hash($this));
     }
 
     /**

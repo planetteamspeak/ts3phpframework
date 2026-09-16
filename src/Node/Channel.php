@@ -71,7 +71,7 @@ class Channel extends Node
             throw new ServerQueryException("invalid channelID", 0x300);
         }
 
-        return $this->channelList[$cid];
+        return $this->subChannelList()[$cid];
     }
 
     /**
@@ -81,7 +81,7 @@ class Channel extends Node
      * @return Channel
      * @throws ServerQueryException
      */
-    public function subChannelGetByName(int $name): Channel
+    public function subChannelGetByName(string $name): Channel
     {
         foreach ($this->subChannelList() as $channel) {
             if ($channel["channel_name"] == $name) {
@@ -124,7 +124,7 @@ class Channel extends Node
             throw new ServerQueryException("invalid clientID", 0x200);
         }
 
-        return $this->clientList[$clid];
+        return $this->clientList()[$clid];
     }
 
     /**
@@ -134,7 +134,7 @@ class Channel extends Node
      * @return Client
      * @throws ServerQueryException
      */
-    public function clientGetByName(int $name): Client
+    public function clientGetByName(string $name): Client
     {
         foreach ($this->clientList() as $client) {
             if ($client["client_nickname"] == $name) {
@@ -392,7 +392,7 @@ class Channel extends Node
             return;
         }
 
-        $download = $this->getParent()->transferInitDownload(rand(0x0000, 0xFFFF), 0, $this->iconGetName("channel_icon_id"));
+        $download = $this->getParent()->transferInitDownload(TeamSpeak3::generateTransferClientId(), 0, $this->iconGetName("channel_icon_id"));
         $transfer = TeamSpeak3::factory("filetransfer://" . (str_contains($download["host"], ":") ? "[" . $download["host"] . "]" : $download["host"]) . ":" . $download["port"]);
 
         return $transfer->download($download["ftkey"], $download["size"]);

@@ -110,6 +110,16 @@ class StringTest extends TestCase
         }
     }
 
+    public function testToIntSupportsValuesAboveSignedThirtyTwoBitRange(): void
+    {
+        if (PHP_INT_SIZE < 8) {
+            $this->markTestSkipped('Requires a 64-bit PHP integer.');
+        }
+
+        $this->assertSame(2147483648, (new StringHelper('2147483648'))->toInt());
+        $this->assertSame(-1, (new StringHelper('9223372036854775808'))->toInt());
+    }
+
     public function testFactory()
     {
         $string = StringHelper::factory("hello world");
@@ -180,6 +190,8 @@ class StringTest extends TestCase
 
     public function testIsUtf8()
     {
+        $this->assertTrue((new StringHelper('11'))->isUtf8());
+
         $string = new StringHelper(mb_convert_encoding("Äpfel", 'UTF-8', mb_list_encodings()));
         $this->assertTrue($string->isUtf8());
 
@@ -230,8 +242,13 @@ class StringTest extends TestCase
                     return $mb_string;
                 }
             ));
-            $this->assertTrue($upperUtf8MultibyteChar->isUtf8());
+            $this->assertSame(
+                $boundary[1][0] !== 0xF0,
+                $upperUtf8MultibyteChar->isUtf8()
+            );
         }
+
+        $this->assertFalse((new StringHelper("\xC2\x80\xFF"))->isUtf8());
 
         foreach ($unicodeBoundariesMalformed as $boundary) {
             $lowerUtf8MultibyteChar = new StringHelper(array_reduce(
@@ -265,6 +282,23 @@ class StringTest extends TestCase
         $this->assertEquals(mb_convert_encoding($notUtf8, 'UTF-8', mb_list_encodings()), $stringNotUtf8->toUtf8()->toString());
     }
 
+    public function testPreventConvertIntToUtf8()
+    {
+        //first convert issue begins at int = 11
+        $int = 11;
+        $intStringHelper = new StringHelper($int);
+        $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
+
+        //last convert issue end at int = 93
+        $int = 93;
+        $intStringHelper = new StringHelper($int);
+        $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
+
+        $int = 99999;
+        $intStringHelper = new StringHelper($int);
+        $this->assertEquals($int, $intStringHelper->toUtf8()->toString());
+    }
+
     public function testToBase64()
     {
         $string = new StringHelper("Hello world!");
@@ -275,6 +309,13 @@ class StringTest extends TestCase
     {
         $string = StringHelper::fromBase64(base64_encode("Hello world!"));
         $this->assertEquals("Hello world!", $string->toString());
+    }
+
+    public function testFromBase64RejectsMalformedInput(): void
+    {
+        $this->expectException(HelperException::class);
+
+        StringHelper::fromBase64('not valid base64!');
     }
 
     /**
@@ -294,6 +335,13 @@ class StringTest extends TestCase
     {
         $string = StringHelper::fromHex("48656C6C6F");
         $this->assertEquals("Hello", $string->toString());
+    }
+
+    public function testFromHexRejectsMalformedInput(): void
+    {
+        $this->expectException(HelperException::class);
+
+        StringHelper::fromHex('zz');
     }
 
     public function testTransliterate()
