@@ -426,6 +426,10 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function isUtf8(): bool
     {
+        if (preg_match('/\\A[\\x00-\\x7F]*\\z/', $this->string)) {
+            return true;
+        }
+
         $pattern = [];
 
         $pattern[] = "[\xC2-\xDF][\x80-\xBF]";            // non-overlong 2-byte
