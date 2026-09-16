@@ -180,6 +180,8 @@ class StringTest extends TestCase
 
     public function testIsUtf8()
     {
+        $this->assertTrue((new StringHelper('11'))->isUtf8());
+
         $string = new StringHelper(mb_convert_encoding("Äpfel", 'UTF-8', mb_list_encodings()));
         $this->assertTrue($string->isUtf8());
 
