@@ -134,12 +134,13 @@ class Host extends Node
      */
     public function serverSelect(int $sid, bool $virtual = null): void
     {
+        $getargs = func_get_args();
+
         if ($this->whoami !== null && $this->serverSelectedId() == $sid) {
             return;
         }
 
         $virtual = ($virtual !== null) ? $virtual : $this->start_offline_virtual;
-        $getargs = func_get_args();
 
         if ($sid != 0 && $this->predefined_query_name !== null) {
             $this->execute("use", ["sid" => $sid, "client_nickname" => (string)$this->predefined_query_name, $virtual ? "-virtual" : null]);
@@ -184,12 +185,13 @@ class Host extends Node
      */
     public function serverSelectByPort(int $port, bool $virtual = null): void
     {
+        $getargs = func_get_args();
+
         if ($this->whoami !== null && $this->serverSelectedPort() == $port) {
             return;
         }
 
         $virtual = ($virtual !== null) ? $virtual : $this->start_offline_virtual;
-        $getargs = func_get_args();
 
         if ($port != 0 && $this->predefined_query_name !== null) {
             $this->execute("use", ["port" => $port, "client_nickname" => (string)$this->predefined_query_name, $virtual ? "-virtual" : null]);

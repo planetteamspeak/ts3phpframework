@@ -4,7 +4,6 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Transport;
 
 use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\MockServerQuery;
-use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\TCP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
@@ -119,7 +118,7 @@ class TCPTest extends TestCase
             ['host' => 'test', 'port' => 12345]
         );
         // Mocking adaptor since `stream_socket_client()` depends on running server
-        $adaptor = $this->createMock(ServerQuery::class);
+        $adaptor = $this->createMockServerQuery();
         $transport->setAdapter($adaptor);
 
         $this->assertSame($adaptor, $transport->getAdapter());

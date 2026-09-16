@@ -340,10 +340,10 @@ class Uri
     /**
      * Returns TRUE if the port is valid.
      *
-     * @param integer|null $port
+     * @param mixed|null $port
      * @return boolean
      */
-    public function checkPort(int $port = null): bool
+    public function checkPort(mixed $port = null): bool
     {
         if ($port === null) {
             if ($this->port instanceof StringHelper) {
@@ -353,15 +353,9 @@ class Uri
             }
         }
 
-        switch ($port) {
-            case str_starts_with($port, '-'):
-            case $port < 0:
-            case !is_int($port):
-            case !filter_var($port, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 65535]]):
-                return false;
-        }
-
-        return true;
+        return is_int($port)
+            && $port > 0
+            && filter_var($port, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 65535]]) !== false;
     }
 
     /**
