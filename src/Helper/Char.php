@@ -168,7 +168,7 @@ class Char
         if ($h <= 0x7F) {
             return $h;
         } elseif ($h < 0xC2) {
-            return false;
+            return -1;
         } elseif ($h <= 0xDF) {
             return ($h & 0x1F) << 6 | (ord($this->char[1]) & 0x3F);
         } elseif ($h <= 0xEF) {
