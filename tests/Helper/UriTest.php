@@ -96,8 +96,10 @@ class UriTest extends TestCase
 
     public function testParseURI()
     {
-        $this->expectNotToPerformAssertions();
-        // @todo: No reachable path results in error. Implement if found.
+        $this->expectException(HelperException::class);
+        $this->expectExceptionMessage('invalid URI supplied');
+
+        new Uri('serverquery://[::1');
     }
 
     /**

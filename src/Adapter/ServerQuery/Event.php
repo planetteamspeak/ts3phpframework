@@ -54,7 +54,9 @@ class Event implements ArrayAccess
             throw new AdapterException("invalid notification event format");
         }
 
-        list($type, $data) = $evt->split(TeamSpeak3::SEPARATOR_CELL, 2);
+        $parts = $evt->split(TeamSpeak3::SEPARATOR_CELL, 2);
+        $type = $parts[0];
+        $data = $parts[1] ?? null;
 
         if (empty($data)) {
             throw new AdapterException("invalid notification event data");
