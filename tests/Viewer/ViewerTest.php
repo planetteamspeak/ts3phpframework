@@ -47,6 +47,17 @@ class ViewerTest extends TestCase
         $this->assertStringContainsString('Clients: 3/32', $html);
     }
 
+    public function testHtmlImageAttributesAreEscaped(): void
+    {
+        $viewer = new HtmlForTest("icons/'onerror='alert(1)");
+
+        $html = $viewer->getImageForTest("image.png' onerror='alert(2)", "title' onmouseover='alert(3)");
+
+        $this->assertStringNotContainsString("' onerror=", $html);
+        $this->assertStringNotContainsString("' onmouseover=", $html);
+        $this->assertStringContainsString('&#039;', $html);
+    }
+
     public function testJsonViewerProducesStructuredServerData(): void
     {
         $data = [];
@@ -125,5 +136,13 @@ class ViewerChannel extends Channel
     public function count(): int
     {
         return 0;
+    }
+}
+
+class HtmlForTest extends Html
+{
+    public function getImageForTest(string $name, string $text): string
+    {
+        return $this->getImage($name, $text);
     }
 }

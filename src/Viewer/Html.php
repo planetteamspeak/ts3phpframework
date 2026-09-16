@@ -611,6 +611,9 @@ class Html implements ViewerInterface
             $src = $this->flagpath;
         }
 
-        return "<img src='" . $src . $name . "' title='" . $text . "' alt='' align='top' />";
+        $src = htmlspecialchars($src . $name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $text = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+        return "<img src='" . $src . "' title='" . $text . "' alt='' align='top' />";
     }
 }
