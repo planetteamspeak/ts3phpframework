@@ -35,7 +35,8 @@ class TCP extends Transport
 
         if (empty($this->config["ssh"])) {
             $address = "tcp://" . (str_contains($host, ":") ? "[" . $host . "]" : $host) . ":" . $port;
-            $options = empty($this->config["tls"]) ? [] : ["ssl" => ["allow_self_signed" => true, "verify_peer" => false, "verify_peer_name" => false]];
+            $verify = !empty($this->config["tls_verify"]);
+            $options = empty($this->config["tls"]) ? [] : ["ssl" => ["allow_self_signed" => !$verify, "verify_peer" => $verify, "verify_peer_name" => $verify]];
             $errno = 0;
             $errstr = '';
 
@@ -47,7 +48,9 @@ class TCP extends Transport
             }
 
             if (!empty($this->config["tls"])) {
-                stream_socket_enable_crypto($this->stream, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
+                if (!$this->enableCrypto()) {
+                    throw new TransportException("failed to enable TLS for server '$host:$port'");
+                }
             }
         } else {
             $this->session = @ssh2_connect($host, $port);
@@ -79,6 +82,16 @@ class TCP extends Transport
     protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
     {
         return @stream_socket_client($address, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, stream_context_create($options));
+    }
+
+    /**
+     * Enables TLS encryption on the connected stream.
+     *
+     * @return bool
+     */
+    protected function enableCrypto(): bool
+    {
+        return stream_socket_enable_crypto($this->stream, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
     }
 
     /**

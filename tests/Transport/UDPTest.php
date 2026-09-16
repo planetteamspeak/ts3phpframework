@@ -38,6 +38,9 @@ class UDPTest extends TestCase
         $this->assertArrayHasKey('timeout', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('timeout'));
 
+        $this->assertArrayHasKey('tls_verify', $adapter->getConfig());
+        $this->assertSame(0, $adapter->getConfig('tls_verify'));
+
         $this->assertArrayHasKey('blocking', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('blocking'));
     }
@@ -68,7 +71,7 @@ class UDPTest extends TestCase
         );
 
         $this->assertIsArray($adapter->getConfig());
-        $this->assertCount(4, $adapter->getConfig());
+        $this->assertCount(5, $adapter->getConfig());
         $this->assertArrayHasKey('host', $adapter->getConfig());
         $this->assertEquals('test', $adapter->getConfig()['host']);
         $this->assertEquals('test', $adapter->getConfig('host'));

@@ -326,6 +326,7 @@ class TeamSpeak3
      *   - timeout
      *   - blocking
      *   - tls (TeaSpeak only)
+     *   - tls_verify
      *   - ssh (TeamSpeak only)
      *   - nickname
      *   - no_query_clients
@@ -343,7 +344,7 @@ class TeamSpeak3
      * === URI Examples ===
      *   - serverquery://127.0.0.1:10011/
      *   - serverquery://127.0.0.1:10022/?ssh=1 (TeamSpeak ONLY)
-     *   - serverquery://127.0.0.1:10011/?tls=1 (TeaSpeak ONLY)
+     *   - serverquery://teaspeak.example.com:10011/?tls=1&tls_verify=1 (TeaSpeak ONLY)
      *   - serverquery://127.0.0.1:10022/?ssh=1&server_port=9987
      *   - serverquery://127.0.0.1:10011/?server_port=9987&channel_id=1
      *   - serverquery://127.0.0.1:10011/?server_port=9987&channel_id=1#no_query_clients
@@ -364,7 +365,7 @@ class TeamSpeak3
         $uri = new Uri($uri);
 
         $adapter = self::getAdapterName($uri->getScheme());
-        $options = ["host" => $uri->getHost(), "port" => $uri->getPort(), "timeout" => (int)$uri->getQueryVar("timeout", 10), "blocking" => (int)$uri->getQueryVar("blocking", 1), "tls" => (int)$uri->getQueryVar("tls", 0), "ssh" => (int)$uri->getQueryVar("ssh", 0)];
+        $options = ["host" => $uri->getHost(), "port" => $uri->getPort(), "timeout" => (int)$uri->getQueryVar("timeout", 10), "blocking" => (int)$uri->getQueryVar("blocking", 1), "tls" => (int)$uri->getQueryVar("tls", 0), "tls_verify" => (int)$uri->getQueryVar("tls_verify", 0), "ssh" => (int)$uri->getQueryVar("ssh", 0)];
 
         self::loadClass($adapter);
 

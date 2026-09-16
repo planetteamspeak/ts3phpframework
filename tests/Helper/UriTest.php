@@ -19,6 +19,8 @@ class UriTest extends TestCase
         'options' => [
             'timeout',
             'blocking',
+            'tls',
+            'tls_verify',
             'nickname',
             'no_query_clients',
             'use_offline_as_virtual',

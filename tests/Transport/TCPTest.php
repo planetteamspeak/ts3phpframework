@@ -73,6 +73,9 @@ class TCPTest extends TestCase
         $this->assertArrayHasKey('timeout', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('timeout'));
 
+        $this->assertArrayHasKey('tls_verify', $adapter->getConfig());
+        $this->assertSame(0, $adapter->getConfig('tls_verify'));
+
         $this->assertArrayHasKey('blocking', $adapter->getConfig());
         $this->assertIsInt($adapter->getConfig('blocking'));
     }
@@ -103,7 +106,7 @@ class TCPTest extends TestCase
         );
 
         $this->assertIsArray($adapter->getConfig());
-        $this->assertCount(4, $adapter->getConfig());
+        $this->assertCount(5, $adapter->getConfig());
         $this->assertArrayHasKey('host', $adapter->getConfig());
         $this->assertEquals('test', $adapter->getConfig()['host']);
         $this->assertEquals('test', $adapter->getConfig('host'));
@@ -310,5 +313,72 @@ class TCPTest extends TestCase
             $this->expectExceptionMessage("getaddrinfo for $host failed");
         }
         $transport->sendLine('test.sendLine');
+    }
+
+    public function testNonBlockingReadTimesOut(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'blocking' => 0, 'timeout' => 0]) extends TCP {
+            private $peer;
+
+            public function connectForTest(): void
+            {
+                [$this->stream, $this->peer] = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+            }
+
+            public function waitForReadForTest(): void
+            {
+                $this->waitForReadyRead();
+            }
+        };
+
+        $transport->connectForTest();
+
+        $this->expectException(TransportException::class);
+        $this->expectExceptionMessage("timed out waiting for data from server 'test:12345'");
+        $transport->waitForReadForTest();
+    }
+
+    public function testTlsVerificationIsDisabledByDefault(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'tls' => 1]) extends TCP {
+            public array $contextOptions;
+
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+            {
+                $this->contextOptions = $options;
+                return fopen('php://temp', 'r+');
+            }
+
+            protected function enableCrypto(): bool
+            {
+                return true;
+            }
+        };
+
+        $transport->connect();
+
+        $this->assertSame(['allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false], $transport->contextOptions['ssl']);
+    }
+
+    public function testTlsVerificationCanBeEnabled(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'tls' => 1, 'tls_verify' => 1]) extends TCP {
+            public array $contextOptions;
+
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+            {
+                $this->contextOptions = $options;
+                return fopen('php://temp', 'r+');
+            }
+
+            protected function enableCrypto(): bool
+            {
+                return true;
+            }
+        };
+
+        $transport->connect();
+
+        $this->assertSame(['allow_self_signed' => false, 'verify_peer' => true, 'verify_peer_name' => true], $transport->contextOptions['ssl']);
     }
 }
