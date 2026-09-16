@@ -100,11 +100,11 @@ abstract class Transport
      */
     public function __destruct()
     {
+        $this->disconnect();
+
         if ($this->adapter instanceof Adapter) {
             $this->adapter->__destruct();
         }
-
-        $this->disconnect();
     }
 
     /**
