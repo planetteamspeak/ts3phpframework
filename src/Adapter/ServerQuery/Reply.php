@@ -86,7 +86,7 @@ class Reply
      */
     public function toString(): ?StringHelper
     {
-        return (!func_num_args()) ? $this->rpl->unescape() : $this->rpl;
+        return (!func_num_args()) ? (new StringHelper($this->rpl->toString()))->unescape() : $this->rpl;
     }
 
     /**
