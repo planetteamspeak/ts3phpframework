@@ -11,6 +11,50 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
 class TCPTest extends TestCase
 {
+    public function testReadLineWaitsForRemainingNonBlockingChunk(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'blocking' => 0]) extends TCP {
+            private array $chunks = ['cldbid=42 client_nickname=Some', false, "|body\\sname=Other\n"];
+
+            public function setStreamForTest(): void
+            {
+                $this->stream = fopen('php://temp', 'r+');
+            }
+
+            protected function waitForReadyRead(int $time = 0): void
+            {
+            }
+
+            protected function readLineChunk(): string|false
+            {
+                return array_shift($this->chunks);
+            }
+        };
+
+        $transport->setStreamForTest();
+
+        $this->assertSame(
+            'cldbid=42 client_nickname=Some|body\\sname=Other',
+            $transport->readLine()->toString()
+        );
+    }
+
+    public function testReadLineThrowsWhenConnectionIsClosed(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends TCP {
+            public function setStreamForTest(): void
+            {
+                $this->stream = fopen('php://temp', 'r');
+            }
+        };
+
+        $transport->setStreamForTest();
+
+        $this->expectException(TransportException::class);
+        $this->expectExceptionMessage("connection to server 'test:12345' lost");
+        $transport->readLine();
+    }
+
     /**
      * @throws TransportException
      */
