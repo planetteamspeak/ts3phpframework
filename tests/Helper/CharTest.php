@@ -318,6 +318,14 @@ class CharTest extends TestCase
         );
     }
 
+    /**
+     * @throws HelperException
+     */
+    public function testUnicodeRejectsTruncatedUtf8Sequence(): void
+    {
+        $this->assertSame(-1, Char::fromHex('C2')->toUnicode());
+    }
+
     public function testFromHexRejectsMalformedInput(): void
     {
         $this->expectException(HelperException::class);
