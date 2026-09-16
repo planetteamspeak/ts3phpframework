@@ -155,6 +155,23 @@ class UDPTest extends TestCase
         $transport->disconnect();
     }
 
+    public function testDisconnectClosesRetainedStream(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends UDP {
+            public function setStreamForTest($stream): void
+            {
+                $this->stream = $stream;
+            }
+        };
+        $stream = fopen('php://temp', 'r+');
+        $transport->setStreamForTest($stream);
+
+        $transport->disconnect();
+
+        $this->assertFalse(is_resource($stream));
+        $this->assertNull($transport->getStream());
+    }
+
     /**
      * @throws TransportException
      */

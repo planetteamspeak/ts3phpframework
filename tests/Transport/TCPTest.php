@@ -110,6 +110,8 @@ class TCPTest extends TestCase
         $this->assertArrayHasKey('host', $adapter->getConfig());
         $this->assertEquals('test', $adapter->getConfig()['host']);
         $this->assertEquals('test', $adapter->getConfig('host'));
+        $this->assertNull($adapter->getConfig('missing'));
+        $this->assertFalse($adapter->getConfig('missing', false));
     }
 
     /**
@@ -218,6 +220,38 @@ class TCPTest extends TestCase
         );
         $this->assertNull($transport->getStream());
         $transport->disconnect();
+    }
+
+    public function testDisconnectClosesRetainedStream(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends TCP {
+            public function setStreamForTest($stream): void
+            {
+                $this->stream = $stream;
+            }
+        };
+        $stream = fopen('php://temp', 'r+');
+        $transport->setStreamForTest($stream);
+
+        $transport->disconnect();
+
+        $this->assertFalse(is_resource($stream));
+        $this->assertNull($transport->getStream());
+    }
+
+    public function testReadThrowsWhenStreamReachedEndOfFile(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345]) extends TCP {
+            public function setStreamForTest($stream): void
+            {
+                $this->stream = $stream;
+            }
+        };
+        $transport->setStreamForTest(fopen('php://temp', 'r'));
+
+        $this->expectException(TransportException::class);
+        $this->expectExceptionMessage("connection to server 'test:12345' lost");
+        $transport->read();
     }
 
     /**
@@ -380,5 +414,27 @@ class TCPTest extends TestCase
         $transport->connect();
 
         $this->assertSame(['allow_self_signed' => false, 'verify_peer' => true, 'verify_peer_name' => true], $transport->contextOptions['ssl']);
+    }
+
+    public function testFailedTlsNegotiationDisconnectsTransport(): void
+    {
+        $transport = new class (['host' => 'test', 'port' => 12345, 'tls' => 1]) extends TCP {
+            protected function openSocket(string $address, int &$errno, string &$errstr, int $timeout, array $options): mixed
+            {
+                return fopen('php://temp', 'r+');
+            }
+
+            protected function enableCrypto(): bool
+            {
+                return false;
+            }
+        };
+
+        try {
+            $transport->connect();
+            $this->fail('Expected TLS negotiation to fail.');
+        } catch (TransportException) {
+            $this->assertNull($transport->getStream());
+        }
     }
 }

@@ -69,6 +69,10 @@ class UDP extends Transport
             return;
         }
 
+        if (is_resource($this->stream)) {
+            @fclose($this->stream);
+        }
+
         $this->stream = null;
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");

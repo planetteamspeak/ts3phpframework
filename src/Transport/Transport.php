@@ -158,9 +158,9 @@ abstract class Transport
      *
      * @param string|null $key
      * @param mixed|null $default
-     * @return array|string
+     * @return mixed
      */
-    public function getConfig(string $key = null, mixed $default = null): array|string|int
+    public function getConfig(string $key = null, mixed $default = null): mixed
     {
         if ($key !== null) {
             return array_key_exists($key, $this->config) ? $this->config[$key] : $default;

@@ -49,6 +49,7 @@ class TCP extends Transport
 
             if (!empty($this->config["tls"])) {
                 if (!$this->enableCrypto()) {
+                    $this->disconnect();
                     throw new TransportException("failed to enable TLS for server '$host:$port'");
                 }
             }
@@ -105,11 +106,17 @@ class TCP extends Transport
             return;
         }
 
+        if (is_resource($this->stream)) {
+            @fclose($this->stream);
+        }
+
         $this->stream = null;
 
         if (is_resource($this->session)) {
             @ssh2_disconnect($this->session);
         }
+
+        $this->session = null;
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");
     }
@@ -131,7 +138,8 @@ class TCP extends Transport
 
         Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
-        if ($data === false) {
+        if ($data === false || ($data === "" && feof($this->stream))) {
+            $this->disconnect();
             throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
         }
 
