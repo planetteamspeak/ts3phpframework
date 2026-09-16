@@ -311,6 +311,13 @@ class StringTest extends TestCase
         $this->assertEquals("Hello world!", $string->toString());
     }
 
+    public function testFromBase64RejectsMalformedInput(): void
+    {
+        $this->expectException(HelperException::class);
+
+        StringHelper::fromBase64('not valid base64!');
+    }
+
     /**
      * @throws Exception
      */
@@ -328,6 +335,13 @@ class StringTest extends TestCase
     {
         $string = StringHelper::fromHex("48656C6C6F");
         $this->assertEquals("Hello", $string->toString());
+    }
+
+    public function testFromHexRejectsMalformedInput(): void
+    {
+        $this->expectException(HelperException::class);
+
+        StringHelper::fromHex('zz');
     }
 
     public function testTransliterate()

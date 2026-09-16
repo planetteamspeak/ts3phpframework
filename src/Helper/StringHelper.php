@@ -463,10 +463,17 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @param string $base64
      * @return self
+     * @throws HelperException
      */
     public static function fromBase64(string $base64): StringHelper
     {
-        return new self(base64_decode($base64));
+        $string = base64_decode($base64, true);
+
+        if ($string === false) {
+            throw new HelperException("given parameter is not valid base64 data");
+        }
+
+        return new self($string);
     }
 
     /**
@@ -488,17 +495,11 @@ class StringHelper implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public static function fromHex(string $hex): StringHelper
     {
-        $string = "";
-
-        if (strlen($hex) % 2 == 1) {
+        if (strlen($hex) % 2 == 1 || ($hex !== "" && !ctype_xdigit($hex))) {
             throw new HelperException("given parameter '" . $hex . "' is not a valid hexadecimal number");
         }
 
-        foreach (str_split($hex, 2) as $chunk) {
-            $string .= chr(hexdec($chunk));
-        }
-
-        return new self($string);
+        return new self(hex2bin($hex));
     }
 
     /**
