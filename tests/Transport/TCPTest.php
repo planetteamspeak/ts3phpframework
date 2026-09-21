@@ -5,6 +5,7 @@ namespace PlanetTeamSpeak\TeamSpeak3Framework\Tests\Transport;
 use PHPUnit\Framework\TestCase;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\MockServerQuery;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Transport\TCP;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 
@@ -349,7 +350,7 @@ class TCPTest extends TestCase
         $transport->sendLine('test.sendLine');
     }
 
-    public function testNonBlockingReadTimesOut(): void
+    public function testNonBlockingReadContinuesWaitingAfterTimeout(): void
     {
         $transport = new class (['host' => 'test', 'port' => 12345, 'blocking' => 0, 'timeout' => 0]) extends TCP {
             private $peer;
@@ -363,13 +364,29 @@ class TCPTest extends TestCase
             {
                 $this->waitForReadyRead();
             }
+
+            public function makeStreamReadableForTest(): void
+            {
+                fwrite($this->peer, "event\n");
+            }
         };
 
         $transport->connectForTest();
+        $idleTimes = [];
+        $callback = static function (int $idleTime) use ($transport, &$idleTimes): void {
+            $idleTimes[] = $idleTime;
+            $transport->makeStreamReadableForTest();
+        };
 
-        $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("timed out waiting for data from server 'test:12345'");
-        $transport->waitForReadForTest();
+        Signal::getInstance()->subscribe('unknownWaitTimeout', $callback);
+
+        try {
+            $transport->waitForReadForTest();
+        } finally {
+            Signal::getInstance()->unsubscribe('unknownWaitTimeout', $callback);
+        }
+
+        $this->assertSame([1], $idleTimes);
     }
 
     public function testTlsVerificationIsDisabledByDefault(): void
