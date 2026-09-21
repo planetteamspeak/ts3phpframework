@@ -169,6 +169,7 @@ class TCP extends Transport
 
             if ($data === false) {
                 if (feof($this->stream)) {
+                    $this->disconnect();
                     throw new TransportException("connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost");
                 }
             } else {

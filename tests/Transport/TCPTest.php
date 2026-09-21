@@ -50,9 +50,14 @@ class TCPTest extends TestCase
 
         $transport->setStreamForTest();
 
-        $this->expectException(TransportException::class);
-        $this->expectExceptionMessage("connection to server 'test:12345' lost");
-        $transport->readLine();
+        try {
+            $transport->readLine();
+            $this->fail('Expected a transport exception for a closed connection.');
+        } catch (TransportException $exception) {
+            $this->assertSame("connection to server 'test:12345' lost", $exception->getMessage());
+        }
+
+        $this->assertFalse($transport->isConnected());
     }
 
     /**
