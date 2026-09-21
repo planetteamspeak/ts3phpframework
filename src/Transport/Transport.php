@@ -244,20 +244,23 @@ abstract class Transport
             return;
         }
 
-        $read = [$this->stream];
-        $null = null;
-        $result = @stream_select($read, $null, $null, $this->config["timeout"]);
+        do {
+            $read = [$this->stream];
+            $null = null;
 
-        if ($result === false) {
-            throw new TransportException("unable to wait for data from server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
-        }
+            if ($time) {
+                Signal::getInstance()
+                    ->emit(strtolower($this->getAdapterType()) . "WaitTimeout", $time, $this->getAdapter());
+            }
 
-        if ($result === 0) {
-            $time = $time ?: $this->config["timeout"];
-            Signal::getInstance()
-                ->emit(strtolower($this->getAdapterType()) . "WaitTimeout", $time, $this->getAdapter());
+            // A zero timeout is valid for polling, but must still advance the
+            // reported idle time to avoid a busy loop without timeout signals.
+            $time += max(1, (int) $this->config["timeout"]);
+            $result = @stream_select($read, $null, $null, $this->config["timeout"]);
 
-            throw new TransportException("timed out waiting for data from server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
-        }
+            if ($result === false) {
+                throw new TransportException("unable to wait for data from server '" . $this->config["host"] . ":" . $this->config["port"] . "'");
+            }
+        } while ($result === 0);
     }
 }
