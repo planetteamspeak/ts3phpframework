@@ -6,6 +6,7 @@ use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Event;
 use PlanetTeamSpeak\TeamSpeak3Framework\Adapter\ServerQuery\Reply;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\AdapterException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Exception\ServerQueryException;
+use PlanetTeamSpeak\TeamSpeak3Framework\Exception\TransportException;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Profiler;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\Signal;
 use PlanetTeamSpeak\TeamSpeak3Framework\Helper\StringHelper;
@@ -99,7 +100,7 @@ class ServerQuery extends Adapter
         if ($this->getTransport() instanceof Transport && $this->transport->isConnected()) {
             try {
                 $this->request("quit");
-            } catch (AdapterException) {
+            } catch (AdapterException | TransportException) {
                 // The transport destructor will close an unavailable connection.
             }
         }
