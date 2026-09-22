@@ -256,6 +256,84 @@ class CharTest extends TestCase
             static::calculateUTF8Ordinal("\x7F"),
             Char::fromHex("7F")->toUnicode()
         );
+
+        //
+        // INVALID LEADING BYTE (< 0xC2)
+        // e.g., 0x80 – 0xC1 should return -1
+        //
+        $this->assertEquals(-1, Char::fromHex('80')->toUnicode());
+        $this->assertEquals(-1, Char::fromHex('C1')->toUnicode());
+
+        //
+        // 2-BYTE UTF-8 (U+0080 – U+07FF)
+        // Example: '¢' (U+00A2) → C2 A2
+        //
+        $this->assertEquals(
+            static::calculateUTF8Ordinal("\xC2\xA2"),
+            Char::fromHex('C2A2')->toUnicode()
+        );
+
+        // Upper end of 2-byte range: '߿' (U+07FF) → DF BF
+        $this->assertEquals(
+            static::calculateUTF8Ordinal("\xDF\xBF"),
+            Char::fromHex('DFBF')->toUnicode()
+        );
+
+        //
+        // 3-BYTE UTF-8 (U+0800 – U+FFFF)
+        // Example: '€' (U+20AC) → E2 82 AC
+        //
+        $this->assertEquals(
+            static::calculateUTF8Ordinal("\xE2\x82\xAC"),
+            Char::fromHex('E282AC')->toUnicode()
+        );
+
+        // Upper end of 3-byte range: '￿' (U+FFFF) → EF BF BF
+        $this->assertEquals(
+            static::calculateUTF8Ordinal("\xEF\xBF\xBF"),
+            Char::fromHex('EFBFBF')->toUnicode()
+        );
+
+        //
+        // 4-BYTE UTF-8 (U+10000 – U+10FFFF)
+        // Example: '😀' (U+1F600) → F0 9F 98 80
+        //
+        $this->assertEquals(
+            static::calculateUTF8Ordinal("\xF0\x9F\x98\x80"),
+            Char::fromHex('F09F9880')->toUnicode()
+        );
+
+        // Upper end: U+10FFFF → F4 8F BF BF
+        $this->assertEquals(
+            static::calculateUTF8Ordinal("\xF4\x8F\xBF\xBF"),
+            Char::fromHex('F48FBFBF')->toUnicode()
+        );
+
+        //
+        // INVALID TOO-HIGH LEAD BYTE (> 0xF4)
+        //
+        $this->assertEquals(
+            -1,
+            Char::fromHex('F5')->toUnicode()
+        );
+    }
+
+    /**
+     * @throws HelperException
+     */
+    public function testUnicodeRejectsTruncatedUtf8Sequence(): void
+    {
+        $this->assertSame(-1, Char::fromHex('C2')->toUnicode());
+    }
+
+    /**
+     * @throws HelperException
+     */
+    public function testFromHexToHexRoundTripsMultibyteUtf8Characters(): void
+    {
+        $this->assertSame('C2A2', Char::fromHex('C2A2')->toHex());
+        $this->assertSame('E282AC', (new Char('€'))->toHex());
+        $this->assertSame('F09F9880', (new Char('😀'))->toHex());
     }
 
     public function testFromHexRejectsMalformedInput(): void
@@ -303,13 +381,30 @@ class CharTest extends TestCase
      */
     private static function calculateUTF8Ordinal(string $char): int
     {
-        $charString = mb_substr($char, 0, 1, 'utf-8');
-        $charLength = strlen($charString);
-        $ordinal    = ord($charString[0]) & (0xFF >> $charLength);
-        //Merge other characters into the value
-        for ($i = 1; $i < $charLength; $i++) {
-            $ordinal = $ordinal << 6 | (ord($charString[$i]) & 127);
+        $bytes = array_map('ord', str_split($char));
+        $length = strlen($char);
+
+        if ($length === 1) {
+            // 1-byte (ASCII)
+            return $bytes[0];
+        } elseif ($length === 2) {
+            // 2-byte
+            return (($bytes[0] & 0x1F) << 6) |
+                ($bytes[1] & 0x3F);
+        } elseif ($length === 3) {
+            // 3-byte
+            return (($bytes[0] & 0x0F) << 12) |
+                (($bytes[1] & 0x3F) << 6) |
+                ($bytes[2] & 0x3F);
+        } elseif ($length === 4) {
+            // 4-byte
+            return (($bytes[0] & 0x07) << 18) |
+                (($bytes[1] & 0x3F) << 12) |
+                (($bytes[2] & 0x3F) << 6) |
+                ($bytes[3] & 0x3F);
         }
-        return $ordinal;
+
+        // invalid UTF-8 (longer than 4 bytes)
+        return -1;
     }
 }
