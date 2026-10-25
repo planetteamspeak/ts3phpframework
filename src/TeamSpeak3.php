@@ -91,6 +91,16 @@ class TeamSpeak3
     public const GREENTEA_MOTD_PREFIX = "Welcome";
 
     /**
+     * VoySpeak protocol welcome message.
+     */
+    public const VOY_PROTO_IDENT = "VoySpeak";
+
+    /**
+     * VoySpeak protocol greeting message prefix.
+     */
+    public const VOY_MOTD_PREFIX = "Welcome";
+
+    /**
      * TeamSpeak 3 protocol error message prefix.
      */
     public const ERROR = "error";

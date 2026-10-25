@@ -100,4 +100,15 @@ class ServerQueryTest extends TestCase
 
         $this->assertTrue($serverQuery->getTransport()->isConnected());
     }
+
+    public function testAcceptsVoySpeakProtocolGreeting(): void
+    {
+        $serverQuery = new MockServerQuery([
+            'host' => '0.0.0.0',
+            'port' => 9987,
+            'welcome' => 'VoySpeak ServerQuery',
+        ]);
+
+        $this->assertTrue($serverQuery->getTransport()->isConnected());
+    }
 }

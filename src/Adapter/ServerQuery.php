@@ -79,7 +79,7 @@ class ServerQuery extends Adapter
      */
     protected function validateProtocolGreeting(StringHelper $greeting): void
     {
-        if (!$greeting->startsWith(TeamSpeak3::TS3_PROTO_IDENT) && !$greeting->startsWith(TeamSpeak3::TEA_PROTO_IDENT) && !$greeting->startsWith(TeamSpeak3::GREENTEA_PROTO_IDENT) && !(defined("CUSTOM_PROTO_IDENT") && $greeting->startsWith(CUSTOM_PROTO_IDENT))) {
+        if (!$greeting->startsWith(TeamSpeak3::TS3_PROTO_IDENT) && !$greeting->startsWith(TeamSpeak3::TEA_PROTO_IDENT) && !$greeting->startsWith(TeamSpeak3::GREENTEA_PROTO_IDENT) && !$greeting->startsWith(TeamSpeak3::VOY_PROTO_IDENT) && !(defined("CUSTOM_PROTO_IDENT") && $greeting->startsWith(CUSTOM_PROTO_IDENT))) {
             throw new AdapterException("invalid reply from the server (" . $greeting . ")");
         }
     }
